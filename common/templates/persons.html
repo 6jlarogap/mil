@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}MIL.ORG - Поиск воинов{% endblock %}
+
+{% block content %}
+    {# Заголовок страницы #}
+    <h1>Поиск воинов</h1>
+    {# Форма поиска #}
+    <form action="" method="get">
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td><input type="submit" value="Поиск" name="search" id="isok"></td>
+                <td><input type="submit" value="Сброс" name="search" id="iscancel"></td>
+            </tr>
+        </table>
+    </form>
+    <br>
+    {# Вывод результатов поиска в виде таблицы #}
+    {% if persons %}
+        <table width="100%">
+            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ persons_count.number }}&nbsp;записей</caption>
+                <thead>
+                    <td>Фамилия</td>
+                    <td>Имя</td>
+                    <td>Отчество</td>
+                    <td>Дата роджения</td>
+                    <td>Дата смерти</td>
+                    <td>Дата захоронения</td>
+                    <td>Захоронение</td>
+                    <td align="center">Опции</td>
+                </thead>
+            {% for person in persons.object_list %}
+                <tr>
+                    <td>{{ person.last_name }}</td>
+                    <td>{{ person.first_name }}</td>
+                    <td>{{ person.patronymic }}</td>
+                    <td>{{ person.birth_date }}</td>
+                    <td>{{ person.death_date }}</td>
+                    <td>{{ person.burial_date }}</td>
+                    <td>
+                        {% for b in person.burial_set.all %}
+                        <li>{{ b.passportid  }}</li>
+                        {% endfor %}
+                    </td>
+                    <td align="center"><a href="/person/{{ person.uuid}}">[Просмотр]</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br/>
+        <center>
+            {% if persons.has_previous %}
+                <a href="?{{ query_vars }}&p={{ persons.previous_page_number }}"><< Пред</a>
+            {% endif %}
+
+            Страница {{ persons.number }} из {{ persons.paginator.num_pages }}
+
+            {% if persons.has_next %}
+                <a href="?{{ query_vars }}&p={{ persons.next_page_number }}">След >></a>
+            {% endif %}
+        </center>
+    {% else %}
+        {% if is_first_search %}
+            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ persons_count.number }}&nbsp;</caption>
+        {% else %}
+            <caption>Результат&nbsp;поиска:&nbsp;0</font>&nbsp;записей</caption>
+        {% endif %}
+    {% endif %}
+{% endblock %}

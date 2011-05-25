@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}MIL.ORG - Поиск захоронений{% endblock %}
+
+{% block content %}
+    {# Заголовок страницы #}
+    <h1>Поиск Захоронений</h1>
+    {# Форма поиска #}
+    <form action="" method="get">
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td><input type="submit" value="Поиск" name="search" id="isok"></td>
+                <td><input type="submit" value="Сброс" name="search" id="iscancel"></td>
+            </tr>
+        </table>
+    </form>
+    <br>
+    {# Вывод результатов поиска в виде таблицы #}
+    {% if burials %}
+        <table width="100%">
+            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ burials_count.number }}&nbsp;записей</caption>
+                <thead>
+                    <td>Паспорт</td>
+                    <td>Дата паспорта</td>
+                    <td>Создано</td>
+                    <td>Обнаружено</td>
+                    <td>Закрыто</td>
+                    <td>Причина закрытия</td>
+                    <td>Адрес</td>
+                    <td>Тип</td>
+                    <td>Военный конфликт</td>
+                    <td>Памятник</td>
+                    <td>Госзнак</td>
+                    <td>Информация</td>
+                    <td align="center">Опции</td>
+                </thead>
+            {% for burial in burials.object_list %}
+                <tr>
+                    <td>{{ burial.passportid }}</td>
+                    <td>{{ burial.date_passport }}</td>
+                    <td>{{ burial.date_buried }}</td>
+                    <td>{{ burial.date_discovered }}</td>
+                    <td>{{ burial.date_closed }}</td>
+                    <td>{{ burial.closure_cause.name }}</td>
+                    <td>{{ burial.location.country }}&nbsp;{{ burial.location.region }}&nbsp;{{ burial.location.city }}</td>
+                    <td>{{ burial.burial_type.name }}</td>
+                    <td>{{ burial.military_conflict.name }}</td>
+                    <td>{{ burial.date_memorial }}</td>
+                    <td>{{ burial.date_gosznak }}</td>
+                    <td>{{ burial.additional_info }}</td>
+                    <td align="center"><a href="/burial/{{ burial.uuid}}">[Просмотр]</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br/>
+        <center>
+            {% if burials.has_previous %}
+                <a href="?{{ query_vars }}&p={{ burials.previous_page_number }}"><< Пред</a>
+            {% endif %}
+
+            Страница {{ burials.number }} из {{ burials.paginator.num_pages }}
+
+            {% if burials.has_next %}
+                <a href="?{{ query_vars }}&p={{ burials.next_page_number }}">След >></a>
+            {% endif %}
+        </center>
+    {% else %}
+        {% if is_first_search %}
+            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ burials_count.number }}&nbsp;</caption>
+        {% else %}
+            <caption>Результат&nbsp;поиска:&nbsp;0</font>&nbsp;записей</caption>
+        {% endif %}
+    {% endif %}
+{% endblock %}

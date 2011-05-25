@@ -1,0 +1,8 @@
+*.pyo
+*.pyc
+*.swp
+.tmp*
+tmp\.*
+.*
+django_extensions/
+!.gitignore

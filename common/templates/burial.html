@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}MIL.ORG - Карточка Захоронения{% endblock %}
+
+{% block content %}
+    <h1>Карточка Захоронения</h1>
+    <br>
+    Номер паспорта захоронения: {{ burial.passportid }}<br>
+    Дата паспорта захоронения: {{ burial.date_passport }}<br>
+    Дата захоронения: {{ burial.date_burried }}<br>
+    Дата обнаружения: {{ burial.date_discovered }}<br>
+    Дата закрытия: {{ burial.date_closed }}<br>
+    Причина закрытия: {{ burial.closure_cause }}<br>
+    Адрес захоронения: {{ burial.locationburial.country }}&nbsp; {{burial.locationburial.region}}&nbsp; {{burial.locationburial.city}}&nbsp; {{burial.locationburial.street}}&nbsp; {{burial.locationburial.house}}&nbsp; {{burial.locationburial.block}}&nbsp; {{burial.locationburial.building}}<br>
+    Тип воинского захоронения: {{ burial.burial_type.name }}<br>
+    Военный конфликт: {{ burial.military_conflict.name }}<br>
+    Дата установки памятника: {{ burial.date_memorial }}<br>
+    Дата установки госзнака: {{ burial.date_gosznak }}<br>
+    Дополнительная информация о месте захоронения: {{ burial.additional_info }}<br>
+    <br>
+    Количество захороненнных: {{ burial.persons.count }}<br>
+    <br>
+    
+    <table width="100%">
+        <thead>
+            <td>ФИО</td>
+            <td>Дата рождения</td>
+            <td>Дата смерти</td>
+            <td>Причина гибели</td>
+            <td>Дата захоронения</td>
+            <td>Дата эксгумации</td>
+        </thead>
+    {% for pb in burial.personburial_set.all %}
+        <tr>
+            <td>{{ pb.person.last_name }}&nbsp;{{ pb.person.first_name }}&nbsp;{{ pb.person.patonymic }}&nbsp;</td>
+            <td>{{ pb.person.birth_date }}</td>
+            <td>{{ pb.person.death_date }}</td>
+            <td>{{ pb.person.death_cause.name }}</td>
+            <td>{{ pb.date_burried }}</td>
+            <td>{{ pb.date_exhumated }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
