@@ -345,7 +345,7 @@ class Burial(models.Model):
     foto = models.FileField(upload_to="bfiles", blank=True, null=True)                      # Ссылка на фотографию
     creator = models.ForeignKey(User, blank=True, null=True)                                # Создатель записи
     date_of_creation = models.DateTimeField(auto_now_add=True)                              # Дата создания записи
-    date_last_edit = models.DateTimeField(auto_now=True)                                # Дата последнего изменения
+    date_last_edit = models.DateTimeField(auto_now=True)                                    # Дата последнего изменения
     additional_info = models.TextField(blank=True, null=True)                               # Дополнительная информация о захоронении.
     is_trash = models.BooleanField(default=False)                                           # В корзине
 
