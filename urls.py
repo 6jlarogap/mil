@@ -27,11 +27,11 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    (r'^$', 'common.views.persons'),
-    (r'^persons/', 'common.views.persons'),
-    (r'^person/(?P<obj>.{36})/$', person),                                      # Карточка с захоронением
-    (r'^burials/', 'common.views.burials'),
-    (r'^burial/(?P<obj>.{36})/$', burial),                                      # Карточка с захоронением
+    url(r'^$', 'common.views.persons'),
+    url(r'^persons/', 'common.views.persons'),
+    url(r'^person/(?P<obj>.{36})/$', person),                                      # Карточка с захоронением
+    url(r'^burials/', 'common.views.burials'),
+    url(r'^burial/(?P<obj>.{36})/$', burial),                                      # Карточка с захоронением
 #    url(r'^accounts/login/$', login,                                           # Страница логина пользователя
 #        {'template_name': 'registration/login.html', 
 #         'authentication_form': LoginForm}, name='auth_login'),

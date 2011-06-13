@@ -8,16 +8,18 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Soul', 'soul@youmemory.org'),
+     ('Soul', 'soul@youmemory.org'),
 )
 
 MANAGERS = ADMINS
 
+SEND_BROKEN_LINK_EMAILS = True
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'mil',                      # Or path to database file if using sqlite3.
-        'USER': 'postgres',                      # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
@@ -47,14 +49,18 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
+
+# Формат даты
+DATE_INPUT_FORMATS=('%d.%m.%Y', '%d-%m-%Y', '%d/%m/%Y')
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = join(ROOT_PATH, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -92,13 +98,13 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'onixpauz!=fzxr@r1(4i&_awxbi+9h&%o8_zi4795w5)a*)wow'
+SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -124,11 +130,15 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'common',
-    # Uncomment the next line to enable the admin:
+    'mil.common',
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+#    'captcha',
+    'django_extensions',
+    'pytils',
+    'south',
+    'easy_thumbnails',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -153,3 +163,18 @@ LOGGING = {
         },
     }
 }
+
+# Конфигирация регистрации пользователей
+#ACCOUNT_ACTIVATION_DAYS = 2
+
+#AUTHENTICATION_BACKENDS = (
+#    'youmemory.common.emailauth.EmailBackend',
+#)
+LOGIN_REDIRECT_URL = '/'
+
+try:
+    from settings_local import *
+except ImportError:
+    pass
+
+

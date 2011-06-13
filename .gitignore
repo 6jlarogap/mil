@@ -4,5 +4,9 @@
 .tmp*
 tmp\.*
 .*
-django_extensions/
 !.gitignore
+settings_local.py
+media/photo/
+pip.log
+cemetery
+tmp
