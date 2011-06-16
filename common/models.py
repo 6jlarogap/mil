@@ -316,12 +316,12 @@ class BurialEditCause(models.Model):
     burial = models.ForeignKey(Burial)                                          # Связь с Воином
     name = models.CharField("Название документа", max_length=100)
     number = models.CharField("Номер документа", max_length=100)
-    date = models.DateField("Дата документа") 
+    date = models.DateField("Дата документа")
     def __unicode__(self):
         return self.name
     class Meta:
-        verbose_name = ('Основание для внесения изменения в захоронение')
-        verbose_name_plural = ('Основания для внесения изменения в захоронение')
+        verbose_name = ('Основание для внесения изменения')
+        verbose_name_plural = ('Основания для внесения изменения')
 
 class BurialPictures(Location):
     """Фотография захоронения
