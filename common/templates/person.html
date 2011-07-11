@@ -9,33 +9,18 @@
     Имя: {{ person.first_name }}<br>
     Отчество: {{ person.patronymic }}<br>
     Дата роджения: {{ person.birth_date }}<br>
-    Место рождения: {{ person.cemetery.country }}&nbsp; {{person.cemetery.region}}&nbsp; {{person.cemetery.city}}&nbsp; {{person.cemetery.street}}&nbsp; {{person.cemetery.house}}&nbsp; {{person.cemetery.block}}&nbsp; {{person.cemetery.building}}<br>
-    Дополнительная информация о месте рождения: {{ person.cemetery.name }}<br>
-    Место нахождения документов: {{ person.documents_place.name }}<br>
-    Источник информации: {{ person.information_source.name }}<br>
-    Категория погибшего: {{ person.death_category.name }}<br>
-    <table width="100%">
-        <thead>
-            <td>Место службы</td>
-            <td>Звание</td>
-            <td>Должность</td>
-            <td>Дата начала</td>
-            <td>Дата окончания</td>
-        </thead>
-    {% for pd in person.personduty_set.all %}
-        <tr>
-            <td>{{ pd.duty.name }}</td>
-            <td>{{ pd.rank.name }}</td>
-            <td>{{ pd.position.name }}</td>
-            <td>{{ pd.date_from }}</td>
-            <td>{{ pd.date_to }}</td>
-        </tr>
-    {% endfor %}
-    </table>
-    <br>
+    Место рождения: {{person.locationbirth}}<br>
+    Дополнительная информация о месте рождения: {{ person.info }}<br>
+    Место нахождения документов: {{ person.documents_place }}<br>
+    Источник информации: {{ person.information_source }}<br>
+    Категория погибшего: {{ person.deadman_category }}<br>
+    Место службы: {{person.personduty.unit}}<br>
+    Звание: {{person.personduty.rank}}<br>
+    Должность: {{person.personduty.post}}<br>
     Дата гибели: {{ person.death_date }}<br>
-    Причина гибели: {{ person.death_cause.name }}<br>
-    <table width="100%">
+    Причина гибели: {{ person.death_cause }}<br>
+    <br>
+    <table border="1" rules="rows" width="100%">
         <thead>
             <td>Номер захоронения</td>
             <td>Дата захоронения</td>
@@ -45,11 +30,11 @@
         </thead>
     {% for pb in person.personburial_set.all %}
         <tr>
-            <td>{{ pb.burial.passportid }}</td>
+            <td><a href="/burial/{{pb.burial.uuid}}">{{ pb.burial.passportid }}</a></td>
             <td>{{ pb.date_burried }}</td>
             <td>{{ pb.date_exhumated }}</td>
-            <td>{{ pb.burial.location.country }}&nbsp;{{ pb.burial.location.region }}&nbsp;{{ pb.burial.location.city }}</td>
-            <td>{{ pb.burial.additional_info }}</td>
+            <td>{{ pb.burial.locationburial }}</td>
+            <td>{{ pb.burial.info }}</td>
         </tr>
     {% endfor %}
     </table>

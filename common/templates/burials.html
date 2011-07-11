@@ -1,4 +1,21 @@
 {% extends "base.html" %}
+{% block scripts %}
+<link rel="stylesheet" href="http://yandex.st/jquery-ui/1.8.11/themes/humanity/jquery.ui.all.min.css"/>
+
+<script type="text/javascript" src="http://yandex.st/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.11/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.11/i18n/jquery.ui.datepicker-ru.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $( ".DateField" ).datepicker({
+			changeMonth: true,
+			changeYear: true,
+            dateFormat: 'dd.mm.yy',
+            yearRange: '1600:{% now "Y" %}'
+		});
+    })
+</script>
+{% endblock %}
 
 {% block title %}MIL.ORG - Поиск захоронений{% endblock %}
 
@@ -43,7 +60,7 @@
                     <td>{{ burial.date_discovered }}</td>
                     <td>{{ burial.date_closed }}</td>
                     <td>{{ burial.closure_cause.name }}</td>
-                    <td>{{ burial.location.country }}&nbsp;{{ burial.location.region }}&nbsp;{{ burial.location.city }}</td>
+                    <td>{{ burial.locationburial }}</td>
                     <td>{{ burial.burial_type.name }}</td>
                     <td>{{ burial.military_conflict.name }}</td>
                     <td>{{ burial.date_memorial }}</td>

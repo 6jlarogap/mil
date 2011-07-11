@@ -8,10 +8,10 @@ class GeoCountry(models.Model):
     """
     Страна.
     """
-    uuid = UUIDField(primary_key=True)
-    name = models.CharField("Название", max_length=24, db_index=True, unique=True)
+    obid = models.IntegerField(blank=True, null=True)
+    name = models.CharField("Название", max_length=36, db_index=True, unique=True)
     def __unicode__(self):
-        return self.name[:16]
+        return self.name
     class Meta:
         #managed = False
         #db_table = "common_country"
@@ -24,11 +24,11 @@ class GeoRegion(models.Model):
     """
     Регион.
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     country = models.ForeignKey(GeoCountry)
     name = models.CharField("Название", max_length=36, db_index=True)
     def __unicode__(self):
-        return self.name[:24]
+        return self.name
     class Meta:
         unique_together = (("country", "name"),)
         verbose_name = 'регион'
@@ -39,13 +39,12 @@ class GeoCity(models.Model):
     """
     Город.
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     region = models.ForeignKey(GeoRegion)
     name = models.CharField("Название", max_length=36, db_index=True)
     def __unicode__(self):
-        return self.name[:24]
+        return self.name
     class Meta:
-        unique_together = (("region", "name"),)
         verbose_name = 'населенный пункт'
         verbose_name_plural = 'населенные пункты'
 
@@ -54,7 +53,6 @@ class GeoStreet(models.Model):
     """
     Улица.
     """
-    uuid = UUIDField(primary_key=True)
     city = models.ForeignKey(GeoCity)  # Город.
     name = models.CharField(max_length=99, db_index=True)  # Название.
     class Meta:
@@ -69,40 +67,32 @@ class Location(models.Model):
     """
     Абстрактный адрес
     """
+    obid = models.IntegerField(blank=True, null=True)
     country = models.ForeignKey(GeoCountry, verbose_name="Страна", blank=True, null=True)       # Страна
     region = models.ForeignKey(GeoRegion, verbose_name="Регион", blank=True, null=True)         # Регион
     city = models.ForeignKey(GeoCity, verbose_name="Город", blank=True, null=True)              # Город
+    info = models.TextField("Дополнительная информация", blank=True, null=True)
     def __unicode__(self):
         ret = u"незаполненный адрес"
-        if self.country:
-            ret = self.country
-            if self.region:
-                ret = u'%s %s' % (ret, self.region)
-                if self.city:
-                    ret = u'%s %s' % (ret, self.city)
+        if self.city:
+            ret = self.city
+            if self.city.region:
+                ret = u'%s %s' % (self.city.region, ret)
+                if self.city.region.country:
+                    ret = u'%s %s' % (self.city.region.country, ret)
+        if self.info:
+            ret = u'%s %s' % (ret, self.info)
         return ret
     class Meta:
         abstract = True
         verbose_name = ('Адрес')
         verbose_name_plural = ('Адреса')
 
-class Rank(models.Model):
-    """
-    Воинское звание.
-    """
-    uuid = UUIDField(primary_key=True)
-    name = models.CharField("Звание", max_length=100)
-    def __unicode__(self):
-        return self.name
-    class Meta:
-        verbose_name = ('воинское звание')
-        verbose_name_plural = ('воинские звания')
-
 class DeathCause(models.Model):
     """
     Причина гибели
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     name = models.CharField("Причина гибели", max_length=100)
     def __unicode__(self):
         return self.name
@@ -114,9 +104,9 @@ class DeadmanCategory(models.Model):
     """
     Категория захороненного
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     name = models.CharField("Категория захороненного", max_length=100)
-    brief = models.CharField("Краткое название категории захороненных", max_length=100)
+    brief = models.CharField("Краткое название категории захороненных", max_length=100, blank=True, null=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -127,7 +117,6 @@ class DocumentsPlace(models.Model):
     """
     Место нахождения документов
     """
-    uuid = UUIDField(primary_key=True)
     name = models.CharField("Место нахождения документов", max_length=100)
     def __unicode__(self):
         return self.name
@@ -139,9 +128,9 @@ class BurialType(models.Model):
     """
     Тип воинского захоронения
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     name = models.CharField("Название типа захоронения", max_length=100)
-    brief = models.CharField("Краткое название типа воинского захоронения", max_length=100)
+    brief = models.CharField("Краткое название типа воинского захоронения", max_length=100, blank=True, null=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -152,7 +141,6 @@ class MilitaryConflictType(models.Model):
     """
     Тип военного конфликта
     """
-    uuid = UUIDField(primary_key=True)
     full = models.CharField("Полное название типа военного конфликта", max_length=100)
     brief = models.CharField("Краткое название типа военного конфликта", max_length=100)
     def __unicode__(self):
@@ -165,10 +153,10 @@ class MilitaryConflict(models.Model):
     """
     Военный конфликт
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     name = models.CharField("Название военного конфликта", max_length=100)
-    brief = models.CharField("Краткое название военного конфликта", max_length=100)
-    military_conflict_type = models.ForeignKey(MilitaryConflictType, blank=True, null=True)          # Тип военного конфликта
+    brief = models.CharField("Краткое название военного конфликта", max_length=100, blank=True, null=True)
+    type = models.ForeignKey(MilitaryConflictType, blank=True, null=True)          # Тип военного конфликта
     comment = models.TextField("Комментарий", blank=True, null=True)
     def __unicode__(self):
         return self.name
@@ -180,7 +168,7 @@ class InformationSource(models.Model):
     """
     Источники информации
     """
-    uuid = UUIDField(primary_key=True)
+    obid = models.IntegerField(blank=True, null=True)
     name = models.CharField("Источник информации", max_length=100)
     def __unicode__(self):
         return self.name
@@ -192,7 +180,6 @@ class ClosureCause(models.Model):
     """
     Причина закрытия захоронения
     """
-    uuid = UUIDField(primary_key=True)
     name = models.CharField("Причина закрытия захоронения", max_length=100)
     def __unicode__(self):
         return self.name
@@ -204,7 +191,6 @@ class Nationality(models.Model):
     """
     Национальность
     """
-    uuid = UUIDField(primary_key=True)
     name = models.CharField("Название", max_length=100)
     def __unicode__(self):
         return self.name
@@ -216,6 +202,8 @@ class Person(models.Model):
     """
     Человек.
     """
+    obid = models.IntegerField(blank=True, null=True)
+    oblocationid = models.IntegerField(blank=True, null=True)
     uuid = UUIDField(primary_key=True)
     last_name = models.CharField("Фамилия", max_length=128)                     # Фамилия
     first_name = models.CharField("Имя", max_length=30, blank=True)             # Имя
@@ -227,10 +215,10 @@ class Person(models.Model):
     deadman_category = models.ForeignKey(DeadmanCategory, blank=True, null=True)    # Категория погибшего
     documents_place = models.ForeignKey(DocumentsPlace, blank=True, null=True)   # Место нахождения документов
     information_source = models.ForeignKey(InformationSource, blank=True, null=True)   # Источник информации
+    info = models.TextField("Информация о месте жительства и родственниках", blank=True, null=True)
     creator = models.ForeignKey(User, blank=True, null=True)                    # Создатель записи
     date_of_creation = models.DateTimeField(auto_now_add=True)                  # Дата создания записи
     date_last_edit = models.DateTimeField(auto_now=True)                        # Дата последнего редактирования записи
-    additional_info = models.TextField("Информация о месте жительства и родственниках", blank=True, null=True)
     is_trash = models.BooleanField(default=False)                               # В корзине
     class Meta:
         ordering = ['last_name'] # Сортировка по фамилии
@@ -240,15 +228,78 @@ class Person(models.Model):
     def __unicode__(self):
         return u'%s' % self.last_name
 
+class MilitaryUnit(Location):
+    """
+    Воинское подразделение
+    """
+    name = models.CharField("Воинское подразделение", max_length=100)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        verbose_name = ('Воинское подразделение')
+        verbose_name_plural = ('Воинские подразделения')
+
+class PersonCall(models.Model):
+    """
+    Место призыва
+    """
+    person = models.OneToOneField(Person, primary_key=True)                      # Связь с воином
+    unit = models.ForeignKey(MilitaryUnit, blank=True, null=True)                  # Воинское подразделение
+    date = models.DateField("Дата призыва", blank=True, null=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.duty.name)
+    class Meta:
+        verbose_name = ('Место призыва')
+
+class Post(models.Model):
+    """
+    Должность
+    """
+    name = models.CharField("Должность", max_length=100)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        verbose_name = ('Должность')
+        verbose_name_plural = ('Должности')
+
+class Rank(models.Model):
+    """
+    Воинское звание.
+    """
+    obid = models.IntegerField(blank=True, null=True)
+    name = models.CharField("Звание", max_length=100)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        verbose_name = ('воинское звание')
+        verbose_name_plural = ('воинские звания')
+
+class PersonDuty(models.Model):
+    """
+    Место службы
+    """
+    person = models.OneToOneField(Person, primary_key=True)                      # Связь с воином
+    unit = models.ForeignKey(MilitaryUnit, blank=True, null=True)                  # Воинское подразделение
+    rank = models.ForeignKey(Rank, blank=True, null=True)                       # Звание
+    post = models.ForeignKey(Post, blank=True, null=True)                       # Должность
+#    date_from = models.DateField("Дата начала службы", blank=True, null=True)
+#    date_to = models.DateField("Дата окончания службы", blank=True, null=True)
+
+    def __unicode__(self):
+        return u'%s %s %s' % (self.rank, self.post, self.unit)
+    class Meta:
+        verbose_name = ('История службы')
+
 class PersonEditCause(models.Model):
     """
     Основание для редактирования Воина
     """
-    uuid = UUIDField(primary_key=True)
     person = models.ForeignKey(Person)                                          # Связь с Воином
     name = models.CharField("Название документа", max_length=100)
     number = models.CharField("Номер документа", max_length=100)
     date = models.DateField("Дата документа") 
+    date_edit = models.DateTimeField(auto_now=True)                             # Дата последнего редактирования записи
     def __unicode__(self):
         return self.name
     class Meta:
@@ -259,7 +310,6 @@ class PersonInformationLinks(models.Model):
     """
     Ссылка на другие информационные источники
     """
-    uuid = UUIDField(primary_key=True)
     person = models.ForeignKey(Person)                                          # Связь с Воином
     link = models.URLField("Ссылка", max_length=100)
     def __unicode__(self):
@@ -281,22 +331,25 @@ class Burial(models.Model):
     """
     Захоронение
     """
+    obid = models.IntegerField(blank=True, null=True)
+    oblocationid = models.IntegerField(blank=True, null=True)
     uuid = UUIDField(primary_key=True)
     persons = models.ManyToManyField(Person, through='PersonBurial')
     passportid = models.CharField("Номер паспорта захоронения",  blank=True, null=True, max_length=128)
     date_passport = models.DateField("Дата создания паспорта", blank=True, null=True)
-    date_burried = models.DateField("Дата захоронения", blank=True, null=True)
+    date_burried = models.DateField("Дата создания захоронения", blank=True, null=True)
     date_discovered = models.DateField("Дата обнаружения", blank=True, null=True)
     burial_type = models.ForeignKey(BurialType, blank=True, null=True)                      # Тип воинского захоронения
     military_conflict = models.ForeignKey(MilitaryConflict, blank=True, null=True)          # Военный конфликт
     date_memorial = models.DateField("Дата установки памятника", blank=True, null=True)
     date_gosznak = models.DateField("Дата установки госзнака", blank=True, null=True)
-    unknown_count = models.FloatField("Количество неизвестных захороненных", blank=True, null=True)
-    foto = models.FileField(upload_to="bfiles", blank=True, null=True)                      # Ссылка на фотографию
+    qunknown = models.IntegerField("Количество неизвестных захороненных", blank=True, null=True)
+    photo = models.ImageField("Фото", upload_to="bpics", null=True)
+    scheme = models.ImageField("Схема", upload_to="bpics", null=True)
     creator = models.ForeignKey(User, blank=True, null=True)                                # Создатель записи
     date_of_creation = models.DateTimeField(auto_now_add=True)                              # Дата создания записи
     date_last_edit = models.DateTimeField(auto_now=True)                                    # Дата последнего изменения
-    additional_info = models.TextField(blank=True, null=True)                               # Дополнительная информация о захоронении.
+    info = models.TextField(blank=True, null=True)                               # Дополнительная информация о захоронении.
     is_trash = models.BooleanField(default=False)                                           # В корзине
 
     def __unicode__(self):
@@ -308,11 +361,31 @@ class Burial(models.Model):
         verbose_name = ('Захоронение')
         verbose_name_plural = ('Захоронения')
 
+class PersonBurial(models.Model):
+    """
+    Захоронение военнослужащего
+    """
+    person = models.ForeignKey(Person)                                          # Персона.
+    burial = models.ForeignKey(Burial)                                          # Захоронение.
+    date_burried = models.DateField("Дата захоронения", blank=True, null=True)
+#    date_exhumated = models.DateField("Дата эксгумации", blank=True, null=True)
+    bnamed = models.BooleanField("Признак нанесения имени на надмогильное сооружение")
+
+    def __unicode__(self):
+        if self.burial.passportid:
+            return u'%s - %s' % (self.person.last_name, self.burial.passportid)
+        else:
+            return u'%s захоронение без паспорта' % self.person.last_name
+
+    class Meta:
+        verbose_name = ('Захоронения военнослужащего')
+        verbose_name_plural = ('Захоронения военнослужащих')
+        unique_together = (("person", "burial"),)
+
 class BurialEditCause(models.Model):
     """
     Основание для внесения изменения
     """
-    uuid = UUIDField(primary_key=True)
     burial = models.ForeignKey(Burial)                                          # Связь с Воином
     name = models.CharField("Название документа", max_length=100)
     number = models.CharField("Номер документа", max_length=100)
@@ -323,12 +396,12 @@ class BurialEditCause(models.Model):
         verbose_name = ('Основание для внесения изменения')
         verbose_name_plural = ('Основания для внесения изменения')
 
-class BurialPictures(Location):
+class BurialPictures(models.Model):
     """Фотография захоронения
     """
-    uuid = UUIDField(primary_key=True)
     burial = models.ForeignKey('Burial')
     photo = models.ImageField("Фото", upload_to="bpics", null=True)
+    comment = models.TextField(blank=True, null=True)                               # Дополнительная информация
 
     def __unicode__(self):
         return self.photo and os.path.basename(self.photo.path) or 'empty pic'
@@ -340,7 +413,6 @@ class BurialInformationLinks(models.Model):
     """
     Ссылка на другие информационные источники
     """
-    uuid = UUIDField(primary_key=True)
     burial = models.ForeignKey(Burial)                                          # Связь с Захоронением
     link = models.URLField("Ссылка", max_length=100)
     def __unicode__(self):
@@ -353,7 +425,6 @@ class SearchObject(models.Model):
     """
     Поисковый объект
     """
-    uuid = UUIDField(primary_key=True)
     number = models.CharField("Номер поискового объекта", max_length=100)               # Номер поискового объекта
     date = models.DateField("Дата отработки", blank=True, null=True)                    # Дата отработки
     inv_number = models.CharField("Номер поискового дела", max_length=100)              # Номер поискового объекта
@@ -365,12 +436,12 @@ class SearchObject(models.Model):
         verbose_name = ('Поисковый объект')
         verbose_name_plural = ('Поисковые объекты')
 
-class ClosedBurial(Location):
+class ClosedBurial(models.Model):
     """
     Входящие захоронения.
     """
     burial = models.OneToOneField(Burial, primary_key=True)                                 # Куда осуществлен перенос
-    burial_from = models.ForeignKey(Burial, related_name="burial_from")                                                 # откуда
+    burial_from = models.ForeignKey(Burial, related_name="burial_from")                     # откуда
     date = models.DateField("Дата закрытия")
     cause = models.ForeignKey(ClosureCause)                                                 # Причина перезахоронения
     class Meta:
@@ -392,70 +463,13 @@ class LocationBurial(Location):
         verbose_name = ('Адрес захоронения')
         verbose_name_plural = ('Адрес захоронения')
 
-class Duty(models.Model):
-    """
-    Место службы
-    """
-    uuid = UUIDField(primary_key=True)
-    name = models.CharField("Место службы", max_length=100)
-    persons = models.ManyToManyField(Person, through='PersonDuty')
     def __unicode__(self):
-        return self.name
-    class Meta:
-        verbose_name = ('место службы')
-        verbose_name_plural = ('места службы')
-
-class PersonBurial(models.Model):
-    """
-    Захоронение военнослужащего
-    """
-    uuid = UUIDField(primary_key=True)
-    person = models.ForeignKey(Person)                                          # Персона.
-    burial = models.ForeignKey(Burial)                                          # Захоронение.
-    date_burried = models.DateField("Дата захоронения", blank=True, null=True)
-    date_exhumated = models.DateField("Дата эксгумации", blank=True, null=True)
-    bnameonmemorial = models.BooleanField("Признак нанесения имени на надмогильное сооружение")
-
-    def __unicode__(self):
-        if self.burial.passportid:
-            return u'%s - %s' % (self.person.last_name, self.burial.passportid)
-        else:
-            return u'%s захоронение без паспорта' % self.person.last_name
-
-    class Meta:
-        verbose_name = ('Захоронения военнослужащего')
-        verbose_name_plural = ('Захоронения военнослужащих')
-        unique_together = (("person", "burial"),)
-
-class PersonDuty(models.Model):
-    """
-    История службы
-    """
-    uuid = UUIDField(primary_key=True)
-    person = models.ForeignKey(Person)                                          # Персона.
-    rank = models.ForeignKey(Rank)                                              # Звание.
-    duty = models.ForeignKey(Duty)                                              # Место службы.
-    date_from = models.DateField("Дата начала службы", blank=True, null=True)
-    date_to = models.DateField("Дата окончания службы", blank=True, null=True)
-
-    def __unicode__(self):
-        return u'%s %s %s' % (self.rank.name, self.person.last_name, self.duty.name)
-    class Meta:
-        verbose_name = ('История службы')
-        verbose_name_plural = ('Истории службы')
-
-class LocationDuty(Location):
-    """
-    Адрес места службы
-    """
-    duty = models.OneToOneField(PersonDuty, primary_key=True)
-
-    post_index = models.CharField("Почтовый индекс", max_length=16, blank=True)                 # Индекс.
-    street = models.ForeignKey(GeoStreet, verbose_name="Улица", blank=True, null=True)          # Улица.
-    house = models.CharField("Дом", max_length=16, blank=True)                                  # Дом.
-    block = models.CharField("Корпус", max_length=16, blank=True)                               # Корпус.
-    building = models.CharField("Строение", max_length=16, blank=True)                          # Строение.
-    class Meta:
-        verbose_name = ('Адрес места службы')
-        verbose_name_plural = ('Адрес места службы')
+        ret = super(LocationBurial, self).__unicode__()
+        if self.street:
+            ret = u'%s, %s' % (ret, self.street)
+            if self.house:
+                ret = u'%s, %s' % (ret, self.house)
+        if self.post_index:
+            ret = u'%s, %s' % (self.post_index, ret)
+        return ret
 

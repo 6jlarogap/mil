@@ -10,14 +10,16 @@ class Migration(SchemaMigration):
         
         # Adding model 'GeoCountry'
         db.create_table('common_geocountry', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=24, db_index=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=36, db_index=True)),
         ))
         db.send_create_signal('common', ['GeoCountry'])
 
         # Adding model 'GeoRegion'
         db.create_table('common_georegion', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=36, db_index=True)),
         ))
@@ -28,18 +30,16 @@ class Migration(SchemaMigration):
 
         # Adding model 'GeoCity'
         db.create_table('common_geocity', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=36, db_index=True)),
         ))
         db.send_create_signal('common', ['GeoCity'])
 
-        # Adding unique constraint on 'GeoCity', fields ['region', 'name']
-        db.create_unique('common_geocity', ['region_id', 'name'])
-
         # Adding model 'GeoStreet'
         db.create_table('common_geostreet', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=99, db_index=True)),
         ))
@@ -50,42 +50,48 @@ class Migration(SchemaMigration):
 
         # Adding model 'Rank'
         db.create_table('common_rank', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('common', ['Rank'])
 
         # Adding model 'DeathCause'
         db.create_table('common_deathcause', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('common', ['DeathCause'])
 
         # Adding model 'DeadmanCategory'
         db.create_table('common_deadmancategory', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('brief', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
         ))
         db.send_create_signal('common', ['DeadmanCategory'])
 
         # Adding model 'DocumentsPlace'
         db.create_table('common_documentsplace', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('common', ['DocumentsPlace'])
 
         # Adding model 'BurialType'
         db.create_table('common_burialtype', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('brief', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
         ))
         db.send_create_signal('common', ['BurialType'])
 
         # Adding model 'MilitaryConflictType'
         db.create_table('common_militaryconflicttype', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('full', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('brief', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
@@ -93,36 +99,59 @@ class Migration(SchemaMigration):
 
         # Adding model 'MilitaryConflict'
         db.create_table('common_militaryconflict', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('brief', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('brief', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
             ('military_conflict_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.MilitaryConflictType'], null=True, blank=True)),
+            ('comment', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
         db.send_create_signal('common', ['MilitaryConflict'])
 
         # Adding model 'InformationSource'
         db.create_table('common_informationsource', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('common', ['InformationSource'])
 
         # Adding model 'ClosureCause'
         db.create_table('common_closurecause', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('common', ['ClosureCause'])
 
         # Adding model 'Nationality'
         db.create_table('common_nationality', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal('common', ['Nationality'])
 
+        # Adding model 'Post'
+        db.create_table('common_post', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal('common', ['Post'])
+
+        # Adding model 'MilitaryUnit'
+        db.create_table('common_militaryunit', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'], null=True, blank=True)),
+            ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'], null=True, blank=True)),
+            ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'], null=True, blank=True)),
+            ('info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal('common', ['MilitaryUnit'])
+
         # Adding model 'Person'
         db.create_table('common_person', (
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
             ('last_name', self.gf('django.db.models.fields.CharField')(max_length=128)),
             ('first_name', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
@@ -134,27 +163,45 @@ class Migration(SchemaMigration):
             ('deadman_category', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.DeadmanCategory'], null=True, blank=True)),
             ('documents_place', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.DocumentsPlace'], null=True, blank=True)),
             ('information_source', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.InformationSource'], null=True, blank=True)),
+            ('additional_info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('creator', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
             ('date_of_creation', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('date_last_edit', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('additional_info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('is_trash', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('common', ['Person'])
 
+        # Adding model 'PersonCall'
+        db.create_table('common_personcall', (
+            ('person_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.Person'], unique=True, primary_key=True)),
+            ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.MilitaryUnit'], null=True, blank=True)),
+            ('date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+        ))
+        db.send_create_signal('common', ['PersonCall'])
+
+        # Adding model 'PersonDuty'
+        db.create_table('common_personduty', (
+            ('person_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.Person'], unique=True, primary_key=True)),
+            ('unit', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.MilitaryUnit'], null=True, blank=True)),
+            ('rank', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Rank'], null=True, blank=True)),
+            ('post', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Post'], null=True, blank=True)),
+        ))
+        db.send_create_signal('common', ['PersonDuty'])
+
         # Adding model 'PersonEditCause'
         db.create_table('common_personeditcause', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Person'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('number', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('date', self.gf('django.db.models.fields.DateField')()),
+            ('date_edit', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
         db.send_create_signal('common', ['PersonEditCause'])
 
         # Adding model 'PersonInformationLinks'
         db.create_table('common_personinformationlinks', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Person'])),
             ('link', self.gf('django.db.models.fields.URLField')(max_length=100)),
         ))
@@ -162,15 +209,18 @@ class Migration(SchemaMigration):
 
         # Adding model 'LocationBirth'
         db.create_table('common_locationbirth', (
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'], null=True, blank=True)),
             ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'], null=True, blank=True)),
             ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'], null=True, blank=True)),
+            ('info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('person', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.Person'], unique=True, primary_key=True)),
         ))
         db.send_create_signal('common', ['LocationBirth'])
 
         # Adding model 'Burial'
         db.create_table('common_burial', (
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
             ('passportid', self.gf('django.db.models.fields.CharField')(max_length=128, null=True, blank=True)),
             ('date_passport', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
@@ -180,19 +230,34 @@ class Migration(SchemaMigration):
             ('military_conflict', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.MilitaryConflict'], null=True, blank=True)),
             ('date_memorial', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('date_gosznak', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('unknown_count', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('foto', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True, blank=True)),
+            ('qunknown', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('photo', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True)),
+            ('scheme', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True)),
             ('creator', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
             ('date_of_creation', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('date_last_edit', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('additional_info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('is_trash', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('common', ['Burial'])
 
+        # Adding model 'PersonBurial'
+        db.create_table('common_personburial', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Person'])),
+            ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Burial'])),
+            ('date_burried', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('date_exhumated', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('bnamed', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal('common', ['PersonBurial'])
+
+        # Adding unique constraint on 'PersonBurial', fields ['person', 'burial']
+        db.create_unique('common_personburial', ['person_id', 'burial_id'])
+
         # Adding model 'BurialEditCause'
         db.create_table('common_burialeditcause', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Burial'])),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('number', self.gf('django.db.models.fields.CharField')(max_length=100)),
@@ -202,10 +267,7 @@ class Migration(SchemaMigration):
 
         # Adding model 'BurialPictures'
         db.create_table('common_burialpictures', (
-            ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'], null=True, blank=True)),
-            ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'], null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'], null=True, blank=True)),
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Burial'])),
             ('photo', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True)),
         ))
@@ -213,7 +275,7 @@ class Migration(SchemaMigration):
 
         # Adding model 'BurialInformationLinks'
         db.create_table('common_burialinformationlinks', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Burial'])),
             ('link', self.gf('django.db.models.fields.URLField')(max_length=100)),
         ))
@@ -221,7 +283,7 @@ class Migration(SchemaMigration):
 
         # Adding model 'SearchObject'
         db.create_table('common_searchobject', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('number', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
             ('inv_number', self.gf('django.db.models.fields.CharField')(max_length=100)),
@@ -232,9 +294,6 @@ class Migration(SchemaMigration):
 
         # Adding model 'ClosedBurial'
         db.create_table('common_closedburial', (
-            ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'], null=True, blank=True)),
-            ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'], null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'], null=True, blank=True)),
             ('burial', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.Burial'], unique=True, primary_key=True)),
             ('burial_from', self.gf('django.db.models.fields.related.ForeignKey')(related_name='burial_from', to=orm['common.Burial'])),
             ('date', self.gf('django.db.models.fields.DateField')()),
@@ -244,9 +303,11 @@ class Migration(SchemaMigration):
 
         # Adding model 'LocationBurial'
         db.create_table('common_locationburial', (
+            ('obid', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'], null=True, blank=True)),
             ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'], null=True, blank=True)),
             ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'], null=True, blank=True)),
+            ('info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('burial', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.Burial'], unique=True, primary_key=True)),
             ('post_index', self.gf('django.db.models.fields.CharField')(max_length=16, blank=True)),
             ('street', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoStreet'], null=True, blank=True)),
@@ -257,52 +318,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('common', ['LocationBurial'])
 
-        # Adding model 'Duty'
-        db.create_table('common_duty', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-        ))
-        db.send_create_signal('common', ['Duty'])
-
-        # Adding model 'PersonBurial'
-        db.create_table('common_personburial', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Person'])),
-            ('burial', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Burial'])),
-            ('date_burried', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('date_exhumated', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('bnameonmemorial', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal('common', ['PersonBurial'])
-
-        # Adding unique constraint on 'PersonBurial', fields ['person', 'burial']
-        db.create_unique('common_personburial', ['person_id', 'burial_id'])
-
-        # Adding model 'PersonDuty'
-        db.create_table('common_personduty', (
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=36, primary_key=True)),
-            ('person', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Person'])),
-            ('rank', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Rank'])),
-            ('duty', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.Duty'])),
-            ('date_from', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-            ('date_to', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
-        ))
-        db.send_create_signal('common', ['PersonDuty'])
-
-        # Adding model 'LocationDuty'
-        db.create_table('common_locationduty', (
-            ('country', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCountry'], null=True, blank=True)),
-            ('region', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoRegion'], null=True, blank=True)),
-            ('city', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoCity'], null=True, blank=True)),
-            ('duty', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['common.PersonDuty'], unique=True, primary_key=True)),
-            ('post_index', self.gf('django.db.models.fields.CharField')(max_length=16, blank=True)),
-            ('street', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['common.GeoStreet'], null=True, blank=True)),
-            ('house', self.gf('django.db.models.fields.CharField')(max_length=16, blank=True)),
-            ('block', self.gf('django.db.models.fields.CharField')(max_length=16, blank=True)),
-            ('building', self.gf('django.db.models.fields.CharField')(max_length=16, blank=True)),
-        ))
-        db.send_create_signal('common', ['LocationDuty'])
-
 
     def backwards(self, orm):
         
@@ -311,9 +326,6 @@ class Migration(SchemaMigration):
 
         # Removing unique constraint on 'GeoStreet', fields ['city', 'name']
         db.delete_unique('common_geostreet', ['city_id', 'name'])
-
-        # Removing unique constraint on 'GeoCity', fields ['region', 'name']
-        db.delete_unique('common_geocity', ['region_id', 'name'])
 
         # Removing unique constraint on 'GeoRegion', fields ['country', 'name']
         db.delete_unique('common_georegion', ['country_id', 'name'])
@@ -360,8 +372,20 @@ class Migration(SchemaMigration):
         # Deleting model 'Nationality'
         db.delete_table('common_nationality')
 
+        # Deleting model 'Post'
+        db.delete_table('common_post')
+
+        # Deleting model 'MilitaryUnit'
+        db.delete_table('common_militaryunit')
+
         # Deleting model 'Person'
         db.delete_table('common_person')
+
+        # Deleting model 'PersonCall'
+        db.delete_table('common_personcall')
+
+        # Deleting model 'PersonDuty'
+        db.delete_table('common_personduty')
 
         # Deleting model 'PersonEditCause'
         db.delete_table('common_personeditcause')
@@ -374,6 +398,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'Burial'
         db.delete_table('common_burial')
+
+        # Deleting model 'PersonBurial'
+        db.delete_table('common_personburial')
 
         # Deleting model 'BurialEditCause'
         db.delete_table('common_burialeditcause')
@@ -392,18 +419,6 @@ class Migration(SchemaMigration):
 
         # Deleting model 'LocationBurial'
         db.delete_table('common_locationburial')
-
-        # Deleting model 'Duty'
-        db.delete_table('common_duty')
-
-        # Deleting model 'PersonBurial'
-        db.delete_table('common_personburial')
-
-        # Deleting model 'PersonDuty'
-        db.delete_table('common_personduty')
-
-        # Deleting model 'LocationDuty'
-        db.delete_table('common_locationduty')
 
 
     models = {
@@ -438,7 +453,6 @@ class Migration(SchemaMigration):
         },
         'common.burial': {
             'Meta': {'object_name': 'Burial'},
-            'additional_info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'burial_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.BurialType']", 'null': 'True', 'blank': 'True'}),
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'date_burried': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -448,110 +462,112 @@ class Migration(SchemaMigration):
             'date_memorial': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'date_of_creation': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'date_passport': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'foto': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'is_trash': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'military_conflict': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.MilitaryConflict']", 'null': 'True', 'blank': 'True'}),
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'passportid': ('django.db.models.fields.CharField', [], {'max_length': '128', 'null': 'True', 'blank': 'True'}),
             'persons': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['common.Person']", 'through': "orm['common.PersonBurial']", 'symmetrical': 'False'}),
-            'unknown_count': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'photo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True'}),
+            'qunknown': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
+            'scheme': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True'}),
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
         },
         'common.burialeditcause': {
             'Meta': {'object_name': 'BurialEditCause'},
             'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Burial']"}),
             'date': ('django.db.models.fields.DateField', [], {}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'number': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'number': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'common.burialinformationlinks': {
             'Meta': {'object_name': 'BurialInformationLinks'},
             'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Burial']"}),
-            'link': ('django.db.models.fields.URLField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'link': ('django.db.models.fields.URLField', [], {'max_length': '100'})
         },
         'common.burialpictures': {
             'Meta': {'object_name': 'BurialPictures'},
             'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Burial']"}),
-            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCity']", 'null': 'True', 'blank': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCountry']", 'null': 'True', 'blank': 'True'}),
-            'photo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True'}),
-            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']", 'null': 'True', 'blank': 'True'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'photo': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True'})
         },
         'common.burialtype': {
             'Meta': {'object_name': 'BurialType'},
+            'brief': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.closedburial': {
             'Meta': {'object_name': 'ClosedBurial'},
             'burial': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['common.Burial']", 'unique': 'True', 'primary_key': 'True'}),
             'burial_from': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'burial_from'", 'to': "orm['common.Burial']"}),
             'cause': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.ClosureCause']"}),
-            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCity']", 'null': 'True', 'blank': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCountry']", 'null': 'True', 'blank': 'True'}),
-            'date': ('django.db.models.fields.DateField', [], {}),
-            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']", 'null': 'True', 'blank': 'True'})
+            'date': ('django.db.models.fields.DateField', [], {})
         },
         'common.closurecause': {
             'Meta': {'object_name': 'ClosureCause'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'common.deadmancategory': {
             'Meta': {'object_name': 'DeadmanCategory'},
+            'brief': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.deathcause': {
             'Meta': {'object_name': 'DeathCause'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.documentsplace': {
             'Meta': {'object_name': 'DocumentsPlace'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
-        },
-        'common.duty': {
-            'Meta': {'object_name': 'Duty'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'persons': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['common.Person']", 'through': "orm['common.PersonDuty']", 'symmetrical': 'False'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'common.geocity': {
-            'Meta': {'unique_together': "(('region', 'name'),)", 'object_name': 'GeoCity'},
+            'Meta': {'object_name': 'GeoCity'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '36', 'db_index': 'True'}),
-            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']"})
         },
         'common.geocountry': {
             'Meta': {'ordering': "['name']", 'object_name': 'GeoCountry'},
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '24', 'db_index': 'True'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '36', 'db_index': 'True'}),
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.georegion': {
             'Meta': {'unique_together': "(('country', 'name'),)", 'object_name': 'GeoRegion'},
             'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCountry']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '36', 'db_index': 'True'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.geostreet': {
             'Meta': {'ordering': "['city', 'name']", 'unique_together': "(('city', 'name'),)", 'object_name': 'GeoStreet'},
             'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCity']"}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '99', 'db_index': 'True'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '99', 'db_index': 'True'})
         },
         'common.informationsource': {
             'Meta': {'object_name': 'InformationSource'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.locationbirth': {
             'Meta': {'object_name': 'LocationBirth'},
             'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCity']", 'null': 'True', 'blank': 'True'}),
             'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCountry']", 'null': 'True', 'blank': 'True'}),
+            'info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'person': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['common.Person']", 'unique': 'True', 'primary_key': 'True'}),
             'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']", 'null': 'True', 'blank': 'True'})
         },
@@ -564,39 +580,41 @@ class Migration(SchemaMigration):
             'gps_y': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'gps_z': ('django.db.models.fields.FloatField', [], {'null': 'True', 'blank': 'True'}),
             'house': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
-            'post_index': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
-            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']", 'null': 'True', 'blank': 'True'}),
-            'street': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoStreet']", 'null': 'True', 'blank': 'True'})
-        },
-        'common.locationduty': {
-            'Meta': {'object_name': 'LocationDuty'},
-            'block': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
-            'building': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
-            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCity']", 'null': 'True', 'blank': 'True'}),
-            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCountry']", 'null': 'True', 'blank': 'True'}),
-            'duty': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['common.PersonDuty']", 'unique': 'True', 'primary_key': 'True'}),
-            'house': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
+            'info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'post_index': ('django.db.models.fields.CharField', [], {'max_length': '16', 'blank': 'True'}),
             'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']", 'null': 'True', 'blank': 'True'}),
             'street': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoStreet']", 'null': 'True', 'blank': 'True'})
         },
         'common.militaryconflict': {
             'Meta': {'object_name': 'MilitaryConflict'},
-            'brief': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'brief': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'comment': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'military_conflict_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.MilitaryConflictType']", 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.militaryconflicttype': {
             'Meta': {'object_name': 'MilitaryConflictType'},
             'brief': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'full': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
+        'common.militaryunit': {
+            'Meta': {'object_name': 'MilitaryUnit'},
+            'city': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCity']", 'null': 'True', 'blank': 'True'}),
+            'country': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoCountry']", 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'region': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.GeoRegion']", 'null': 'True', 'blank': 'True'})
         },
         'common.nationality': {
             'Meta': {'object_name': 'Nationality'},
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'common.person': {
             'Meta': {'ordering': "['last_name']", 'object_name': 'Person'},
@@ -614,54 +632,66 @@ class Migration(SchemaMigration):
             'is_trash': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'nationality': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Nationality']", 'null': 'True', 'blank': 'True'}),
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'patronymic': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
         },
         'common.personburial': {
             'Meta': {'unique_together': "(('person', 'burial'),)", 'object_name': 'PersonBurial'},
-            'bnameonmemorial': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'bnamed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'burial': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Burial']"}),
             'date_burried': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'date_exhumated': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"})
+        },
+        'common.personcall': {
+            'Meta': {'ordering': "['last_name']", 'object_name': 'PersonCall', '_ormbases': ['common.Person']},
+            'date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'person_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['common.Person']", 'unique': 'True', 'primary_key': 'True'}),
+            'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.MilitaryUnit']", 'null': 'True', 'blank': 'True'})
         },
         'common.personduty': {
-            'Meta': {'object_name': 'PersonDuty'},
-            'date_from': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'date_to': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
-            'duty': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Duty']"}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"}),
-            'rank': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Rank']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'Meta': {'ordering': "['last_name']", 'object_name': 'PersonDuty', '_ormbases': ['common.Person']},
+            'person_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['common.Person']", 'unique': 'True', 'primary_key': 'True'}),
+            'post': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Post']", 'null': 'True', 'blank': 'True'}),
+            'rank': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Rank']", 'null': 'True', 'blank': 'True'}),
+            'unit': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.MilitaryUnit']", 'null': 'True', 'blank': 'True'})
         },
         'common.personeditcause': {
             'Meta': {'object_name': 'PersonEditCause'},
             'date': ('django.db.models.fields.DateField', [], {}),
+            'date_edit': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"})
         },
         'common.personinformationlinks': {
             'Meta': {'object_name': 'PersonInformationLinks'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'link': ('django.db.models.fields.URLField', [], {'max_length': '100'}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'person': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['common.Person']"})
+        },
+        'common.post': {
+            'Meta': {'object_name': 'Post'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'common.rank': {
             'Meta': {'object_name': 'Rank'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'obid': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         'common.searchobject': {
             'Meta': {'object_name': 'SearchObject'},
             'burial': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['common.Burial']", 'unique': 'True'}),
             'date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'inv_number': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'link': ('django.db.models.fields.URLField', [], {'max_length': '100'}),
-            'number': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '36', 'primary_key': 'True'})
+            'number': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},

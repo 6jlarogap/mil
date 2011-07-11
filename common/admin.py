@@ -3,10 +3,6 @@
 from django.contrib import admin
 from common.models import *
 
-
-class LocationDutyInLine(admin.TabularInline):
-    model = LocationDuty
-
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
     extra = 1
@@ -38,25 +34,19 @@ class PersonAdmin(admin.ModelAdmin):
 
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
-        PersonBurialInline,
+#        PersonBurialInline,
         LocationBurialInLine,
         ClosedBurialInLine,
         ClosedInBurialInLine,
     ]
     search_fields = ['passportid']
 
-class DutyAdmin(admin.ModelAdmin):
-    inlines = [
-        PersonDutyInline,
-    ]
-
 admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
 admin.site.register(GeoCity)
 admin.site.register(GeoStreet)
-#admin.site.register(Location)
 admin.site.register(Rank)
-admin.site.register(Duty, DutyAdmin)
+admin.site.register(MilitaryUnit)
 admin.site.register(DeathCause)
 admin.site.register(DeadmanCategory)
 admin.site.register(DocumentsPlace)
@@ -66,7 +56,7 @@ admin.site.register(MilitaryConflict)
 admin.site.register(ClosureCause)
 admin.site.register(Burial, BurialAdmin)
 admin.site.register(Person, PersonAdmin)
-admin.site.register(PersonBurial)
-admin.site.register(PersonDuty)
+#admin.site.register(PersonBurial)
+#admin.site.register(PersonDuty)
 admin.site.register(InformationSource)
 
