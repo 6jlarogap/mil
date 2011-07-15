@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'pytils',
     'south',
     'easy_thumbnails',
+    'smart_selects'
 )
 
 # A sample logging configuration. The only tangible logging

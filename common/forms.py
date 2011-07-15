@@ -7,6 +7,8 @@ from common.models import *
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.conf import settings
+
+from smart_selects.form_fields import ChainedModelChoiceField
 #from registration.models import RegistrationProfile
 
 #from contact_form.forms import ContactForm
@@ -77,32 +79,28 @@ class PersonsForm(forms.Form):
             if isinstance(self.fields[k], forms.DateField):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
 
-class BurialsForm(forms.Form):
+class BurialsForm(forms.ModelForm):
     """Форма поиска захоронений.
     """
+    
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
     bemptypassport = forms.BooleanField(required=False, label="Показать без паспорта")
-    passport_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата паспортизации c')
-    passport_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата паспортизации по')
+#    passport_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата паспортизации c')
+#    passport_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата паспортизации по')
     burried_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения c')
     burried_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения по')
-    discovered_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата обнаружения c')
-    discovered_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата обнаружения по')
-    closure_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата закрытия c')
-    closure_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата закрытия по')
-    closure_cause = forms.ModelChoiceField(queryset=ClosureCause.objects.all(), required=False, label="Причина перезахоронения")
-    city = forms.CharField(required=False, max_length=36, label="Нас. пункт",
-                           widget=forms.TextInput(attrs={"tabindex": "15"}))
-    region = forms.CharField(required=False, max_length=36, label="Регион",
-                             widget=forms.TextInput(attrs={"tabindex": "16"}))
-    country = forms.CharField(required=False, max_length=24, label="Страна",
-                              widget=forms.TextInput(attrs={"tabindex": "17"}))
+#    discovered_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата обнаружения c')
+#    discovered_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата обнаружения по')
+#    closure_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата закрытия c')
+#    closure_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата закрытия по')
+#    closure_cause = forms.ModelChoiceField(queryset=ClosureCause.objects.all(), required=False, label="Причина перезахоронения")
+    
     burial_type = forms.ModelChoiceField(queryset=BurialType.objects.all(), required=False, label="Тип захоронения")
     military_conflict = forms.ModelChoiceField(queryset=MilitaryConflict.objects.all(), required=False, label="Военный конфликт")
-    memorial_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки памятника c')
-    memorial_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки памятника по')
-    gosznak_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки госзнака c')
-    gosznak_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки госзнака по')
+#    memorial_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки памятника c')
+#    memorial_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки памятника по')
+#    gosznak_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки госзнака c')
+#    gosznak_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата установки госзнака по')
 #    creator = forms.CharField(required=False, max_length=128, label="Создатель записи ")
 #    creation_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата создания записи c')
 #    creation_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата создания записи по')
@@ -116,3 +114,7 @@ class BurialsForm(forms.Form):
         for k in self.fields:
             if isinstance(self.fields[k], forms.DateField):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
+    class Meta:
+        model = LocationBurial
+        fields = ['country', 'region', 'city']
+

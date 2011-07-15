@@ -181,24 +181,6 @@ def burials(request):
                     burials = burials.filter(passportid = u'')
                 else:
                     burials = burials.exclude(passportid = u'')
-                if cd['passport_date_from']:
-                    burials = burials.filter(date_passport__gte = cd['passport_date_from'])
-                if cd['passport_date_to']:
-                    burials = burials.filter(date_passport__lte = cd['passport_date_to'])
-                if cd['burried_date_from']:
-                    burials = burials.filter(date_burried__gte = cd['burried_date_from'])
-                if cd['burried_date_to']:
-                    burials = burials.filter(date_burried__lte = cd['burried_date_to'])
-                if cd['discovered_date_from']:
-                    burials = burials.filter(date_discovered__gte = cd['discovered_date_from'])
-                if cd['discovered_date_to']:
-                    burials = burials.filter(date_discovered__lte = cd['discovered_date_to'])
-                if cd['closure_date_from']:
-                    burials = burials.filter(date_closure__gte = cd['closure_date_from'])
-                if cd['closure_date_to']:
-                    burials = burials.filter(date_closure__lte = cd['closure_date_to'])
-                if cd['closure_cause']:
-                    burials = burials.filter(closure_cause__name = cd['closure_cause'])
                 if cd['city']:
                     burials = burials.filter(locationburial__city__name__icontains = cd['city'])
                 if cd['region']:
@@ -209,6 +191,25 @@ def burials(request):
                     burials = burials.filter(burial_type__name = cd['burial_type'])
                 if cd['military_conflict']:
                     burials = burials.filter(military_conflict__name = cd['military_conflict'])
+                if cd['burried_date_from']:
+                    burials = burials.filter(date_burried__gte = cd['burried_date_from'])
+                if cd['burried_date_to']:
+                    burials = burials.filter(date_burried__lte = cd['burried_date_to'])
+                """
+                if cd['passport_date_from']:
+                    burials = burials.filter(date_passport__gte = cd['passport_date_from'])
+                if cd['passport_date_to']:
+                    burials = burials.filter(date_passport__lte = cd['passport_date_to'])
+                if cd['discovered_date_from']:
+                    burials = burials.filter(date_discovered__gte = cd['discovered_date_from'])
+                if cd['discovered_date_to']:
+                    burials = burials.filter(date_discovered__lte = cd['discovered_date_to'])
+                if cd['closure_date_from']:
+                    burials = burials.filter(date_closure__gte = cd['closure_date_from'])
+                if cd['closure_date_to']:
+                    burials = burials.filter(date_closure__lte = cd['closure_date_to'])
+                if cd['closure_cause']:
+                    burials = burials.filter(closure_cause__name = cd['closure_cause'])
                 if cd['memorial_date_from']:
                     burials = burials.filter(date_memorial__gte = cd['memorial_date_from'])
                 if cd['memorial_date_to']:
@@ -217,14 +218,7 @@ def burials(request):
                     burials = burials.filter(date_gosznak__gte = cd['gosznak_date_from'])
                 if cd['gosznak_date_to']:
                     burials = burials.filter(date_gosznak__lte = cd['gosznak_date_to'])
-                if cd['creation_date_from']:
-                    burials = burials.filter(date_of_creation__gte = cd['creation_date_from'])
-                if cd['creation_date_to']:
-                    burials = burials.filter(date_of_creation__lte = cd['creation_date_to'])
-                if cd['last_edit_date_from']:
-                    burials = burials.filter(date_last_edit__gte = cd['last_edit_date_from'])
-                if cd['last_edit_date_to']:
-                    burials = burials.filter(date_last_edit__lte = cd['last_edit_date_to'])
+                """
                 if cd['additional_info']:
                     burials = burials.filter(additional_info__icontains = cd['additional_info'])
                 if not burials:
