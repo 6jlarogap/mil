@@ -350,8 +350,8 @@ class Burial(models.Model):
     date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
     date_gosznak = models.DateField(u"Дата установки госзнака", blank=True, null=True)
     qunknown = models.IntegerField(u"Количество неизвестных захороненных", blank=True, null=True)
-    photo = models.ImageField(u"Фото", upload_to="bpics", null=True)
-    scheme = models.ImageField(u"Схема", upload_to="bpics", null=True)
+    photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
+    scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
     creator = models.ForeignKey(User, blank=True, null=True)                                # Создатель записи
     date_of_creation = models.DateTimeField(auto_now_add=True)                              # Дата создания записи
     date_last_edit = models.DateTimeField(auto_now=True)                                    # Дата последнего изменения
@@ -396,6 +396,7 @@ class BurialEditCause(models.Model):
     name = models.CharField(u"Название документа", max_length=100)
     number = models.CharField(u"Номер документа", max_length=100)
     date = models.DateField(u"Дата документа")
+    date_of_creation = models.DateTimeField(auto_now_add=True)                              # Дата создания записи
     def __unicode__(self):
         return self.name
     class Meta:
@@ -446,13 +447,13 @@ class ClosedBurial(models.Model):
     """
     Входящие захоронения.
     """
-    burial = models.OneToOneField(Burial, primary_key=True, verbose_name = u'Куда осуществлен перенос') 
-    burial_from = models.ForeignKey(Burial, related_name="burial_from", verbose_name = u'Откуда')  
+    burial_from = models.OneToOneField(Burial, primary_key=True) 
+    burial_to = models.ForeignKey(Burial, related_name="burial_to", verbose_name = u'Куда выполнен перенос')  
     date = models.DateField("Дата закрытия")
     cause = models.ForeignKey(ClosureCause)                                                 # Причина перезахоронения
     class Meta:
         verbose_name = (u'Перенос захоронения')
-        verbose_name_plural = (u'Переносы захоронений')
+        verbose_name_plural = (u'Перенос захоронений')
 
 class LocationBurial(Location):
     """

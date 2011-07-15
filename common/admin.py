@@ -17,13 +17,22 @@ class LocationBirthInLine(admin.TabularInline):
 class LocationBurialInLine(admin.TabularInline):
     model = LocationBurial
 
-class ClosedBurialInLine(admin.TabularInline):
-    model = ClosedBurial
-    fk_name = "burial"
-
-class ClosedInBurialInLine(admin.TabularInline):
+class ClosedBurialFromInLine(admin.TabularInline):
     model = ClosedBurial
     fk_name = "burial_from"
+
+#class ClosedBurialToInLine(admin.TabularInline):
+#    model = ClosedBurial
+#    fk_name = "burial_to"
+#    extra = 1
+
+class BurialAdmin(admin.ModelAdmin):
+    inlines = [
+        LocationBurialInLine,
+        ClosedBurialFromInLine,
+#        ClosedBurialToInLine,
+    ]
+    search_fields = ['passportid']
 
 class PersonAdmin(admin.ModelAdmin):
     inlines = [
@@ -31,15 +40,6 @@ class PersonAdmin(admin.ModelAdmin):
         PersonDutyInline,
         LocationBirthInLine,
     ]
-
-class BurialAdmin(admin.ModelAdmin):
-    inlines = [
-#        PersonBurialInline,
-        LocationBurialInLine,
-        ClosedBurialInLine,
-        ClosedInBurialInLine,
-    ]
-    search_fields = ['passportid']
 
 admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
@@ -56,6 +56,7 @@ admin.site.register(MilitaryConflict)
 admin.site.register(ClosureCause)
 admin.site.register(Burial, BurialAdmin)
 admin.site.register(Person, PersonAdmin)
+admin.site.register(ClosedBurial)
 #admin.site.register(PersonBurial)
 #admin.site.register(PersonDuty)
 admin.site.register(InformationSource)

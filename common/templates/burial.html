@@ -5,12 +5,20 @@
 {% block content %}
     <h1>Карточка Захоронения</h1>
     <br>
+
+    {% if burial.closedburial %}
+    <h1>Внимание это захоронение закрыто!</h1>
+    Дата закрытия: {{ burial.closedburial.date }}<br>
+    Причина закрытия: {{ burial.closedburial.cause }}<br>
+    Новое захоронение: <a href="/burial/{{burial.closedburial.burial_to.uuid}}">{{ burial.closedburial.burial_to}}</a>
+    <br>
+    {% endif %}
+
+
     Номер паспорта захоронения: {{ burial.passportid }}<br>
     Дата паспорта захоронения: {{ burial.date_passport }}<br>
     Дата захоронения: {{ burial.date_burried }}<br>
     Дата обнаружения: {{ burial.date_discovered }}<br>
-    Дата закрытия: {{ burial.date_closed }}<br>
-    Причина закрытия: {{ burial.closure_cause }}<br>
     Адрес захоронения: {{ burial.locationburial }}<br>
     Тип воинского захоронения: {{ burial.burial_type.name }}<br>
     Военный конфликт: {{ burial.military_conflict.name }}<br>
@@ -43,4 +51,8 @@
         </tr>
     {% endfor %}
     </table>
+
+
+
+
 {% endblock %}
