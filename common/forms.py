@@ -67,7 +67,7 @@ class PersonsForm(forms.Form):
 #                             widget=forms.TextInput(attrs={"tabindex": "16"}))
 #    country_burial = forms.CharField(required=False, max_length=24, label="Страна",
 #                              widget=forms.TextInput(attrs={"tabindex": "17"}))
-    additional_info = forms.CharField(required=False, max_length=30, label="Доролнительная информация о месте рождения и родственниках")
+    info = forms.CharField(required=False, max_length=30, label="Доролнительная информация о воине")
 #    documents_place = forms.ModelChoiceField(queryset=DocumentsPlace.objects.all(), required=False, label="Место нахождения документов")
 #    information_source = forms.ModelChoiceField(queryset=InformationSource.objects.all(), required=False, label="Источник информации")
 #    deadman_category = forms.ModelChoiceField(queryset=DeadmanCategory.objects.all(), required=False, label="Категория погибшего")
@@ -106,7 +106,8 @@ class BurialsForm(forms.ModelForm):
 #    creation_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата создания записи по')
 #    last_edit_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата редактирования записи c')
 #    last_edit_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата редактирования записи по')
-    additional_info = forms.CharField(required=False, max_length=30, label="Доролнительная информация о месте захоронения")
+    info = forms.CharField(required=False, max_length=30, label="Доролнительная информация о захоронении")
+    state = forms.ModelChoiceField(queryset=MemorialState.objects.all(), required=False, label="Состояние памятника")
     in_trash = forms.BooleanField(required=False, label="В корзине")
 
     def __init__(self, *args, **kwargs):

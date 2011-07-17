@@ -67,6 +67,8 @@ def importSettlement():
                             lb = LocationBirth(person = p)
                             if city:
                                 lb.city = city
+                                lb.region = lb.city.region
+                                lb.country = lb.city.region.country
                             if text:
                                 lb.info = text
                             lb.save()
@@ -79,6 +81,8 @@ def importSettlement():
                             lb = LocationBurial(burial = b)
                             if city:
                                 lb.city = city
+                                lb.region = lb.city.region
+                                lb.country = lb.city.region.country
                             if text:
                                 lb.info = text
                             lb.save()
@@ -348,11 +352,12 @@ def importPerson():
                     p.info = info
 #                    print "info", info, p.info
 
+                if burial:
+                    p.burial = burial
+#                    pb = PersonBurial.objects.create(person=p, burial=burial)
+
                 p.save()
 #                print p.uuid
-
-                if burial:
-                    pb = PersonBurial.objects.create(person=p, burial=burial)
 
                 if mu or rank or post:
                     pd = PersonDuty(person=p)

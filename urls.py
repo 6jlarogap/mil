@@ -29,9 +29,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'common.views.persons'),
     url(r'^persons/', 'common.views.persons'),
-    url(r'^person/(?P<obj>.{36})/$', person),                                      # Карточка с захоронением
+    url(r'^person/(?P<obj>.{36})/$', person, name='person'),                                   # Карточка воина
     url(r'^burials/', 'common.views.burials'),
-    url(r'^burial/(?P<obj>.{36})/$', burial),                                      # Карточка с захоронением
+    url(r'^burial/(?P<obj>.{36})/$', burial, name='burial'),                    # Карточка захоронение
     url(r'^chaining/', include('smart_selects.urls')),
 #    url(r'^accounts/login/$', login,                                           # Страница логина пользователя
 #        {'template_name': 'registration/login.html', 

@@ -3,14 +3,15 @@
 {% block title %}MIL.ORG - Карточка Захоронения{% endblock %}
 
 {% block content %}
-    <h1>Карточка Захоронения</h1>
+    <h1><a href="/admin/common/burial/{{burial.uuid}}">Карточка Захоронения {{ burial.passportid }}</a></h1>
     <br>
 
-    {% if burial.closedburial %}
-    <h1>Внимание это захоронение закрыто!</h1>
-    Дата закрытия: {{ burial.closedburial.date }}<br>
-    Причина закрытия: {{ burial.closedburial.cause }}<br>
-    Новое захоронение: <a href="/burial/{{burial.closedburial.burial_to.uuid}}">{{ burial.closedburial.burial_to}}</a>
+    {% if burial.burial_from %}
+    <h1>Внимание! Это захоронение закрыто!</h1>
+    Дата закрытия: {{ burial.burial_from.date }}<br>
+    Причина закрытия: {{ burial.burial_from.cause }}<br>
+    Новое захоронение: <a href="{% url burial burial.burial_from.burial_to.uuid%}">{{ burial.burial_from.burial_to}}</a><br>
+    <br>
     <br>
     {% endif %}
 
@@ -26,9 +27,9 @@
     Дата установки госзнака: {{ burial.date_gosznak }}<br>
     Дополнительная информация о месте захоронения: {{ burial.additional_info }}<br>
     <br>
-    Количество захороненнных: {{ burial.persons.count }}<br>
+    Количество захороненнных: {{ burial.get_count }}<br>
     <br>
-    Количество неизвестных: {{ burial.qunknown }}<br>
+    Количество неизвестных: {{ burial.get_qunknown }}<br>
     <br>
     
     <table border="1" rules="rows" width="100%">
@@ -38,21 +39,48 @@
             <td>Дата смерти</td>
             <td>Причина гибели</td>
             <td>Дата захоронения</td>
-            <td>Дата эксгумации</td>
         </thead>
-    {% for pb in burial.personburial_set.all %}
+    {% for p in burial.person_set.all %}
         <tr>
-            <td><a href="/person/{{pb.person.uuid}}">{{ pb.person.last_name }}&nbsp;{{ pb.person.first_name }}&nbsp;{{ pb.person.patonymic }}</a></td>
-            <td>{{ pb.person.birth_date }}</td>
-            <td>{{ pb.person.death_date }}</td>
-            <td>{{ pb.person.death_cause.name }}</td>
-            <td>{{ pb.date_burried }}</td>
-            <td>{{ pb.date_exhumated }}</td>
+            <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
+            <td>{{ p.birth_date }}</td>
+            <td>{{ p.death_date }}</td>
+            <td>{{ p.death_cause }}</td>
+            <td>{{ burial.date_burried }}</td>
         </tr>
     {% endfor %}
     </table>
 
+    <br>
+    <br>
+    {% if burial.burial_to.all %}
+    <br>
+    <h1>В это захоронение были перенесены следующие воины:</h1>
 
+        {% for cb in burial.burial_to.all %}
+        <h3>Захоронение №<a href="{% url burial cb.burial_from.uuid %}">{{ cb.burial_from.passportid }}</a></h3>
+            <h3>Дата переноса: {{ cb.date }}</h3>
+            <h3>Причина переноса: {{ cb.cause }}</h3>
+            <table border="1" rules="rows" width="100%">
+                <thead>
+                    <td>ФИО</td>
+                    <td>Дата рождения</td>
+                    <td>Дата смерти</td>
+                    <td>Причина гибели</td>
+                    <td>Дата первого захоронения</td>
+                </thead>
+            {% for p in cb.burial_from.person_set.all %}
+                <tr>
+                    <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
+                    <td>{{ p.birth_date }}</td>
+                    <td>{{ p.death_date }}</td>
+                    <td>{{ p.death_cause.name }}</td>
+                    <td>{{ cb.burial_from.date_burried }}</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+
+    {% endif %}
 
 
 {% endblock %}

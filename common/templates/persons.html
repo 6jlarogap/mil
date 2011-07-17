@@ -11,7 +11,7 @@
 			changeMonth: true,
 			changeYear: true,
             dateFormat: 'dd.mm.yy',
-            yearRange: '1600:{% now "Y" %}'
+            yearRange: '1400:{% now "Y" %}'
 		});
     })
 </script>
@@ -43,24 +43,22 @@
                     <td>Отчество</td>
                     <td>Дата роджения</td>
                     <td>Дата смерти</td>
-                    <td>Дата захоронения</td>
                     <td>Захоронение</td>
-                    <td align="center">Опции</td>
+                    <td>Дополнительная информация</td>
                 </thead>
             {% for person in persons.object_list %}
                 <tr>
-                    <td>{{ person.last_name }}</td>
+                    <td><a href="{% url person person.uuid %}">{{ person.last_name }}</a></td>
                     <td>{{ person.first_name }}</td>
                     <td>{{ person.patronymic }}</td>
                     <td>{{ person.birth_date }}</td>
                     <td>{{ person.death_date }}</td>
-                    <td>{{ person.burial_date }}</td>
                     <td>
-                        {% for b in person.burial_set.all %}
-                        <li>{{ b.passportid  }}</li>
-                        {% endfor %}
+                        {% if person.burial %}
+                        <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>
+                        {% endif %}
                     </td>
-                    <td align="center"><a href="/person/{{ person.uuid}}">[Просмотр]</a></td>
+                    <td>{{ person.info }}</td>
                 </tr>
             {% endfor %}
         </table>

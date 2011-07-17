@@ -107,13 +107,14 @@ def persons(request):
                 if cd['deadman_category']:
                     persons = persons.filter(deadman_category__name = cd['deadman_category'])
                 """
-                if cd['additional_info']:
-                    burials = burials.filter(additional_info__icontains = cd['additional_info'])
-                if not persons:
-                    return render_to_response('persons.html', context_instance=RequestContext(request, {
-                        'form': form
-                        }))
-                else:
+                if cd['info']:
+                    persons = persons.filter(info__icontains = cd['info'])
+                if persons:
+#                if not persons:
+#                    return render_to_response('persons.html', context_instance=RequestContext(request, {
+#                        'form': form
+#                        }))
+#                else:
                     persons_count = persons.aggregate(number=Count('uuid'))
 
                     paginator = Paginator(persons, 20)
@@ -219,8 +220,10 @@ def burials(request):
                 if cd['gosznak_date_to']:
                     burials = burials.filter(date_gosznak__lte = cd['gosznak_date_to'])
                 """
-                if cd['additional_info']:
-                    burials = burials.filter(additional_info__icontains = cd['additional_info'])
+                if cd['info']:
+                    burials = burials.filter(info__icontains = cd['info'])
+                if cd['state']:
+                    burials = burials.filter(state__name = cd['burial_type'])
                 if not burials:
                     return render_to_response('burials.html', context_instance=RequestContext(request, {
                         'form': form

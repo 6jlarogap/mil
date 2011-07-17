@@ -7,9 +7,13 @@ class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
     extra = 1
 
-class PersonBurialInline(admin.TabularInline):
-    model = PersonBurial
+class PersonCallInline(admin.TabularInline):
+    model = PersonCall
     extra = 1
+
+#class PersonBurialInline(admin.TabularInline):
+#    model = PersonBurial
+#    extra = 1
 
 class LocationBirthInLine(admin.TabularInline):
     model = LocationBirth
@@ -36,10 +40,12 @@ class BurialAdmin(admin.ModelAdmin):
 
 class PersonAdmin(admin.ModelAdmin):
     inlines = [
-        PersonBurialInline,
+#        PersonBurialInline,
+        PersonCallInline,
         PersonDutyInline,
         LocationBirthInLine,
     ]
+    search_fields = ['burial__passportid', 'last_name']
 
 admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
@@ -60,4 +66,6 @@ admin.site.register(ClosedBurial)
 #admin.site.register(PersonBurial)
 #admin.site.register(PersonDuty)
 admin.site.register(InformationSource)
+admin.site.register(Nationality)
+admin.site.register(MemorialState)
 

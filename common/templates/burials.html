@@ -42,12 +42,11 @@
                     <td>Дата паспорта</td>
                     <td>Создано</td>
                     <td>Обнаружено</td>
-                    <td>Закрыто</td>
-                    <td>Причина закрытия</td>
                     <td>Адрес</td>
                     <td>Тип</td>
                     <td>Военный конфликт</td>
                     <td>Памятник</td>
+                    <td>Состояние</td>
                     <td>Госзнак</td>
                     <td>Информация</td>
                     <td align="center">Опции</td>
@@ -58,15 +57,14 @@
                     <td>{{ burial.date_passport }}</td>
                     <td>{{ burial.date_buried }}</td>
                     <td>{{ burial.date_discovered }}</td>
-                    <td>{{ burial.date_closed }}</td>
-                    <td>{{ burial.closure_cause.name }}</td>
                     <td>{{ burial.locationburial }}</td>
-                    <td>{{ burial.burial_type.name }}</td>
-                    <td>{{ burial.military_conflict.name }}</td>
+                    <td>{{ burial.burial_type }}</td>
+                    <td>{{ burial.military_conflict }}</td>
                     <td>{{ burial.date_memorial }}</td>
+                    <td>{{ burial.state }}</td>
                     <td>{{ burial.date_gosznak }}</td>
-                    <td>{{ burial.additional_info }}</td>
-                    <td align="center"><a href="/burial/{{ burial.uuid}}">[Просмотр]</a></td>
+                    <td>{{ burial.info }}</td>
+                    <td align="center"><a href="{% url burial  burial.uuid %}">[Просмотр]</a></td>
                 </tr>
             {% endfor %}
         </table>
