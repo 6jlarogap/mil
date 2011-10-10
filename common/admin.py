@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+
 from common.models import *
+from common.forms import PersonAdminForm
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
@@ -45,6 +47,7 @@ class PersonAdmin(admin.ModelAdmin):
         PersonDutyInline,
         LocationBirthInLine,
     ]
+    form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
 
 admin.site.register(GeoCountry)

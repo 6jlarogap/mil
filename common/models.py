@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from django.db import models
 from django_extensions.db.fields import UUIDField
 from django.contrib.auth.models import User
@@ -349,6 +351,34 @@ class Nationality(models.Model):
         verbose_name = (u'Национальность')
         verbose_name_plural = (u'Национальности')
 
+class UnclearDate:
+    def __init__(self, year, month=None, day=None):
+        self.d = datetime.date(year, month or 1, day or 1)
+        self.no_day = not day
+        self.no_month = not month
+
+    def strftime(self, format):
+        if self.no_day:
+            format = format.replace('%d', '-')
+        if self.no_month:
+            format = format.replace('%m', '-')
+        return self.d.strftime(format)
+
+    def __repr__(self):
+        return u'<UnclearDate: %s>' % self.strftime('%d.%m.%Y')
+
+    @property
+    def year(self):
+        return self.d.year
+
+    @property
+    def month(self):
+        return not self.no_month and self.d.month or None
+
+    @property
+    def day(self):
+        return not self.no_month and self.d.day or None
+
 class Person(models.Model):
     """
     Человек.
@@ -360,8 +390,14 @@ class Person(models.Model):
     last_name = models.CharField(u"Фамилия", max_length=128)
     first_name = models.CharField(u"Имя", max_length=30, blank=True)
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True)
+
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True)
+    birth_date_no_month = models.BooleanField(default=False, editable=False)
+    birth_date_no_day = models.BooleanField(default=False, editable=False)
     death_date = models.DateField(u"Дата гибели", blank=True, null=True)
+    death_date_no_month = models.BooleanField(default=False, editable=False)
+    death_date_no_day = models.BooleanField(default=False, editable=False)
+
     death_cause = models.ForeignKey(DeathCause, verbose_name=u"Причина гибели", blank=True, null=True)
     nationality = models.ForeignKey(Nationality, verbose_name=u"Национальность", blank=True, null=True)
     deadman_category = models.ForeignKey(DeadmanCategory, verbose_name=u"Категория погибшего", blank=True, null=True)
@@ -371,6 +407,7 @@ class Person(models.Model):
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True)
     date_of_creation = models.DateTimeField(auto_now_add=True)                      # Дата создания записи
     is_trash = models.BooleanField(default=False)                                   # В корзине
+
     class Meta:
         ordering = ['last_name'] # Сортировка по фамилии
         verbose_name = (u'Погибший')
@@ -378,6 +415,23 @@ class Person(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.last_name
+
+    def get_unclear_date(self, field_name):
+        if not getattr(self, field_name, None):
+            return None
+        cur_date = getattr(self, field_name)
+        tmp_date = UnclearDate(cur_date.year, cur_date.month, cur_date.day)
+        if getattr(self, field_name+'_no_day'):
+            tmp_date.day = None
+        if getattr(self, field_name+'_no_month'):
+            tmp_date.month = None
+        return tmp_date
+
+    def set_unclear_date(self, field_name, ud):
+        setattr(self, field_name, ud)
+        if ud:
+            setattr(self, field_name+'_no_day', ud.no_day)
+            setattr(self, field_name+'_no_month', ud.no_month)
 
 class MilitaryUnit(Location):
     """
