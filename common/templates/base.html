@@ -6,16 +6,14 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/adminmedia/css/base.css">
-    <link rel="stylesheet" type="text/css" href="/adminmedia/css/forms.css">
-    <link rel="stylesheet" type="text/css" href="/adminmedia/css/widgets.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/widgets.css">
     {% block scripts %}{% endblock %}
     <script type="text/javascript">
         window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";
     </script>
     {{ form.media }}
-    <link rel="stylesheet" type="text/css" href="/media/css/base.css">
-    <script type="text/javascript" src="/media/js/repository.js"></script>
     <title>{% block title %}{% endblock %}</title>
 </head>
 

@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import re
-import datetime, time
-from common.models import *
-from common.forms import *
+import simplejson
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import *
-from django.contrib import auth
-from django.contrib.auth.models import User, Group, Permission
 from django.core.paginator import Paginator, EmptyPage
-#from django.shortcuts import redirect
 
+from common.models import *
+from common.forms import *
+
+def persons_autocomplete(request):
+    persons = Person.objects.filter(last_name__istartswith=request.GET.get('term')).values_list('last_name', flat=True)
+    return HttpResponse(simplejson.dumps(list(persons.distinct('last_name')[:10])))
 
 def persons(request):
     """

@@ -2,19 +2,26 @@
 {% block scripts %}
 <link rel="stylesheet" href="http://yandex.st/jquery-ui/1.8.11/themes/humanity/jquery.ui.all.min.css"/>
 
-<script type="text/javascript" src="http://yandex.st/jquery/1.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.11/jquery-ui.min.js"></script>
-<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.11/i18n/jquery.ui.datepicker-ru.min.js"></script>
+<script type="text/javascript" src="http://yandex.st/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.16/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.16/i18n/jquery.ui.datepicker-ru.min.js"></script>
 <script type="text/javascript">
     $(function() {
         $( ".DateField" ).datepicker({
 			changeMonth: true,
 			changeYear: true,
             dateFormat: 'dd.mm.yy',
-            yearRange: '1400:{% now "Y" %}'
+            yearRange: '1850:{% now "Y" %}'
 		});
+        $('#id_last_name').autocomplete({
+            source: "{% url persons_autocomplete %}",
+            minLength: 2
+        })
     })
 </script>
+<style type="text/css">
+    ul.ui-autocomplete li { list-style-type: none; }
+</style>
 {% endblock %}
 
 {% block title %}MIL.ORG - Поиск воинов{% endblock %}

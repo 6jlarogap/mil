@@ -9,9 +9,10 @@ admin.autodiscover()
 
 urlpatterns = patterns('common.views',
     url(r'^$', 'persons'),
-    url(r'^persons/', 'persons'),
+    url(r'^persons/$', 'persons'),
+    url(r'^persons/autocomplete/$', 'persons_autocomplete', name='persons_autocomplete'),
     url(r'^person/(?P<obj>.{36})/$', 'person', name='person'),                                   # Карточка воина
-    url(r'^burials/', 'burials'),
+    url(r'^burials/$', 'burials'),
     url(r'^burial/(?P<obj>.{36})/$', 'burial', name='burial'),                    # Карточка захоронение
 )
 
