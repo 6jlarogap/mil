@@ -75,8 +75,6 @@ class Location(models.Model):
     country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", blank=True, null=True)       # Страна
     region = ChainedForeignKey(GeoRegion, verbose_name=u"Регион", chained_field="country", chained_model_field="country", blank=True, null=True)
     city = ChainedForeignKey(GeoCity, verbose_name=u"Город", chained_field="region", chained_model_field="region", blank=True, null=True)
-#    region = models.ForeignKey(GeoRegion, verbose_name=u"Регион", blank=True, null=True)         # Регион
-#    city = models.ForeignKey(GeoCity, verbose_name=u"Город", blank=True, null=True)              # Город
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
     gps_x = models.FloatField(u"Координата X", blank=True, null=True)                            # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)                            # GPS Y-ось.
@@ -463,6 +461,7 @@ class Post(models.Model):
     Должность
     """
     name = models.CharField(u"Должность", max_length=100)
+    
     def __unicode__(self):
         return self.name
     class Meta:
@@ -475,6 +474,7 @@ class Rank(models.Model):
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Звание", max_length=100)
+
     def __unicode__(self):
         return self.name
     class Meta:
@@ -489,8 +489,6 @@ class PersonDuty(models.Model):
     unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", blank=True, null=True)
     rank = models.ForeignKey(Rank, verbose_name=u"Звание", blank=True, null=True)
     post = models.ForeignKey(Post, verbose_name=u"Должность", blank=True, null=True)
-#    date_from = models.DateField("Дата начала службы", blank=True, null=True)
-#    date_to = models.DateField("Дата окончания службы", blank=True, null=True)
 
     def __unicode__(self):
         return u'%s %s %s' % (self.rank, self.post, self.unit)
