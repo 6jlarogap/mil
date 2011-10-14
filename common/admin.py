@@ -41,6 +41,9 @@ class BurialAdmin(admin.ModelAdmin):
     search_fields = ['passportid']
 
 class PersonAdmin(admin.ModelAdmin):
+    class Media:
+        js = ['js/admin/person.js', ]
+
     inlines = [
 #        PersonBurialInline,
         PersonCallInline,

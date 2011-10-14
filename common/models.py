@@ -385,6 +385,7 @@ class Person(models.Model):
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
     burial = models.ForeignKey(Burial, verbose_name=u"Номер захоронения", blank=True, null=True)
+    mia = models.BooleanField(u"Пропал без вести", blank=True, default=False)
     last_name = models.CharField(u"Фамилия", max_length=128, db_index=True)
     first_name = models.CharField(u"Имя", max_length=30, blank=True, db_index=True)
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True, db_index=True)
