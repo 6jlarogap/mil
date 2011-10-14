@@ -29,7 +29,13 @@ def persons(request):
                 persons = Person.objects.all()
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
- # //rd-- fio search field regex rules            
+                if cd['country']:
+                    params = dict(burial__locationburial__city__region__country__pk = cd['country'].pk)
+                    if cd['country_exclude']:
+                        persons = persons.exclude(**params)
+                    else:
+                        persons = persons.filter(**params)
+ # //rd-- fio search field regex rules
  # ".етер"   # ^
  # "етер"    # ^
  # "етер.*"  # ^

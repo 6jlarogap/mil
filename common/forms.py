@@ -95,16 +95,20 @@ class LoginForm(AuthenticationForm): # Форма авторизации
     username = forms.CharField(max_length=30, label="E-mail ")
     password = forms.CharField(max_length=18, widget=forms.PasswordInput, label="Пароль ")
 
+COUNTRIES = GeoCountry.objects.filter(georegion__geocity__locationburial__isnull=False).distinct()
+
 class PersonsForm(forms.Form):
     """Форма поиска воинов.
     """
+    country = forms.ModelChoiceField(queryset=COUNTRIES, required=False, label="Страна")
+    country_exclude = forms.BooleanField(required=False, initial=False, label="Все страны, кроме выбранной")
     rank = forms.ModelChoiceField(queryset=Rank.objects.all(), required=False, label="Воинское звание")
     last_name = forms.CharField(required=False, max_length=128, label="Фамилия ")
     first_name = forms.CharField(required=False, max_length=30, label="Имя ")
     patronymic = forms.CharField(required=False, max_length=30, label="Отчество ")
+
     birth_date_from = UnclearDateField(required=False, label='Дата рождения c')
     birth_date_to = UnclearDateField(required=False, label='Дата рождения по')
-
     death_date_from = UnclearDateField(required=False, label='Дата смерти с')
     death_date_to = UnclearDateField(required=False, label='Дата смерти по')
 
