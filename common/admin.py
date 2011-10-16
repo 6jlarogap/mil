@@ -53,6 +53,13 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
 
+    def get_fieldsets(self, *args, **kwargs):
+        fieldsets = super(PersonAdmin, self).get_fieldsets(*args, **kwargs)
+        if len(fieldsets) == 1:
+            flist = fieldsets[0][1]['fields']
+            flist.insert(flist.index('patronymic') + 1, flist.pop(flist.index('nationality')))
+        return fieldsets
+
 admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
 admin.site.register(GeoCity)
