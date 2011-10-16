@@ -26,6 +26,9 @@ class LocationBurialInLine(admin.TabularInline):
 class ClosedBurialFromInLine(admin.TabularInline):
     model = ClosedBurial
     fk_name = "burial_from"
+    extra = 1
+    max_num = 1
+    can_delete = False
 
 #class ClosedBurialToInLine(admin.TabularInline):
 #    model = ClosedBurial
@@ -43,10 +46,10 @@ class BurialCategoryInLine(admin.TabularInline):
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
         LocationBurialInLine,
-        ClosedBurialFromInLine,
         BurialCategoryInLine,
+        ClosedBurialFromInLine,
     ]
-    search_fields = ['passportid']
+    search_fields = ['passportid', ]
 
     def change_view(self, request, object_id, extra_context=None):
         try:
@@ -73,6 +76,7 @@ class PersonAdmin(admin.ModelAdmin):
     ]
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
+    readonly_fields = ['closed_burials', ]
 
     def get_fieldsets(self, *args, **kwargs):
         fieldsets = super(PersonAdmin, self).get_fieldsets(*args, **kwargs)

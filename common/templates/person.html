@@ -10,16 +10,16 @@
     Отчество: {{ person.patronymic }}<br>
     Дата роджения: {{ person.birth_date }}<br>
     Место рождения: {{person.locationbirth}}<br>
-    Место нахождения документов: {{ person.documents_place }}<br>
+    Место нахождения документов: {{ person.documents_place|default:"нет" }}<br>
     Источник информации: {{ person.information_source }}<br>
-    Категория погибшего: {{ person.deadman_category }}<br>
+    Категория погибшего: {{ person.deadman_category|default:"не известна" }}<br>
     Место призыва: {{person.personcall.unit}}<br>
     Дата призыва: {{ person.personcall.date }}<br>
-    Место службы: {{person.personduty.unit}}<br>
-    Звание: {{person.personduty.rank}}<br>
-    Должность: {{person.personduty.post}}<br>
+    Место службы: {{ person.personduty.unit|default:"не известно" }}<br>
+    Звание: {{ person.personduty.rank }}<br>
+    Должность: {{ person.personduty.post }}<br>
     Дата гибели: {{ person.death_date }}<br>
-    Причина гибели: {{ person.death_cause }}<br>
+    Причина гибели: {{ person.death_cause|default:"не известна" }}<br>
     <br>
     {% if person.burial %}
         <table border="1" rules="rows" width="100%">
@@ -33,11 +33,16 @@
                 <td>{{ person.burial.date_burried }}</td>
                 <td>{{ person.burial.locationburial }}</td>
             </tr>
+            {% for old in  person.closed_burials.all %}
+            <tr>
+                <td>
+                    Перенесено из:
+                    <a href="{% url burial old.uuid %}">{{ old.passportid }}</a>
+                </td>
+                <td>{{ old.date_burried }}</td>
+                <td>{{ old.locationburial }}</td>
+            </tr>
+            {% endfor %}
         </table>
-        {% if person.burial.burial_from %}
-            {% with b=person.burial.get_last %}
-            <h4><a href="{% url burial b.uuid %}">Место перезахоронения :{{ b }}</a></h4>
-            {% endwith %}
-        {% endif %}
     {% endif %}
 {% endblock %}

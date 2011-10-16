@@ -156,6 +156,7 @@ class Burial(models.Model):
     date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True)
     date_burried = models.DateField(u"Дата создания захоронения", blank=True, null=True)
     date_discovered = models.DateField(u"Дата обнаружения", blank=True, null=True)
+    date_closed = models.DateField(u"Дата закрытия", blank=True, null=True, editable=False)
     burial_type = models.ForeignKey(BurialType, verbose_name=u"Тип воинского захоронения", blank=True, null=True)
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
     date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
@@ -219,11 +220,24 @@ class ClosedBurial(models.Model):
     """
     burial_from = models.OneToOneField(Burial, related_name="burial_from", verbose_name = u'Откуда выполнен перенос', primary_key=True) 
     burial_to = models.ForeignKey(Burial, related_name="burial_to", verbose_name = u'Куда выполнен перенос')  
-    date = models.DateField("Дата закрытия")
-    cause = models.ForeignKey(ClosureCause)                                                 # Причина перезахоронения
+    date = models.DateField(u"Дата закрытия")
+    cause = models.ForeignKey(ClosureCause, verbose_name=u"Причина перезахоронения")
+    document = models.FileField(u"Документ", upload_to='documents/', blank=True, null=True)
+    def __unicode__(self):
+        return u"Закрыто: %s" % self.cause
     class Meta:
         verbose_name = (u'Перенос захоронения')
         verbose_name_plural = (u'Перенос захоронения')
+
+def close_burial(instance, **kwargs):
+    instance.burial_from.date_closed = datetime.datetime.now()
+    instance.burial_from.save()
+
+    persons = Person.objects.filter(burial=instance.burial_from)
+    instance.burial_from.closed_persons.add(*list(persons))
+    persons.update(burial=instance.burial_to)
+
+models.signals.post_save.connect(close_burial, ClosedBurial)
 
 class BurialEditCause(models.Model):
     """
@@ -407,6 +421,7 @@ class Person(models.Model):
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
     burial = models.ForeignKey(Burial, verbose_name=u"Номер захоронения", blank=True, null=True)
+    closed_burials = models.ManyToManyField(Burial, related_name='closed_persons', verbose_name=u"Перенесен из", help_text=u"")
     mia = models.BooleanField(u"Пропал без вести", blank=True, default=False)
     last_name = models.CharField(u"Фамилия", max_length=128, db_index=True)
     first_name = models.CharField(u"Имя", max_length=30, blank=True, db_index=True)
