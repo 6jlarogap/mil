@@ -32,13 +32,34 @@ class ClosedBurialFromInLine(admin.TabularInline):
 #    fk_name = "burial_to"
 #    extra = 1
 
+class BurialCategoryInLine(admin.TabularInline):
+    model = BurialCategory
+    extra = 0
+    readonly_fields = ['category', 'known', ]
+    can_delete = False
+    template = 'tabular_burialcat.html'
+    fieldsets = [(None, {'fields': ['category', 'known', 'unknown', ]})]
+
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
         LocationBurialInLine,
         ClosedBurialFromInLine,
-#        ClosedBurialToInLine,
+        BurialCategoryInLine,
     ]
     search_fields = ['passportid']
+
+    def change_view(self, request, object_id, extra_context=None):
+        try:
+            obj = Burial.objects.get(pk=object_id)
+        except Burial.DoesNotExist:
+            pass
+        else:
+            for cat in DeadmanCategory.objects.all():
+                bc, created = cat.burial_categories.get_or_create(burial=obj)
+                if created or bc.updated < datetime.datetime.now() - datetime.timedelta(0, 3600):
+                    bc.update()
+
+        return super(BurialAdmin, self).change_view(request, object_id, extra_context=None)
 
 class PersonAdmin(admin.ModelAdmin):
     class Media:

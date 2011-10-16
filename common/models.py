@@ -315,6 +315,28 @@ class DeadmanCategory(models.Model):
         verbose_name = (u'Категория погибшего')
         verbose_name_plural = (u'Категории погибших')
 
+class BurialCategory(models.Model):
+    """
+    Связь категории с захоронением
+    """
+    category = models.ForeignKey(DeadmanCategory, related_name='burial_categories', verbose_name=u"Категория")
+    burial = models.ForeignKey(Burial, related_name='burial_categories')
+    known = models.PositiveIntegerField(default=0, verbose_name=u"Известных")
+    unknown = models.PositiveIntegerField(default=0, verbose_name=u"Неизвестных")
+    updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.burial, self.category)
+
+    class Meta:
+        verbose_name = (u'Связь категории с захоронением')
+        verbose_name_plural = (u'Связи категории с захоронением')
+
+    def update(self):
+        self.known = self.burial.person_set.all().count()
+        self.updated = datetime.datetime.now()
+        self.save()
+
 class DocumentsPlace(models.Model):
     """
     Место нахождения документов
