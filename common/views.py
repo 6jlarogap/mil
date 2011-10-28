@@ -26,7 +26,7 @@ def persons(request):
         if request.GET['search'] == u'Поиск':
             if form.is_valid():
                 cd = form.cleaned_data
-                persons = Person.objects.all()
+                persons = Person.objects.all().select_related()
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
                 if cd['country']:
@@ -124,7 +124,7 @@ def persons(request):
                     persons_count = persons.aggregate(number=Count('uuid'))
 
                     paginator = Paginator(persons, 20)
-                    p = request.GET.get('p', 1)
+                    p = request.GET.get('p', '1')
                     try:
                         persons = paginator.page(p)
                     except EmptyPage:
@@ -138,8 +138,9 @@ def persons(request):
                         'persons': persons,
                         'persons_count': persons_count,
                         'query_vars': query_vars,
-                        'form': form
-                        }))
+                        'form': form,
+                        'search_offset': 20 * (int(p) - 1),
+                    }))
             return render_to_response('persons.html', context_instance=RequestContext(request, {
                 'form': form
                 }))

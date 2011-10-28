@@ -45,27 +45,41 @@
         <table width="100%">
             <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ persons_count.number }}&nbsp;записей</caption>
                 <thead>
-                    <td>Фамилия</td>
-                    <td>Имя</td>
-                    <td>Отчество</td>
-                    <td>Дата роджения</td>
-                    <td>Дата смерти</td>
-                    <td>Захоронение</td>
-                    <td>Дополнительная информация</td>
+                    <th>№п/п</th>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Отчество</th>
+                    <th>Звание</th>
+                    <th>Дата рождения</th>
+                    <th>Дата смерти</th>
+                    <th>Захоронение</th>
+                    <th>Расположение</th>
+                    <th>Дополнительная информация</th>
                 </thead>
             {% for person in persons.object_list %}
                 <tr>
+                    <td>{{ forloop.counter|add:search_offset }}</td>
                     <td><a href="{% url person person.uuid %}">{{ person.last_name }}</a></td>
                     <td>{{ person.first_name }}</td>
                     <td>{{ person.patronymic }}</td>
-                    <td>{{ person.birth_date }}</td>
-                    <td>{{ person.death_date }}</td>
-                    <td>
-                        {% if person.burial %}
-                        <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>
-                        {% endif %}
-                    </td>
-                    <td>{{ person.info }}</td>
+                    <td>{{ person.personduty.rank }}</td>
+                    <td>{{ person.birth_date|default:"" }}</td>
+                    <td>{{ person.death_date|default:"" }}</td>
+                    {% if person.burial %}
+                        <td>
+                            <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>
+                        </td>
+                        <td>
+                            {% with person.burial.locationburial as location %}
+                                {% if location.country %}{{ location.country }}{% if location.region or location.city %}, {% endif %}{% endif %}
+                                {% if location.region %}{{ location.region }}{% if location.city %}, {% endif %}{% endif %}
+                                {% if location.city %}{{ location.city }}{% endif %}
+                            {% endwith %}
+                        </td>
+                    {% else %}
+                        <td></td><td></td>
+                    {% endif %}
+                    <td>{{ person.info|default:"" }}</td>
                 </tr>
             {% endfor %}
         </table>
