@@ -4,8 +4,11 @@ import imp
 
 import os, sys
 
-#activate_this = '/path/to/env/bin/activate_this.py'
-#execfile(activate_this, dict(__file__=activate_this))
+for search in ['.', '..']:
+    activate_this = os.path.join(search. '.env', 'bin', 'activate_this.py')
+    if os.path.exists(activate_this):
+        execfile(activate_this, dict(__file__=activate_this))
+        break
 
 try:
     imp.find_module('settings') # Assumed to be in the same directory.
