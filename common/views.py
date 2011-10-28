@@ -16,7 +16,7 @@ def persons_autocomplete(request):
     persons = Person.objects.filter(last_name__istartswith=request.GET.get('term')).values_list('last_name', flat=True)
     names = list(set(list(persons.order_by('last_name')[:100])))
     names.sort()
-    return HttpResponse(simplejson.dumps(names)[:10])
+    return HttpResponse(simplejson.dumps(names[:10]))
 
 def persons(request):
     """
