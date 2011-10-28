@@ -347,6 +347,8 @@ class BurialCategory(models.Model):
 
     def update(self):
         self.known = self.burial.person_set.filter(deadman_category=self.category).count()
+        if self.category.name == u'Другие':
+            self.known += self.burial.person_set.filter(deadman_category__isnull=True).count()
         self.updated = datetime.datetime.now()
         self.save()
 
