@@ -17,6 +17,10 @@ class PersonCallInline(admin.TabularInline):
 #    model = PersonBurial
 #    extra = 1
 
+class PersonEditCauseInline(admin.TabularInline):
+    model = PersonEditCause
+    extra = 1
+
 class LocationBirthInLine(admin.TabularInline):
     model = LocationBirth
 
@@ -73,10 +77,11 @@ class PersonAdmin(admin.ModelAdmin):
         PersonCallInline,
         PersonDutyInline,
         LocationBirthInLine,
+        PersonEditCauseInline,
     ]
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
-    readonly_fields = ['closed_burials', ]
+    readonly_fields = ['closed_burials', 'date_of_creation', 'last_edit', ]
 
     def get_fieldsets(self, *args, **kwargs):
         fieldsets = super(PersonAdmin, self).get_fieldsets(*args, **kwargs)

@@ -414,6 +414,8 @@ class UnclearDate:
     def day(self):
         return not self.no_month and self.d.day or None
 
+
+
 class Person(models.Model):
     """
     Человек.
@@ -422,7 +424,8 @@ class Person(models.Model):
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
     burial = models.ForeignKey(Burial, verbose_name=u"Номер захоронения", blank=True, null=True)
-    closed_burials = models.ManyToManyField(Burial, related_name='closed_persons', verbose_name=u"Перенесен из", help_text=u"")
+    closed_burials = models.ManyToManyField(Burial,
+        related_name='closed_persons', verbose_name=u"Перенесен из", help_text=u"", editable=False)
     mia = models.BooleanField(u"Пропал без вести", blank=True, default=False)
     last_name = models.CharField(u"Фамилия", max_length=128, db_index=True)
     first_name = models.CharField(u"Имя", max_length=30, blank=True, db_index=True)
@@ -442,8 +445,11 @@ class Person(models.Model):
     information_source = models.ForeignKey(InformationSource, verbose_name=u"Источник информации", blank=True, null=True)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True)
-    date_of_creation = models.DateTimeField(auto_now_add=True)                      # Дата создания записи
-    is_trash = models.BooleanField(default=False)                                   # В корзине
+    date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)
+    is_trash = models.BooleanField(u"Удалена", default=False)
+
+    edit_causes = property(lambda self: self.personeditcause_set.all().order_by('-date_edit'))
+    last_edit = property(lambda self: (self.edit_causes and self.edit_causes[0].date_edit or self.date_of_creation).strftime(u'%d.%m.%Y %H:%M'))
 
     class Meta:
         ordering = ['last_name'] # Сортировка по фамилии
@@ -542,10 +548,13 @@ class PersonEditCause(models.Model):
     person = models.ForeignKey(Person)
     name = models.CharField(u"Название документа", max_length=100)
     number = models.CharField(u"Номер документа", max_length=100)
-    date = models.DateField(u"Дата документа") 
+    date = models.DateField(u"Дата документа")
+    file = models.FileField(u"Скан документа", null=True, upload_to='cause_docs')
     date_edit = models.DateTimeField(auto_now=True)                             # Дата последнего редактирования записи
+
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name = (u'Основание для редакирования Воина')
         verbose_name_plural = (u'Основания для редактирования Воина')
