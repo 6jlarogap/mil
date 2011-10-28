@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-from django.core.management import execute_manager
-import imp
-
 import os, sys
 
 for search in ['.', '..']:
@@ -10,6 +7,9 @@ for search in ['.', '..']:
         print 'Activating', activate_this
         execfile(activate_this, dict(__file__=activate_this))
         break
+
+from django.core.management import execute_manager
+import imp
 
 try:
     imp.find_module('settings') # Assumed to be in the same directory.
