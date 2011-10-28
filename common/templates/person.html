@@ -3,7 +3,9 @@
 {% block title %}MIL.ORG - Карточка Воина{% endblock %}
 
 {% block content %}
-<h1><a href="/admin/common/person/{{person.uuid}}">Личная карточка воина {{ person.last_name }}</a></h1>
+    <h1>Личная карточка воина {{ person.last_name }}</h1>
+    <a href="/admin/common/person/{{person.uuid}}">редактировать</a>
+    <br>
     <br>
     Фамилия: {{ person.last_name }}<br>
     Имя: {{ person.first_name }}<br>
