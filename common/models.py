@@ -347,7 +347,7 @@ class BurialCategory(models.Model):
         verbose_name_plural = (u'Связи категории с захоронением')
 
     def update(self):
-        self.known = self.burial.person_set.all().count()
+        self.known = self.burial.person_set.filter(deadman_category=self.category).count()
         self.updated = datetime.datetime.now()
         self.save()
 
