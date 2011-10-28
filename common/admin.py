@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django import forms
 
 from common.models import *
 from common.forms import PersonAdminForm
@@ -23,6 +24,10 @@ class PersonEditCauseInline(admin.TabularInline):
 
 class LocationBirthInLine(admin.TabularInline):
     model = LocationBirth
+
+    def __init__(self, *args, **kwargs):
+        super(LocationBirthInLine, self).__init__(*args, **kwargs)
+        self.opts.get_field_by_name('info')[0].verbose_name = u'Дополнительная информация о месте жительства и родственниках'
 
 class LocationBurialInLine(admin.TabularInline):
     model = LocationBurial
@@ -86,6 +91,11 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['closed_burials', 'date_of_creation', 'last_edit', ]
+
+
+    def __init__(self, *args, **kwargs):
+        super(PersonAdmin, self).__init__(*args, **kwargs)
+        self.opts.get_field_by_name('info')[0].verbose_name = u'Дополнительная информация о месте захоронения'
 
     def get_fieldsets(self, *args, **kwargs):
         fieldsets = super(PersonAdmin, self).get_fieldsets(*args, **kwargs)
