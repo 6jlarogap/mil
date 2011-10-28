@@ -5,7 +5,7 @@ import imp
 import os, sys
 
 for search in ['.', '..']:
-    activate_this = os.path.join(search. '.env', 'bin', 'activate_this.py')
+    activate_this = os.path.join(search, '.env', 'bin', 'activate_this.py')
     if os.path.exists(activate_this):
         execfile(activate_this, dict(__file__=activate_this))
         break
