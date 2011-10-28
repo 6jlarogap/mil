@@ -113,7 +113,7 @@ class PersonsForm(forms.Form):
     death_date_to = UnclearDateField(required=False, label='Дата смерти по')
 
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
-    info = forms.CharField(required=False, max_length=30, label="Доролнительная информация о воине")
+    info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о воине")
     in_trash = forms.BooleanField(required=False, label="В корзине")
 
     def __init__(self, *args, **kwargs):

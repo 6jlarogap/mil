@@ -43,7 +43,7 @@
     {# Вывод результатов поиска в виде таблицы #}
     {% if persons %}
         <table width="100%">
-            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ persons_count.number }}&nbsp;записей</caption>
+            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ persons_count }}&nbsp;записей</caption>
                 <thead>
                     <th>№п/п</th>
                     <th>Фамилия</th>
@@ -97,9 +97,16 @@
         </center>
     {% else %}
         {% if is_first_search %}
-            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ persons_count.number }}&nbsp;</caption>
+            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ persons_count }}&nbsp;</caption>
         {% else %}
             <caption>Результат&nbsp;поиска:&nbsp;0</font>&nbsp;записей</caption>
         {% endif %}
+    {% endif %}
+
+
+    {% if debug %}
+        {% for q in sql_queries %}
+            <br/>{{ q }}
+        {% endfor %}
     {% endif %}
 {% endblock %}

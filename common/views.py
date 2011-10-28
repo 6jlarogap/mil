@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import *
 from django.core.paginator import Paginator, EmptyPage
+from django.core.cache import cache
 
 from common.models import *
 from common.forms import *
@@ -123,7 +124,7 @@ def persons(request):
 #                        'form': form
 #                        }))
 #                else:
-                    persons_count = persons.aggregate(number=Count('uuid'))
+                    persons_count = persons.count()
 
                     paginator = Paginator(persons, 20)
                     p = request.GET.get('p', '1')
@@ -150,7 +151,12 @@ def persons(request):
         if request.GET['search'] == u'Сброс':
             return HttpResponseRedirect('/persons')
     form = PersonsForm()
-    persons_count = Person.objects.aggregate(number=Count('uuid'))
+
+    persons_count = cache.get('db_size')
+    if not persons_count:
+        persons_count = Person.objects.all().count()
+        cache.set('db_size', persons_count, 3600)
+
     return render_to_response('persons.html', context_instance = RequestContext(request, {
         'is_first_search': True,
         'persons_count': persons_count,
