@@ -68,6 +68,10 @@ class BurialAdmin(admin.ModelAdmin):
 
         return super(BurialAdmin, self).change_view(request, object_id, extra_context=None)
 
+
+class RankAdmin(admin.ModelAdmin):
+    search_fields = ['name', ]
+
 class PersonAdmin(admin.ModelAdmin):
     class Media:
         js = ['js/admin/person.js', ]
@@ -94,7 +98,7 @@ admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
 admin.site.register(GeoCity)
 admin.site.register(GeoStreet)
-admin.site.register(Rank)
+admin.site.register(Rank, RankAdmin)
 admin.site.register(MilitaryUnit)
 admin.site.register(DeathCause)
 admin.site.register(DeadmanCategory)

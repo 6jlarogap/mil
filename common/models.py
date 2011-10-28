@@ -522,9 +522,11 @@ class Rank(models.Model):
 
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name = (u'воинское звание')
         verbose_name_plural = (u'воинские звания')
+        ordering = ['name', ]
 
 class PersonDuty(models.Model):
     """
