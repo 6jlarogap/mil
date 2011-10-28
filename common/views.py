@@ -13,7 +13,9 @@ from common.forms import *
 
 def persons_autocomplete(request):
     persons = Person.objects.filter(last_name__istartswith=request.GET.get('term')).values_list('last_name', flat=True)
-    return HttpResponse(simplejson.dumps(list(persons.distinct('last_name')[:10])))
+    names = list(set(list(persons.order_by('last_name'))[:100]))
+    names.sort()
+    return HttpResponse(simplejson.dumps(names))
 
 def persons(request):
     """
