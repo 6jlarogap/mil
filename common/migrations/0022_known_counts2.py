@@ -8,10 +8,10 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         "Write your forwards methods here."
-        
+
         for bc in orm.BurialCategory.objects.all():
             bc.known = bc.burial.person_set.filter(deadman_category=bc.category).count()
-            if self.category.name == u'Другие':
+            if bc.category.name == u'Другие':
                 bc.known += bc.burial.person_set.filter(deadman_category__isnull=True).count()
             bc.save()
 
