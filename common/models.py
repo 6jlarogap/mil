@@ -162,7 +162,6 @@ class Burial(models.Model):
     date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
     date_gosznak = models.DateField(u"Дата установки госзнака", blank=True, null=True)
-    qunknown = models.IntegerField(u"Количество неизвестных захороненных", blank=True, null=True)
     photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
     scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
     creator = models.ForeignKey(User, blank=True, null=True)                                # Создатель записи
