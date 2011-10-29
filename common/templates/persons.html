@@ -48,6 +48,13 @@
         <table>
             {{ form.as_table }}
             <tr>
+                <td>Отчет</td>
+                <td>
+                    <label><input type="radio" name="template" value="persons.html" checked="1">Стандартный</label>
+                    <label><input type="radio" name="template" value="reports/report_3.html">Отчет 3</label>
+                </td>
+            </tr>
+            <tr>
                 <td style="vertical-align: middle;">
                     <input type="submit" value="Поиск" name="search" id="isok" style="padding: 10px 50px; "/>
                 </td>

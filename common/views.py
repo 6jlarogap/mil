@@ -119,31 +119,96 @@ def persons(request):
                 if cd['info']:
                     persons = persons.filter(info__icontains = cd['info'])
                 if persons:
-#                if not persons:
-#                    return render_to_response('persons.html', context_instance=RequestContext(request, {
-#                        'form': form
-#                        }))
-#                else:
                     persons_count = persons.count()
 
                     paginator = Paginator(persons, 20)
                     p = request.GET.get('p', '1')
                     try:
-                        persons = paginator.page(p)
+                        persons_page = paginator.page(p)
                     except EmptyPage:
-                        persons = paginator.page(paginator.num_pages)
+                        persons_page = paginator.page(paginator.num_pages)
                         
                     query_vars = ''
                     for x in request.GET:
                         query_vars += '%s=%s&' % (x, request.GET[x])
 
-                    return render_to_response('persons.html', context_instance = RequestContext(request, {
-                        'persons': persons,
+                    template = request.REQUEST.get('template', 'persons.html')
+
+                    context = {
+                        'persons': persons_page,
                         'persons_count': persons_count,
                         'query_vars': query_vars,
                         'form': form,
                         'search_offset': 20 * (int(p) - 1),
-                    }))
+                    }
+
+                    if template == 'reports/report_3.html':
+                        all_count = Person.objects.all().count()
+                        unknown_count = BurialCategory.objects.all().aggregate(unknown=models.Sum('unknown'))['unknown']
+                        context.update({
+                            'all': Burial.objects.all().count(),
+                            'conflicts': {
+                                'WW': Burial.objects.filter(
+                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                ).count(),
+                                'WWII': Burial.objects.filter(
+                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                ).count(),
+                                'local': Burial.objects.filter(military_conflict__name=u"Локальные военные конфликты").count(),
+                                'other': Burial.objects.exclude(
+                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                ).count(),
+                            },
+                            'types': {
+                                'war': Burial.objects.filter(
+                                    burial_type__name__in=[u"Воинское кладбище", u"Смешанное"]
+                                ).count(),
+                                'group': Burial.objects.filter(
+                                    burial_type__name__in=[u"Братская могила"]
+                                ).count(),
+                                'personal': Burial.objects.filter(
+                                    burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
+                                ).count(),
+                                'mass': Burial.objects.filter(
+                                    burial_type__name__in=[u"Место массов.уничтож."]
+                                ).count(),
+                                'foreign': Burial.objects.filter(
+                                    burial_type__name__in=[u"Иностранное"]
+                                ).count(),
+                            },
+                            'persons': {
+                                'all': all_count + unknown_count,
+                                'known': all_count,
+                                'unknown': unknown_count,
+                                'WW': Person.objects.filter(
+                                    burial__military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                ).count(),
+                                'WWII': Person.objects.filter(
+                                    burial__military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                ).count(),
+                                'local': Person.objects.filter(
+                                    burial__military_conflict__name=u"Локальные военные конфликты"
+                                ).count(),
+                                'other': Person.objects.exclude(
+                                    burial__military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                ).count(),
+                                'soldiers': Person.objects.exclude(
+                                    deadman_category__name__in=[u"Военнослужащий", ]
+                                ).count(),
+                                'resistance': Person.objects.exclude(
+                                    deadman_category__name__in=[u"Участник сопротивления", ]
+                                ).count(),
+                                'prey': Person.objects.exclude(
+                                    deadman_category__name__in=[u"Жертва войны", ]
+                                ).count(),
+                                'prisoners': Person.objects.exclude(
+                                    deadman_category__name__in=[u"Другие", ]
+                                ).count(),
+                                'nowhere': Person.objects.filter(burial__isnull=True).count(),
+                            },
+                        })
+
+                    return render_to_response(template, context_instance = RequestContext(request, context))
             return render_to_response('persons.html', context_instance=RequestContext(request, {
                 'form': form
                 }))
