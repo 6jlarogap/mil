@@ -52,6 +52,22 @@ class BurialCategoryInLine(admin.TabularInline):
     template = 'tabular_burialcat.html'
     fieldsets = [(None, {'fields': ['category', 'known', 'unknown', ]})]
 
+    def get_formset(self, request, obj=None):
+        if not obj:
+            if not request.POST:
+                self.extra = DeadmanCategory.objects.all().count()
+            FormSetClass = super(BurialCategoryInLine, self).get_formset(request, obj)
+
+            class NewFormSetClass(FormSetClass):
+                def __init__(self, *args, **kwargs):
+                    super(NewFormSetClass, self).__init__(*args, **kwargs)
+                    self.initial = []
+                    for i, c in enumerate(DeadmanCategory.objects.all()):
+                        self.forms[i].instance = BurialCategory(**{'category': c, 'known': 0})
+            return NewFormSetClass
+        else:
+            return super(BurialCategoryInLine, self).get_formset(request, obj)
+
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
         LocationBurialInLine,
