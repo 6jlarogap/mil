@@ -210,30 +210,6 @@ def burials(request):
                     burials = burials.filter(date_burried__gte = cd['burried_date_from'])
                 if cd['burried_date_to']:
                     burials = burials.filter(date_burried__lte = cd['burried_date_to'])
-                """
-                if cd['passport_date_from']:
-                    burials = burials.filter(date_passport__gte = cd['passport_date_from'])
-                if cd['passport_date_to']:
-                    burials = burials.filter(date_passport__lte = cd['passport_date_to'])
-                if cd['discovered_date_from']:
-                    burials = burials.filter(date_discovered__gte = cd['discovered_date_from'])
-                if cd['discovered_date_to']:
-                    burials = burials.filter(date_discovered__lte = cd['discovered_date_to'])
-                if cd['closure_date_from']:
-                    burials = burials.filter(date_closure__gte = cd['closure_date_from'])
-                if cd['closure_date_to']:
-                    burials = burials.filter(date_closure__lte = cd['closure_date_to'])
-                if cd['closure_cause']:
-                    burials = burials.filter(closure_cause__name = cd['closure_cause'])
-                if cd['memorial_date_from']:
-                    burials = burials.filter(date_memorial__gte = cd['memorial_date_from'])
-                if cd['memorial_date_to']:
-                    burials = burials.filter(date_memorial__lte = cd['memorial_date_to'])
-                if cd['gosznak_date_from']:
-                    burials = burials.filter(date_gosznak__gte = cd['gosznak_date_from'])
-                if cd['gosznak_date_to']:
-                    burials = burials.filter(date_gosznak__lte = cd['gosznak_date_to'])
-                """
                 if cd['info']:
                     burials = burials.filter(info__icontains = cd['info'])
                 if cd['state']:
@@ -333,6 +309,115 @@ def burials(request):
                             },
                         })
 
+                    if template == 'reports/report_4.html':
+                        selected_persons = Person.objects.filter(burial__in=burials)
+
+                        def filter_data(burials_all, persons_all, region, city):
+                            if city:
+                                burials_sel = burials_all.filter(locationburial__city=city)
+                            else:
+                                burials_sel = burials_all.filter(locationburial__city__region=region)
+                            b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
+                            unknown = b_cats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
+                            if region:
+                                persons_sel = persons_all.filter(burial__locationburial__city=city)
+                            else:
+                                persons_sel = persons_all.filter(burial__locationburial__city__region=region)
+                            return {
+                                'burials': {
+                                    'all': burials_sel.count(),
+                                    'WW': burials_sel.filter(military_conflict__name__in=[
+                                        u"Иностранные 1мв", u"Первая мировая война"]).count(),
+                                    'WWII': burials_sel.filter(military_conflict__name__in=[
+                                        u"Иностранные 2мв", u"Вторая мировая война"]).count(),
+                                    'local': burials_sel.filter(military_conflict__name__in=[
+                                        u"Локальные военные конфликты"]).count(),
+                                    'other': burials_sel.exclude(military_conflict__name__in=[
+                                        u"Иностранные 2мв", u"Вторая мировая война", u"Иностранные 1мв",
+                                        u"Первая мировая война", u"Локальные военные конфликты"
+                                    ]).count(),
+                                    'war': burials_sel.filter(
+                                        burial_type__name__in=[u"Воинское кладбище", u"Смешанное"]
+                                    ).count(),
+                                    'group': burials_sel.filter(
+                                        burial_type__name__in=[u"Братская могила"]
+                                    ).count(),
+                                    'personal': burials_sel.filter(
+                                        burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
+                                    ).count(),
+                                    'mass': burials_sel.filter(
+                                        burial_type__name__in=[u"Место массов.уничтож."]
+                                    ).count(),
+                                    'foreign': burials_sel.filter(
+                                        burial_type__name__in=[u"Иностранное"]
+                                    ).count(),
+                                },
+
+                                'persons': {
+                                    'all': persons_sel.count() + unknown,
+                                    'known': persons_sel.count(),
+                                    'unknown': unknown,
+                                    'WW': persons_sel.filter(burial__military_conflict__name__in=[
+                                        u"Иностранные 1мв", u"Первая мировая война"
+                                    ]).count(),
+                                    'WWII': persons_sel.filter(burial__military_conflict__name__in=[
+                                        u"Иностранные 2мв", u"Вторая мировая война"
+                                    ]).count(),
+                                    'local': persons_sel.filter(burial__military_conflict__name__in=[
+                                        u"Локальные военные конфликты"]).count(),
+                                    'other': persons_sel.exclude(burial__military_conflict__name__in=[
+                                        u"Иностранные 2мв", u"Вторая мировая война", u"Иностранные 1мв", u"Первая мировая война", u"Локальные военные конфликты"
+                                    ]).count(),
+                                    'soldiers': persons_sel.filter(
+                                        deadman_category__name__in=[u"Военнослужащий", ]
+                                    ).count(),
+                                    'resistance': persons_sel.filter(
+                                        deadman_category__name__in=[u"Участник сопротивления", ]
+                                    ).count(),
+                                    'prey': persons_sel.filter(
+                                        deadman_category__name__in=[u"Жертва войны", ]
+                                    ).count(),
+                                    'prisoners': persons_sel.filter(
+                                        deadman_category__isnull=[u"Другие", ]
+                                    ).count(),
+                                },
+
+                            }
+
+                        rows = []
+                        if form.cleaned_data.get('region'):
+                            for city in form.cleaned_data['region'].geocity_set.all().order_by('name'):
+                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), city)
+                                data = cache.get(data_key)
+                                if not data:
+                                    data = filter_data(
+                                        burials, selected_persons, form.cleaned_data['region'], city
+                                    )
+                                    cache.set(data_key, data, 86400)
+                                if not data['persons']['all'] and not data['burials']['all']:
+                                    continue
+                                rows.append({
+                                    'city': city,
+                                    'data': data
+                                })
+                        else:
+                            for region in form.cleaned_data['country'].georegion_set.all().order_by('name'):
+                                data_key = 'form4_data_%s_%s' % (region, '')
+                                data = cache.get(data_key)
+                                if not data:
+                                    data = filter_data(
+                                        burials, selected_persons, region, None
+                                    )
+                                    cache.set(data_key, data, 86400)
+                                if not data['persons']['all'] and not data['burials']['all']:
+                                    continue
+                                rows.append({
+                                    'region': region,
+                                    'data': data
+                                })
+
+                        context['rows'] = rows
+
                     return render_to_response(template, context_instance = RequestContext(request, context))
             return render_to_response('burials.html', context_instance=RequestContext(request, {
                 'form': form
@@ -341,7 +426,7 @@ def burials(request):
         if request.GET['search'] == u'Сброс':
             return HttpResponseRedirect('/burials')
     form = BurialsForm()
-    burials_count = Burial.objects.aggregate(number=Count('uuid'))
+    burials_count = Burial.objects.count()
     return render_to_response('burials.html', context_instance = RequestContext(request, {
         'is_first_search': True,
         'burials_count': burials_count,

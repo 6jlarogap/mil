@@ -32,7 +32,7 @@
                     <select name="template" id="id_select_template">
                         <option value="persons.html">Стандартный</option>
                         <option value="reports/report_3.html">Форма 3</option>
-                        <option value="reports/report_4.html">Форма 4</option>
+                        <option value="reports/report_4.html">Форма 4(а)</option>
                         <option value="reports/report_5.html">Форма 5</option>
                     </select>
                 </td>
@@ -51,7 +51,7 @@
     {# Вывод результатов поиска в виде таблицы #}
     {% if burials %}
         <table width="100%">
-            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ burials_count.number }}&nbsp;записей</caption>
+            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ burials_count }}&nbsp;записей</caption>
                 <thead>
                     <td>Паспорт</td>
                     <td>Дата паспорта</td>
@@ -97,7 +97,7 @@
         </center>
     {% else %}
         {% if is_first_search %}
-            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ burials_count.number }}&nbsp;</caption>
+            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ burials_count }}&nbsp;</caption>
         {% else %}
             <caption>Результат&nbsp;поиска:&nbsp;0</font>&nbsp;записей</caption>
         {% endif %}
