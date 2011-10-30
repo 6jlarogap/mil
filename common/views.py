@@ -265,9 +265,11 @@ def burials(request):
                         'form': form
                     }
 
-                    if template == 'reports/report_3.html':
-                        all_count = Person.objects.all().count()
-                        unknown_count = BurialCategory.objects.all().aggregate(unknown=models.Sum('unknown'))['unknown']
+                    if template == 'reports/report_3.html' or template == 'reports/report_5.html':
+                        selected_persons = Person.objects.filter(burial__in=burials)
+                        all_count = selected_persons.count()
+                        bcats = BurialCategory.objects.filter(burial__in=burials)
+                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown']
                         context.update({
                             'all': burials.count(),
                             'conflicts': {
@@ -303,31 +305,31 @@ def burials(request):
                                 'all': all_count + unknown_count,
                                 'known': all_count,
                                 'unknown': unknown_count,
-                                'WW': Person.objects.filter(
+                                'WW': selected_persons.filter(
                                     burial__military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
                                 ).count(),
-                                'WWII': Person.objects.filter(
+                                'WWII': selected_persons.filter(
                                     burial__military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
                                 ).count(),
-                                'local': Person.objects.filter(
+                                'local': selected_persons.filter(
                                     burial__military_conflict__name=u"Локальные военные конфликты"
                                 ).count(),
-                                'other': Person.objects.exclude(
+                                'other': selected_persons.exclude(
                                     burial__military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
                                 ).count(),
-                                'soldiers': Person.objects.exclude(
+                                'soldiers': selected_persons.filter(
                                     deadman_category__name__in=[u"Военнослужащий", ]
                                 ).count(),
-                                'resistance': Person.objects.exclude(
+                                'resistance': selected_persons.filter(
                                     deadman_category__name__in=[u"Участник сопротивления", ]
                                 ).count(),
-                                'prey': Person.objects.exclude(
+                                'prey': selected_persons.filter(
                                     deadman_category__name__in=[u"Жертва войны", ]
                                 ).count(),
-                                'prisoners': Person.objects.exclude(
-                                    deadman_category__name__in=[u"Другие", ]
+                                'prisoners': selected_persons.filter(
+                                    deadman_category__isnull=[u"Другие", ]
                                 ).count(),
-                                'nowhere': Person.objects.filter(burial__isnull=True).count(),
+                                'nowhere': selected_persons.filter(burial__isnull=True).count(),
                             },
                         })
 
