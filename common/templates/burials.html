@@ -27,8 +27,23 @@
         <table>
             {{ form.as_table }}
             <tr>
-                <td><input type="submit" value="Поиск" name="search" id="isok"></td>
-                <td><input type="submit" value="Сброс" name="search" id="iscancel"></td>
+                <td><label for="id_select_template">Отчет</label></td>
+                <td>
+                    <select name="template" id="id_select_template">
+                        <option value="persons.html">Стандартный</option>
+                        <option value="reports/report_3.html">Форма 3</option>
+                        <option value="reports/report_4.html">Форма 4</option>
+                        <option value="reports/report_5.html">Форма 5</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: middle;">
+                    <input type="submit" value="Поиск" name="search" id="isok" style="padding: 10px 50px; " />
+                </td>
+                <td style="vertical-align: middle; text-align: right;">
+                    <input type="submit" value="Сброс" name="search" id="iscancel" />
+                </td>
             </tr>
         </table>
     </form>
