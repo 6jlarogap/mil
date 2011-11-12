@@ -401,7 +401,11 @@ def burials(request):
                                     'data': data
                                 })
                         else:
-                            for region in form.cleaned_data['country'].georegion_set.all().order_by('name'):
+                            if form.cleaned_data['country']:
+                                regions = form.cleaned_data['country'].georegion_set.all().order_by('name')
+                            else:
+                                regions = GeoRegion.objects.all().order_by('name')
+                            for region in regions:
                                 data_key = 'form4_data_%s_%s' % (region, '')
                                 data = cache.get(data_key)
                                 if not data:
@@ -430,8 +434,9 @@ def burials(request):
     return render_to_response('burials.html', context_instance = RequestContext(request, {
         'is_first_search': True,
         'burials_count': burials_count,
-        'form': form
-        }))
+        'form': form,
+        'template': request.REQUEST.get('template', 'burials.html'),
+    }))
 
 def burial(request, obj):
     """Страница просмотра данных Захоронения.
