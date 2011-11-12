@@ -1,0 +1,11 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript">
+    django.jQuery(function($) {
+        $('.form-row.burial_type').before($('#locationburial-group'));
+        $('#locationburial-group textarea').css('width', '300px');
+        $('#locationburial-group').css({margin: '0', border: 'none'});
+    })
+</script>
+{% endblock %}
