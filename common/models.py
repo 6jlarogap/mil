@@ -152,7 +152,7 @@ class Burial(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
-    passportid = models.CharField(u"Номер паспорта захоронения",  blank=True, null=True, max_length=128)
+    passportid = models.CharField(u"Номер паспорта воинского захоронения",  blank=True, null=True, max_length=128)
     date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True)
     date_burried = models.DateField(u"Дата создания захоронения", blank=True, null=True)
     date_discovered = models.DateField(u"Дата обнаружения", blank=True, null=True)
