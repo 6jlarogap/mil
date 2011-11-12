@@ -75,6 +75,7 @@ class BurialAdmin(admin.ModelAdmin):
         ClosedBurialFromInLine,
     ]
     search_fields = ['passportid', ]
+    readonly_fields = ['date_of_creation', 'date_of_creation', 'last_edit', ]
 
     def change_view(self, request, object_id, extra_context=None):
         try:
