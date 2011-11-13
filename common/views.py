@@ -319,75 +319,54 @@ def burials(request):
                                 burials_sel = burials_all.filter(locationburial__city__region=region)
                             b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
                             unknown = b_cats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
-                            if region:
-                                persons_sel = persons_all.filter(burial__locationburial__city=city)
-                            else:
-                                persons_sel = persons_all.filter(burial__locationburial__city__region=region)
-                            return {
-                                'burials': {
-                                    'all': burials_sel.count(),
-                                    'WW': burials_sel.filter(military_conflict__name__in=[
-                                        u"Иностранные 1мв", u"Первая мировая война"]).count(),
-                                    'WWII': burials_sel.filter(military_conflict__name__in=[
-                                        u"Иностранные 2мв", u"Вторая мировая война"]).count(),
-                                    'local': burials_sel.filter(military_conflict__name__in=[
-                                        u"Локальные военные конфликты"]).count(),
-                                    'other': burials_sel.exclude(military_conflict__name__in=[
-                                        u"Иностранные 2мв", u"Вторая мировая война", u"Иностранные 1мв",
-                                        u"Первая мировая война", u"Локальные военные конфликты"
-                                    ]).count(),
-                                    'war': burials_sel.filter(
-                                        burial_type__name__in=[u"Воинское кладбище", u"Смешанное"]
-                                    ).count(),
-                                    'group': burials_sel.filter(
-                                        burial_type__name__in=[u"Братская могила"]
-                                    ).count(),
-                                    'personal': burials_sel.filter(
-                                        burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
-                                    ).count(),
-                                    'mass': burials_sel.filter(
-                                        burial_type__name__in=[u"Место массов.уничтож."]
-                                    ).count(),
-                                    'foreign': burials_sel.filter(
-                                        burial_type__name__in=[u"Иностранное"]
-                                    ).count(),
-                                },
+                            persons_sel = persons_all.filter(burial__in=burials_sel)
 
-                                'persons': {
+                            if not burials_sel.count() and not persons_sel.count() and not unknown:
+                                return {'burials': {'all': 0}, 'persons': {'all': 0}, }
+                            else:
+                                conflicts = MilitaryConflict.objects.filter(burial__in=burials_sel).annotate(count=Count('burial'))
+                                burial_types = BurialType.objects.filter(burial__in=burials_sel).annotate(count=Count('burial'))
+
+                                burials_data = {
+                                    'all': burials_sel.count(),
+                                    'WW': sum([c.count for c in conflicts if c.name in [u"Иностранные 1мв", u"Первая мировая война"]]),
+                                    'WWII': sum([c.count for c in conflicts if c.name in [u"Иностранные 2мв", u"Вторая мировая война"]]),
+                                    'local': sum([c.count for c in conflicts if c.name in [u"Локальные военные конфликты"]]),
+                                    'other': sum([c.count for c in conflicts if c.name not in [u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]]),
+                                    'war': sum([b.count for b in burial_types if b.name in [u"Воинское кладбище", u"Смешанное"]]),
+                                    'group': sum([b.count for b in burial_types if b.name in [u"Братская могила"]]),
+                                    'personal': sum([b.count for b in burial_types if b.name in [u"Индивидуальная могила", u"Локальные войны"]]),
+                                    'mass': sum([b.count for b in burial_types if b.name in [u"Место массов.уничтож."]]),
+                                    'foreign': sum([b.count for b in burial_types if b.name in [u"Иностранное"]]),
+                                }
+
+                                conflicts = MilitaryConflict.objects.filter(burial__person__in=persons_sel).annotate(count=Count('burial__person'))
+                                deadman_cats = DeadmanCategory.objects.filter(person__in=persons_sel).annotate(count=Count('person'))
+
+                                persons_data = {
                                     'all': persons_sel.count() + unknown,
                                     'known': persons_sel.count(),
                                     'unknown': unknown,
-                                    'WW': persons_sel.filter(burial__military_conflict__name__in=[
-                                        u"Иностранные 1мв", u"Первая мировая война"
-                                    ]).count(),
-                                    'WWII': persons_sel.filter(burial__military_conflict__name__in=[
-                                        u"Иностранные 2мв", u"Вторая мировая война"
-                                    ]).count(),
-                                    'local': persons_sel.filter(burial__military_conflict__name__in=[
-                                        u"Локальные военные конфликты"]).count(),
-                                    'other': persons_sel.exclude(burial__military_conflict__name__in=[
-                                        u"Иностранные 2мв", u"Вторая мировая война", u"Иностранные 1мв", u"Первая мировая война", u"Локальные военные конфликты"
-                                    ]).count(),
-                                    'soldiers': persons_sel.filter(
-                                        deadman_category__name__in=[u"Военнослужащий", ]
-                                    ).count(),
-                                    'resistance': persons_sel.filter(
-                                        deadman_category__name__in=[u"Участник сопротивления", ]
-                                    ).count(),
-                                    'prey': persons_sel.filter(
-                                        deadman_category__name__in=[u"Жертва войны", ]
-                                    ).count(),
-                                    'prisoners': persons_sel.filter(
-                                        deadman_category__isnull=[u"Другие", ]
-                                    ).count(),
-                                },
+                                    'WW': sum([c.count for c in conflicts if c.name in [u"Иностранные 1мв", u"Первая мировая война"]]),
+                                    'WWII': sum([c.count for c in conflicts if c.name in [u"Иностранные 2мв", u"Вторая мировая война"]]),
+                                    'local': sum([c.count for c in conflicts if c.name in [u"Локальные военные конфликты"]]),
+                                    'other': sum([c.count for c in conflicts if c.name not in [u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]]),
+                                    'soldiers': sum([d.count for d in deadman_cats if d.name in [u"Военнослужащий",]]),
+                                    'resistance': sum([d.count for d in deadman_cats if d.name in [u"Участник сопротивления",]]),
+                                    'prey': sum([d.count for d in deadman_cats if d.name in [u"Жертва войны",]]),
+                                    'prisoners': sum([d.count for d in deadman_cats if d.name in [u"Другие",]]),
+                                }
 
-                            }
+                                return {
+                                    'burials': burials_data,
+                                    'persons': persons_data,
+
+                                }
 
                         rows = []
                         if form.cleaned_data.get('region'):
                             for city in form.cleaned_data['region'].geocity_set.all().order_by('name'):
-                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), city)
+                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), city.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
@@ -406,7 +385,7 @@ def burials(request):
                             else:
                                 regions = GeoRegion.objects.all().order_by('name')
                             for region in regions:
-                                data_key = 'form4_data_%s_%s' % (region, '')
+                                data_key = 'form4_data_%s_%s' % (region.pk, '')
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
