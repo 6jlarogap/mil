@@ -488,12 +488,23 @@ class MilitaryUnit(Location):
         verbose_name = (u'Воинское подразделение')
         verbose_name_plural = (u'Воинские подразделения')
 
+class Comissariat(Location):
+    """
+    Военкомат
+    """
+    name = models.CharField(u"Военкомат", max_length=100)
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        verbose_name = (u'Военкомат')
+        verbose_name_plural = (u'Военкоматы')
+
 class PersonCall(models.Model):
     """
     Место призыва
     """
     person = models.OneToOneField(Person, primary_key=True)  
-    unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", blank=True, null=True)
+    unit = models.ForeignKey(Comissariat, verbose_name=u"Военкомат", blank=True, null=True)
     date = models.DateField(u"Дата призыва", blank=True, null=True)
 
     def __unicode__(self):
