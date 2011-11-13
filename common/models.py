@@ -343,8 +343,8 @@ class BurialCategory(models.Model):
         return u'%s - %s' % (self.burial, self.category)
 
     class Meta:
-        verbose_name = (u'Связь категории с захоронением')
-        verbose_name_plural = (u'Связи категории с захоронением')
+        verbose_name = (u'Количество захороненных')
+        verbose_name_plural = (u'Количество захороненных')
 
     def update(self):
         self.known = self.burial.person_set.filter(deadman_category=self.category).count()
