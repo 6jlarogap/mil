@@ -4,7 +4,7 @@ from django.contrib import admin
 from django import forms
 
 from common.models import *
-from common.forms import PersonAdminForm
+from common.forms import PersonAdminForm, BurialAdminForm
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
@@ -74,6 +74,7 @@ class BurialAdmin(admin.ModelAdmin):
         BurialCategoryInLine,
         ClosedBurialFromInLine,
     ]
+    form = BurialAdminForm
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', ]
 

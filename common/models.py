@@ -161,7 +161,11 @@ class Burial(models.Model):
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
     date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
-    date_gosznak = models.DateField(u"Дата установки госзнака", blank=True, null=True)
+
+    date_gosznak = models.DateField(u"Дата установки государственного знака", blank=True, null=True)
+    date_gosznak_no_month = models.BooleanField(default=False, editable=False)
+    date_gosznak_no_day = models.BooleanField(default=False, editable=False)
+
     photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
     scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
     creator = models.ForeignKey(User, blank=True, null=True)                                # Создатель записи
@@ -202,6 +206,23 @@ class Burial(models.Model):
         except:
             pass
         return last
+
+    def get_unclear_date(self, field_name):
+        if not getattr(self, field_name, None):
+            return None
+        cur_date = getattr(self, field_name)
+        tmp_date = UnclearDate(cur_date.year, cur_date.month, cur_date.day)
+        if getattr(self, field_name+'_no_day'):
+            tmp_date.day = None
+        if getattr(self, field_name+'_no_month'):
+            tmp_date.month = None
+        return tmp_date
+
+    def set_unclear_date(self, field_name, ud):
+        setattr(self, field_name, ud)
+        if ud:
+            setattr(self, field_name+'_no_day', ud.no_day)
+            setattr(self, field_name+'_no_month', ud.no_month)
 
 class ClosureCause(models.Model):
     """

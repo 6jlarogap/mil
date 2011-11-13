@@ -147,6 +147,30 @@ class BurialsForm(forms.ModelForm):
         model = LocationBurial
         fields = ['country', 'region', 'city']
 
+class BurialAdminForm(forms.ModelForm):
+    date_gosznak = UnclearDateField(label=u"Дата установки государственного знака", required=False)
+
+    class Meta:
+        model = Burial
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('initial', {}).update({
+            'date_gosznak': kwargs.get('instance', Burial()).get_unclear_date('date_gosznak'),
+        })
+        super(BurialAdminForm, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        kwargs['commit'] = False
+        obj = super(BurialAdminForm, self).save(*args, **kwargs)
+        for f in self.fields:
+            if isinstance(self.fields[f], UnclearDateField):
+                setattr(obj, f, self.cleaned_data[f])
+                self.fields[f].widget.value_from_datadict(data=self.data, files=None, name=f)
+                setattr(obj, f+'_no_month', getattr(obj, f) and self.fields[f].widget.no_month or False)
+                setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
+        obj.save()
+        return obj
+
 class PersonAdminForm(forms.ModelForm):
     birth_date = UnclearDateField(label=u"Дата рождения", required=False)
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
