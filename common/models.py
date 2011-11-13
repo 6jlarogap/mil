@@ -301,8 +301,8 @@ class LocationBurial(Location):
     """
     burial = models.OneToOneField(Burial, primary_key=True)
     class Meta:
-        verbose_name = (u'Адрес захоронения')
-        verbose_name_plural = (u'Адрес захоронения')
+        verbose_name = (u'Место захоронения')
+        verbose_name_plural = (u'Место захоронения')
 
 class DeathCause(models.Model):
     """
