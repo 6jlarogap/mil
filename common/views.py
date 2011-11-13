@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import urllib
 import simplejson
 
 from django.shortcuts import render_to_response
@@ -214,9 +215,10 @@ def burials(request):
                     burials = burials.filter(info__icontains = cd['info'])
                 if cd['state']:
                     burials = burials.filter(state__name = cd['burial_type'])
-                if not burials:
+                if not burials.count():
                     return render_to_response('burials.html', context_instance=RequestContext(request, {
-                        'form': form
+                        'form': form,
+                        'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                         }))
                 else:
                     burials_count = burials.count()
@@ -238,14 +240,15 @@ def burials(request):
                         'burials': burials_page,
                         'burials_count': burials_count,
                         'query_vars': query_vars,
-                        'form': form
+                        'form': form,
+                        'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                     }
 
                     if template == 'reports/report_3.html' or template == 'reports/report_5.html':
                         selected_persons = Person.objects.filter(burial__in=burials)
                         all_count = selected_persons.count()
                         bcats = BurialCategory.objects.filter(burial__in=burials)
-                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown']
+                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
                         context.update({
                             'all': burials.count(),
                             'conflicts': {
@@ -403,7 +406,8 @@ def burials(request):
 
                     return render_to_response(template, context_instance = RequestContext(request, context))
             return render_to_response('burials.html', context_instance=RequestContext(request, {
-                'form': form
+                'form': form,
+                'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                 }))
         # Если пользователь нажал кнопку 'Сброс'
         if request.GET['search'] == u'Сброс':
@@ -414,7 +418,7 @@ def burials(request):
         'is_first_search': True,
         'burials_count': burials_count,
         'form': form,
-        'template': request.REQUEST.get('template', 'burials.html'),
+        'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
     }))
 
 def burial(request, obj):
