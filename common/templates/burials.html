@@ -74,7 +74,12 @@
                     <td>{{ burial.state }}</td>
                     <td>{{ burial.date_gosznak }}</td>
                     <td>{{ burial.info }}</td>
-                    <td align="center"><a href="{% url burial  burial.uuid %}">[Просмотр]</a></td>
+                    <td align="center">
+                        <a href="{% url burial  burial.uuid %}">[Просмотр]</a>
+                        {% if user.is_staff or user.is_superuser %}
+                            <br/><a href="{% url admin:common_burial_changelist burial.uuid %}">[Редактирование]</a>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
