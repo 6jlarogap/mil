@@ -81,7 +81,7 @@ class BurialAdmin(admin.ModelAdmin):
     ]
     form = BurialAdminForm
     search_fields = ['passportid', ]
-    readonly_fields = ['date_of_creation', 'date_of_update', ]
+    readonly_fields = ['date_of_creation', 'date_of_update', 'creator', ]
 
     def change_view(self, request, object_id, extra_context=None):
         try:
@@ -117,7 +117,7 @@ class PersonAdmin(admin.ModelAdmin):
     ]
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
-    readonly_fields = ['date_of_creation', 'last_edit', ]
+    readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
 
 
     def __init__(self, *args, **kwargs):
