@@ -82,7 +82,6 @@ class BurialAdmin(admin.ModelAdmin):
     form = BurialAdminForm
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', ]
-    exclude = ['creator', ]
 
     def change_view(self, request, object_id, extra_context=None):
         try:
@@ -95,7 +94,7 @@ class BurialAdmin(admin.ModelAdmin):
                 if created or bc.updated < datetime.datetime.now() - datetime.timedelta(0, 3600):
                     bc.update()
 
-        return super(BurialAdmin, self).change_view(request, object_id, extra_context=None)
+        return super(BurialAdmin, self).change_view(request, object_id, extra_context)
 
 
     def save_model(self, request, obj, form, change):
@@ -119,7 +118,6 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['date_of_creation', 'last_edit', ]
-    exclude = ['creator', ]
 
 
     def __init__(self, *args, **kwargs):

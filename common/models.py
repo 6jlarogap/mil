@@ -168,7 +168,7 @@ class Burial(models.Model):
 
     photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
     scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
-    creator = models.ForeignKey(User, blank=True, null=True)                                # Создатель записи
+    creator = models.ForeignKey(User, blank=True, null=True, editable=False)                                # Создатель записи
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)
     date_of_update = models.DateTimeField(u"Дата обновления записи", auto_now=True)
     info = models.TextField(verbose_name=u"Дополнительная информация о захоронении", blank=True, null=True)
@@ -466,7 +466,7 @@ class Person(models.Model):
     documents_place = models.ForeignKey(DocumentsPlace, verbose_name=u"Место нахождения документов", blank=True, null=True)
     information_source = models.ForeignKey(InformationSource, verbose_name=u"Источник информации", blank=True, null=True)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
-    creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True)
+    creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True, editable=False)
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)
     is_trash = models.BooleanField(u"Удалена", default=False)
 

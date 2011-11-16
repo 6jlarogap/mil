@@ -152,7 +152,6 @@ class BurialAdminForm(forms.ModelForm):
 
     class Meta:
         model = Burial
-        exclude = ['creator', ]
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('initial', {}).update({
@@ -178,7 +177,6 @@ class PersonAdminForm(forms.ModelForm):
 
     class Meta:
         model = Person
-        exclude = ['creator', ]
 
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('initial', {}).update({
