@@ -9,10 +9,12 @@ from common.forms import PersonAdminForm, BurialAdminForm
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
     extra = 1
+    can_delete = False
 
 class PersonCallInline(admin.TabularInline):
     model = PersonCall
     extra = 1
+    can_delete = False
 
 #class PersonBurialInline(admin.TabularInline):
 #    model = PersonBurial
@@ -21,9 +23,11 @@ class PersonCallInline(admin.TabularInline):
 class PersonEditCauseInline(admin.TabularInline):
     model = PersonEditCause
     extra = 1
+    can_delete = False
 
 class LocationBirthInLine(admin.TabularInline):
     model = LocationBirth
+    can_delete = False
 
     def __init__(self, *args, **kwargs):
         super(LocationBirthInLine, self).__init__(*args, **kwargs)
@@ -31,6 +35,7 @@ class LocationBirthInLine(admin.TabularInline):
 
 class LocationBurialInLine(admin.TabularInline):
     model = LocationBurial
+    can_delete = False
 
 class ClosedBurialFromInLine(admin.TabularInline):
     model = ClosedBurial
