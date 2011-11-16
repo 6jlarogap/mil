@@ -97,6 +97,10 @@ class BurialAdmin(admin.ModelAdmin):
         return super(BurialAdmin, self).change_view(request, object_id, extra_context=None)
 
 
+    def save_model(self, request, obj, form, change):
+        obj.creator = request.user
+        obj.save()
+
 class RankAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
 
@@ -127,6 +131,10 @@ class PersonAdmin(admin.ModelAdmin):
             flist = fieldsets[0][1]['fields']
             flist.insert(flist.index('patronymic') + 1, flist.pop(flist.index('nationality')))
         return fieldsets
+
+    def save_model(self, request, obj, form, change):
+        obj.creator = request.user
+        obj.save()
 
 admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
