@@ -82,6 +82,7 @@ class BurialAdmin(admin.ModelAdmin):
     form = BurialAdminForm
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', ]
+    exclude = ['creator', ]
 
     def change_view(self, request, object_id, extra_context=None):
         try:
@@ -98,7 +99,8 @@ class BurialAdmin(admin.ModelAdmin):
 
 
     def save_model(self, request, obj, form, change):
-        obj.creator = request.user
+        if not obj.creator:
+            obj.creator = request.user
         obj.save()
 
 class RankAdmin(admin.ModelAdmin):
@@ -109,7 +111,6 @@ class PersonAdmin(admin.ModelAdmin):
         js = ['js/admin/person.js', ]
 
     inlines = [
-#        PersonBurialInline,
         PersonCallInline,
         PersonDutyInline,
         LocationBirthInLine,
@@ -118,6 +119,7 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['date_of_creation', 'last_edit', ]
+    exclude = ['creator', ]
 
 
     def __init__(self, *args, **kwargs):
@@ -133,7 +135,8 @@ class PersonAdmin(admin.ModelAdmin):
         return fieldsets
 
     def save_model(self, request, obj, form, change):
-        obj.creator = request.user
+        if not obj.creator:
+            obj.creator = request.user
         obj.save()
 
 admin.site.register(GeoCountry)
