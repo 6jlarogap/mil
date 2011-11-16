@@ -109,7 +109,6 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['date_of_creation', 'last_edit', ]
-    exclude = ['closed_burials', ]
 
 
     def __init__(self, *args, **kwargs):
