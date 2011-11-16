@@ -193,7 +193,7 @@ class Burial(models.Model):
         return count
 
     def get_qunknown(self):
-        count = self.qunknown
+        count = sum([bc.unknown for bc in self.burial_categories.all()] + [0])
         if self.burial_to:
             for cb in self.burial_to.all():
                 count += cb.burial_from.get_qunknown()
