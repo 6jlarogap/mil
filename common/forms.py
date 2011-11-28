@@ -182,6 +182,8 @@ class PersonAdminForm(forms.ModelForm):
     birth_date = UnclearDateField(label=u"Дата рождения", required=False)
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
 
+    duplicate_ok = forms.BooleanField(label=u"Да, создайте дублирующую запись", required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = Person
 
@@ -191,6 +193,26 @@ class PersonAdminForm(forms.ModelForm):
             'death_date': kwargs.get('instance', Person()).get_unclear_date('death_date'),
         })
         super(PersonAdminForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        try:
+            person = Person.objects.filter(
+                last_name = self.cleaned_data['last_name'],
+                first_name = self.cleaned_data['first_name'],
+                patronymic = self.cleaned_data['patronymic'],
+                birth_date = self.cleaned_data['birth_date'],
+                death_date = self.cleaned_data['death_date'],
+            )[0]
+        except IndexError:
+            pass
+        else:
+            if not self.cleaned_data['duplicate_ok']:
+                self.fields['duplicate_ok'].widget = forms.CheckboxInput()
+                raise forms.ValidationError(u"Обнаружена дублирующая запись: %s %s %s (%s - %s). Необходимо подтвердить дублирование." % (
+                    person.last_name, person.first_name, person.patronymic,
+                    person.birth_date, person.death_date
+                ))
+        return self.cleaned_data
 
     def save(self, *args, **kwargs):
         kwargs['commit'] = False
