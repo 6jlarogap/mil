@@ -162,6 +162,7 @@ class Burial(models.Model):
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
     date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
+    names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
 
     date_gosznak = models.DateField(u"Дата установки государственного знака", blank=True, null=True)
     date_gosznak_no_month = models.BooleanField(default=False, editable=False)
