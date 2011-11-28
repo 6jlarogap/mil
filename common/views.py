@@ -379,6 +379,8 @@ def burials(request):
                                     deadman_category__isnull=[u"Другие", ]
                                 ).count(),
                                 'nowhere': selected_persons.filter(burial__isnull=True).count(),
+                                'mia': selected_persons.filter(burial__isnull=True, mia=True).count(),
+                                'outside_rb': selected_persons.filter(burial__isnull=True, outside_rb=True).count(),
                             },
                         })
 

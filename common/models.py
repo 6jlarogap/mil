@@ -482,6 +482,7 @@ class Person(models.Model):
     closed_burials = models.ManyToManyField(Burial,
         related_name='closed_persons', verbose_name=u"Перенесен из", help_text=u"", editable=False)
     mia = models.BooleanField(u"Пропал без вести", blank=True, default=False)
+    outside_rb = models.BooleanField(u"За пределами РБ", blank=True, default=False)
     last_name = models.CharField(u"Фамилия", max_length=128, db_index=True)
     first_name = models.CharField(u"Имя", max_length=30, blank=True, db_index=True)
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True, db_index=True)
