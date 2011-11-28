@@ -373,9 +373,13 @@ class DeadmanCategory(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Категория захороненного", max_length=100)
     brief = models.CharField(u"Краткое название категории захороненных", max_length=100, blank=True, null=True)
+    ordering = models.PositiveSmallIntegerField(u"сортировка", default=1)
+
     def __unicode__(self):
         return self.name
+
     class Meta:
+        ordering = ['ordering', ]
         verbose_name = (u'Категория погибшего')
         verbose_name_plural = (u'Категории погибших')
 
