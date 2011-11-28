@@ -32,8 +32,10 @@ class GeoRegion(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     country = models.ForeignKey(GeoCountry)
     name = models.CharField(u"Название", max_length=36, db_index=True)
+
     def __unicode__(self):
         return self.name
+
     class Meta:
         unique_together = (("country", "name"),)
         verbose_name = u'регион'
@@ -47,8 +49,10 @@ class GeoCity(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     region = models.ForeignKey(GeoRegion)
     name = models.CharField("Название", max_length=36, db_index=True)
+
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name = u'населенный пункт'
         verbose_name_plural = u'населенные пункты'

@@ -310,7 +310,11 @@
                 {% if form.cleaned_data.region %}
                     {{ r.city }} р-н
                 {% else %}
-                    {{ r.region }} обл.
+                    {% if r.region.name == 'Г.минск' %}
+                        {{ r.region }}
+                    {% else %}
+                        {{ r.region }} обл.
+                    {% endif %}
                 {% endif %}
             </FONT></P>
 		</TD>
