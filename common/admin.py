@@ -137,6 +137,10 @@ class PersonAdmin(admin.ModelAdmin):
             obj.creator = request.user
         obj.save()
 
+class DeadmanCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'ordering',]
+    list_editable = ['ordering',]
+
 admin.site.register(GeoCountry)
 admin.site.register(GeoRegion)
 admin.site.register(GeoCity)
@@ -145,7 +149,7 @@ admin.site.register(Rank, RankAdmin)
 admin.site.register(Comissariat)
 admin.site.register(MilitaryUnit)
 admin.site.register(DeathCause)
-admin.site.register(DeadmanCategory)
+admin.site.register(DeadmanCategory, DeadmanCategoryAdmin)
 admin.site.register(DocumentsPlace)
 admin.site.register(BurialType)
 admin.site.register(MilitaryConflictType)
