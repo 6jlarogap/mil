@@ -390,8 +390,10 @@ def burials(request):
                         def filter_data(burials_all, persons_all, region, city):
                             if city:
                                 burials_sel = burials_all.filter(locationburial__city=city)
-                            else:
+                            elif region:
                                 burials_sel = burials_all.filter(locationburial__city__region=region)
+                            else:
+                                burials_sel = burials_all
                             b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
                             unknown = b_cats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
                             persons_sel = persons_all.filter(burial__in=burials_sel)
@@ -440,6 +442,9 @@ def burials(request):
 
                         rows = []
                         if form.cleaned_data.get('region'):
+                            context['data'] = filter_data(
+                                burials, selected_persons, form.cleaned_data['region'], None
+                            )
                             for city in form.cleaned_data['region'].geocity_set.all().order_by('name'):
                                 data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), city.pk)
                                 data = cache.get(data_key)
@@ -459,6 +464,9 @@ def burials(request):
                                 regions = form.cleaned_data['country'].georegion_set.all().order_by('name')
                             else:
                                 regions = GeoRegion.objects.all().order_by('name')
+                            context['data'] = filter_data(
+                                burials, selected_persons, None, None
+                            )
                             for region in regions:
                                 data_key = 'form4_data_%s_%s' % (region.pk, '')
                                 data = cache.get(data_key)
