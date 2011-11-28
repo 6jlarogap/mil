@@ -150,6 +150,9 @@ class BurialsForm(forms.ModelForm):
 
 class BurialAdminForm(forms.ModelForm):
     date_gosznak = UnclearDateField(label=u"Дата установки государственного знака", required=False)
+    date_burried = UnclearDateField(label=u"Дата создания захоронения", required=False)
+    date_discovered = UnclearDateField(label=u"Дата обнаружения захоронения", required=False)
+    date_memorial = UnclearDateField(label=u"Дата установки памятника", required=False)
 
     class Meta:
         model = Burial
@@ -157,6 +160,9 @@ class BurialAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('initial', {}).update({
             'date_gosznak': kwargs.get('instance', Burial()).get_unclear_date('date_gosznak'),
+            'date_burried': kwargs.get('instance', Burial()).get_unclear_date('date_burried'),
+            'date_discovered': kwargs.get('instance', Burial()).get_unclear_date('date_discovered'),
+            'date_memorial': kwargs.get('instance', Burial()).get_unclear_date('date_memorial'),
         })
         super(BurialAdminForm, self).__init__(*args, **kwargs)
 

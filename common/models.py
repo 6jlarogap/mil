@@ -159,18 +159,28 @@ class Burial(models.Model):
     uuid = UUIDField(primary_key=True)
     passportid = models.CharField(u"Номер паспорта воинского захоронения",  blank=True, null=True, max_length=128)
     date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True)
-    date_burried = models.DateField(u"Дата создания захоронения", blank=True, null=True)
-    date_discovered = models.DateField(u"Дата обнаружения", blank=True, null=True)
     date_closed = models.DateField(u"Дата закрытия", blank=True, null=True, editable=False)
     burial_type = models.ForeignKey(BurialType, verbose_name=u"Тип воинского захоронения", blank=True, null=True)
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
-    date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
     names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
 
     date_gosznak = models.DateField(u"Дата установки государственного знака", blank=True, null=True)
     date_gosznak_no_month = models.BooleanField(default=False, editable=False)
     date_gosznak_no_day = models.BooleanField(default=False, editable=False)
+
+    date_burried = models.DateField(u"Дата создания захоронения", blank=True, null=True)
+    date_burried_no_month = models.BooleanField(default=False, editable=False)
+    date_burried_no_day = models.BooleanField(default=False, editable=False)
+
+    date_discovered = models.DateField(u"Дата обнаружения", blank=True, null=True)
+    date_discovered_no_month = models.BooleanField(default=False, editable=False)
+    date_discovered_no_day = models.BooleanField(default=False, editable=False)
+
+    date_memorial = models.DateField(u"Дата установки памятника", blank=True, null=True)
+    date_memorial_no_month = models.BooleanField(default=False, editable=False)
+    date_memorial_no_day = models.BooleanField(default=False, editable=False)
+
 
     photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
     scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
