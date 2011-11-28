@@ -214,6 +214,8 @@ def burials(request):
                     burials = burials.filter(info__icontains = cd['info'])
                 if cd['state']:
                     burials = burials.filter(state__name = cd['burial_type'])
+                if cd['only_closed']:
+                    burials = burials.filter(Q(date_closed__isnull=False) | Q(is_trash=True))
                 if not burials.count():
                     return render_to_response('burials.html', context_instance=RequestContext(request, {
                         'form': form,

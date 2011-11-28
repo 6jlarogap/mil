@@ -133,9 +133,10 @@ class BurialsForm(forms.ModelForm):
     burried_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения по')
     burial_type = forms.ModelChoiceField(queryset=BurialType.objects.all(), required=False, label="Тип захоронения")
     military_conflict = forms.ModelChoiceField(queryset=MilitaryConflict.objects.all(), required=False, label="Военный конфликт")
-    info = forms.CharField(required=False, max_length=30, label="Доролнительная информация о захоронении")
+    info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о захоронении")
     state = forms.ModelChoiceField(queryset=MemorialState.objects.all(), required=False, label="Состояние памятника")
     in_trash = forms.BooleanField(required=False, label="В корзине")
+    only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
 
     def __init__(self, *args, **kwargs):
         super(BurialsForm, self).__init__(*args, **kwargs)
