@@ -137,6 +137,7 @@ class BurialsForm(forms.ModelForm):
     state = forms.ModelChoiceField(queryset=MemorialState.objects.all(), required=False, label="Состояние памятника")
     in_trash = forms.BooleanField(required=False, label="В корзине")
     only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
+    other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
 
     def __init__(self, *args, **kwargs):
         super(BurialsForm, self).__init__(*args, **kwargs)

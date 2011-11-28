@@ -201,7 +201,10 @@ def burials(request):
                 if cd['region']:
                     burials = burials.filter(locationburial__city__region = cd['region'])
                 if cd['country']:
-                    burials = burials.filter(locationburial__city__region__country = cd['country'])
+                    if cd['other_countries']:
+                        burials = burials.exclude(locationburial__city__region__country = cd['country'])
+                    else:
+                        burials = burials.filter(locationburial__city__region__country = cd['country'])
                 if cd['burial_type']:
                     burials = burials.filter(burial_type__name = cd['burial_type'])
                 if cd['military_conflict']:
