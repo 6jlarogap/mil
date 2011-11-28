@@ -45,7 +45,7 @@ update-rc.d django defaults
 
 #Restore postgres dump
 createdb -U postgres cemetery
-#cat geo.sql.gz | psql -U postgres cemetery # ????????????????
+cat basic.sql | psql -U postgres cemetery
 #Test strings
 #echo "*/1 * * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py 2>>/tmp/cronerror.txt" >> /etc/crontab
 
