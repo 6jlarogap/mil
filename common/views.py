@@ -189,7 +189,6 @@ def burials(request):
             if form.is_valid():
                 cd = form.cleaned_data
                 burials = Burial.objects.all()
-                print burials.count()
 
                 if cd['burial_passportid']:
                     burials = burials.filter(passportid = cd['burial_passportid'])
@@ -198,11 +197,11 @@ def burials(request):
                 else:
                     burials = burials.exclude(passportid = u'')
                 if cd['city']:
-                    burials = burials.filter(locationburial__city__name__icontains = cd['city'])
+                    burials = burials.filter(locationburial__city = cd['city'])
                 if cd['region']:
-                    burials = burials.filter(locationburial__city__region__name__icontains = cd['region'])
+                    burials = burials.filter(locationburial__city__region = cd['region'])
                 if cd['country']:
-                    burials = burials.filter(locationburial__city__region__country__name__icontains = cd['country'])
+                    burials = burials.filter(locationburial__city__region__country = cd['country'])
                 if cd['burial_type']:
                     burials = burials.filter(burial_type__name = cd['burial_type'])
                 if cd['military_conflict']:
@@ -243,6 +242,72 @@ def burials(request):
                         'form': form,
                         'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                     }
+
+                    if template == 'reports/report_2a.html':
+                        context.update({
+                            'region': cd['region'],
+                            'city': cd['city'],
+                            'burials': burials,
+                        })
+
+                    if template == 'reports/report_2b.html':
+                        selected_persons = Person.objects.filter(burial__in=burials)
+                        all_count = selected_persons.count()
+                        bcats = BurialCategory.objects.filter(burial__in=burials)
+                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
+                        context.update({
+                            'region': cd['region'],
+                            'city': cd['city'],
+                            'all': burials.count(),
+                            'burials': burials.order_by('passportid'),
+                            'conflicts': {
+                                'WW': burials.filter(
+                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                ).count(),
+                                'WWII': burials.filter(
+                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                ).count(),
+                                'local': burials.filter(military_conflict__name=u"Локальные военные конфликты").count(),
+                                'other': burials.exclude(
+                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                ).count(),
+                            },
+                            'types': {
+                                'war': burials.filter(
+                                    burial_type__name__in=[u"Воинское кладбище", u"Смешанное"]
+                                ).count(),
+                                'group': burials.filter(
+                                    burial_type__name__in=[u"Братская могила"]
+                                ).count(),
+                                'personal': burials.filter(
+                                    burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
+                                ).count(),
+                                'mass': burials.filter(
+                                    burial_type__name__in=[u"Место массов.уничтож."]
+                                ).count(),
+                                'foreign': burials.filter(
+                                    burial_type__name__in=[u"Иностранное"]
+                                ).count(),
+                            },
+                            'persons': {
+                                'all': all_count + unknown_count,
+                                'known': all_count,
+                                'unknown': unknown_count,
+                                'soldiers': selected_persons.filter(
+                                    deadman_category__name__in=[u"Военнослужащий", ]
+                                ).count(),
+                                'resistance': selected_persons.filter(
+                                    deadman_category__name__in=[u"Участник сопротивления", ]
+                                ).count(),
+                                'prey': selected_persons.filter(
+                                    deadman_category__name__in=[u"Жертва войны", ]
+                                ).count(),
+                                'prisoners': selected_persons.filter(
+                                    deadman_category__isnull=[u"Другие", ]
+                                ).count(),
+                                'nowhere': selected_persons.filter(burial__isnull=True).count(),
+                            },
+                        })
 
                     if template == 'reports/report_3.html' or template == 'reports/report_5.html':
                         selected_persons = Person.objects.filter(burial__in=burials)

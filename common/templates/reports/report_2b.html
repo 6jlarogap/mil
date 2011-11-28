@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Форма 2б</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 3.4  (Unix)">
+	<META NAME="AUTHOR" CONTENT="админ">
+	<META NAME="CREATED" CONTENT="20110602;19250000">
+	<META NAME="CHANGEDBY" CONTENT="пользователь">
+	<META NAME="CHANGED" CONTENT="20110617;9340000">
+	<META NAME="Info 1" CONTENT="">
+	<META NAME="Info 2" CONTENT="">
+	<META NAME="Info 3" CONTENT="">
+	<META NAME="Info 4" CONTENT="">
+	<STYLE TYPE="text/css">
+	<!--
+		@page { size: 21cm 29.7cm; margin-right: 1.1cm; margin-top: 1.25cm; margin-bottom: 1.25cm }
+		@page:first { margin-top: 1.27cm; margin-bottom: 1.27cm }
+		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
+		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ru-RU }
+		P.cjk { font-family: "Times New Roman", serif; font-size: 12pt }
+		P.ctl { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ar-SA }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#000000" DIR="LTR">
+<P LANG="ru-RU" CLASS="western" ALIGN=RIGHT STYLE="margin-bottom: 0cm;"><FONT SIZE=4>Форма 2б</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>Автоматизированный банк данных</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>«Книга памяти» Республики
+Беларусь»</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Сведения по воинским захоронениям</B></FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г. (текущая
+дата)</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>Место нахождения: {{ region }} область;</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	 {{ city }} район.</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Всего захоронений    <U> 	</U> 	- <B>{{ all }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	<I>из них</I>  	1 МВ 	- <B>{{ conflicts.WW }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	2 МВ 	- <B>{{ conflicts.WWII }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	ЛВК 	- <B>{{ conflicts.local }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	ГВ и другие 	- <B>{{ conflicts.other }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	</P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	<I>из них</I> 	военные кладбища 	- <B>{{ types.war }}
+</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><B>		</B>братские могилы 	- <B>{{ types.group }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	индивидуальные захоронения 	- <B>{{ types.personal }}
+</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	места массового уничтожения	- <B>{{ types.mass }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">			иностранные	- <B>{{ types.foreign }}</B></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
+<BR>
+</P>
+<TABLE WIDTH=652 CELLPADDING=7 CELLSPACING=0>
+	<COL WIDTH=30>
+	<COL WIDTH=200>
+	<COL WIDTH=46>
+	<COL WIDTH=46>
+	<COL WIDTH=31>
+	<COL WIDTH=31>
+	<COL WIDTH=31>
+	<COL WIDTH=31>
+	<COL WIDTH=31>
+	<COL WIDTH=31>
+	<TR>
+		<TD ROWSPAN=2 WIDTH=30 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER>№ <FONT SIZE=2>п/п</FONT></P>
+		</TD>
+		<TD ROWSPAN=2 WIDTH=200 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">Наименование
+			населенного пункта</FONT></P>
+		</TD>
+		<TD ROWSPAN=2 WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>Вид захоронения</FONT></P>
+		</TD>
+		<TD ROWSPAN=2 WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>Количество похороненных</FONT></P>
+		</TD>
+		<TD COLSPAN=2 WIDTH=77 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>Из них</FONT></P>
+		</TD>
+		<TD COLSPAN=4 WIDTH=167 STYLE="border: 1px solid #000000; padding: 0cm 0.19cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>Из них</FONT></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>известных</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>неизвестных</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>военнослу-жащих</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>участников сопротивле-ния</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>жертв войны</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border: 1px solid #000000; padding: 0cm 0.19cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
+			<FONT SIZE=2>военнопленные</FONT></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=30 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>1</FONT></P>
+		</TD>
+		<TD WIDTH=200 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>2</FONT></P>
+		</TD>
+		<TD WIDTH=46 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>3</FONT></P>
+		</TD>
+		<TD WIDTH=46 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>4</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>5</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>6</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>7</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>8</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>9</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="border: 1px solid #000000; padding: 0cm 0.19cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>10</FONT></P>
+		</TD>
+	</TR>
+    {% for b in burials %}
+	<TR>
+		<TD WIDTH=30 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.passportid }}</FONT></P>
+		</TD>
+		<TD WIDTH=200 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western"><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.locationburial.info }}</FONT></P>
+		</TD>
+		<TD WIDTH=46 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.burial_type }}</FONT></P>
+		</TD>
+		<TD WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.all }}</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.known }}</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.unknown }}</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.soldiers }}</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.resistance }}</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.prey }}</FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border: 1px solid #000000; padding: 0cm 0.19cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.prisoners }}</FONT></P>
+		</TD>
+	</TR>
+    {% endfor %}
+	<TR>
+		<TD WIDTH=30 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ burials.count }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=200 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western"><FONT SIZE=2 STYLE="font-size: 11pt"><B>ВСЕГО
+			по району</B></FONT></P>
+		</TD>
+		<TD WIDTH=46 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><BR>
+			</P>
+		</TD>
+		<TD WIDTH=46 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.all }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.known }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.unknown }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.soldiers }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.resistance }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.prey }}</B></FONT></P>
+		</TD>
+		<TD WIDTH=31 STYLE="; border: 1px solid #000000; padding: 0cm 0.19cm">
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt"><B>{{ persons.prisoners }}</B></FONT></P>
+		</TD>
+	</TR>
+</TABLE>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
+<BR>
+</P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><I><B>Примечание.</B></I></FONT><FONT SIZE=4><I>
+Сортировка должна производиться по
+номеру воинского захоронения.</I></FONT></P>
+
+</BODY>
+</HTML>

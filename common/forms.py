@@ -129,7 +129,6 @@ class BurialsForm(forms.ModelForm):
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
     bemptypassport = forms.BooleanField(required=False, label="Показать без паспорта")
 
-
     burried_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения c')
     burried_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения по')
     burial_type = forms.ModelChoiceField(queryset=BurialType.objects.all(), required=False, label="Тип захоронения")

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import datetime
+from django.core.cache import cache
 
 from django.db import models
 from django_extensions.db.fields import UUIDField
@@ -179,10 +180,34 @@ class Burial(models.Model):
             return self.passportid
         else:
             return u'без паспорта'
+
     class Meta:
         verbose_name = (u'Захоронение')
         verbose_name_plural = (u'Захоронения')
         ordering = ['passportid']
+
+    def stats(self):
+        stats = cache.get('stats_burial_%s' % self.pk)
+        if not stats:
+            stats = {
+                'all': self.get_count(),
+                'known': self.get_count() - self.get_qunknown(),
+                'unknown': self.get_qunknown(),
+                'soldiers': self.person_set.filter(
+                    deadman_category__name__in=[u"Военнослужащий", ]
+                ).count(),
+                'resistance': self.person_set.filter(
+                    deadman_category__name__in=[u"Участник сопротивления", ]
+                ).count(),
+                'prey': self.person_set.filter(
+                    deadman_category__name__in=[u"Жертва войны", ]
+                ).count(),
+                'prisoners': self.person_set.filter(
+                    deadman_category__isnull=[u"Другие", ]
+                ).count(),
+            }
+            cache.set('stats_burial_%s' % self.pk, stats, 3600)
+        return stats
 
     # get persons count from all previous burials
     def get_count(self):
@@ -198,6 +223,9 @@ class Burial(models.Model):
             for cb in self.burial_to.all():
                 count += cb.burial_from.get_qunknown()
         return count
+
+    def location(self):
+        return Location.objects.get(pk=self.oblocationid)
 
     def get_last(self):
         last = self
