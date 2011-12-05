@@ -6,9 +6,9 @@ usermod -p $1$KQwQ4Rq7$CtkUF2cjpb9raBQZPjy4J0 django
 
 #Copy project files
 mkdir /home/django/projects
-#cp -R ../../cemetery /home/django/projects
-git clone --no-hardlinks ../../mil /home/django/projects/cemetery
-mkdir -p /home/django/projects/cemetery/media/ofiles
+#cp -R ../../mil /home/django/projects
+git clone --no-hardlinks ../../mil /home/django/projects/mil
+mkdir -p /home/django/projects/mil/media/ofiles
 chown -R www-data:www-data /home/django/projects
 
 #Postgres
@@ -21,10 +21,10 @@ chmod 640 /etc/postgresql/8.4/main/pg_hba.conf
 cp -R configs/nginx/fastcgi_params /etc/nginx/
 chown root:root /etc/nginx/fastcgi_params
 chmod 644 /etc/nginx/fastcgi_params
-cp configs/nginx/cemetery /etc/nginx/sites-available/
-chown root:root /etc/nginx/sites-available/cemetery
-chmod 644 /etc/nginx/sites-available/cemetery
-ln -s /etc/nginx/sites-available/cemetery /etc/nginx/sites-enabled/
+cp configs/nginx/mil /etc/nginx/sites-available/
+chown root:root /etc/nginx/sites-available/mil
+chmod 644 /etc/nginx/sites-available/mil
+ln -s /etc/nginx/sites-available/mil /etc/nginx/sites-enabled/
 
 #User for admin
 adduser --disabled-password --gecos "" soul
@@ -44,29 +44,26 @@ chmod 751 /etc/init.d/django
 update-rc.d django defaults
 
 #Restore postgres dump
-createdb -U postgres cemetery
-cat basic.sql | psql -U postgres cemetery
+createdb -U postgres mil
+cat basic.sql | psql -U postgres mil
 #Test strings
-#echo "*/1 * * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py 2>>/tmp/cronerror.txt" >> /etc/crontab
+#echo "*/1 * * * *    www-data   python /home/django/projects/mil/contrib/dumpdb.py 2>>/tmp/cronerror.txt" >> /etc/crontab
 
 #Database dump cron script
-echo "PYTHONPATH=/home/django/projects/cemetery:\$PYTHONPATH" >> /etc/crontab
+echo "PYTHONPATH=/home/django/projects/mil:\$PYTHONPATH" >> /etc/crontab
 echo "DJANGO_SETTINGS_MODULE=settings" >> /etc/crontab
-echo "5 16 * * *    www-data   python /home/django/projects/cemetery/contrib/dumpdb.py" >> /etc/crontab
-echo "15 15 * * *    www-data   python /home/django/projects/cemetery/contrib/export2term.py" >> /etc/crontab
+echo "5 16 * * *    www-data   python /home/django/projects/mil/contrib/dumpdb.py" >> /etc/crontab
 
 #Start django daemon
 /etc/init.d/django restart
 /etc/init.d/nginx restart
 
 #Outbox
-mkdir -p /var/cemetery/outbox
-mkdir -p /var/cemetery/inbox
-mkdir -p /var/cemetery/dumps
-mkdir -p /var/cemetery/terminal
-#mkdir -p /var/cemetery/media/ofiles
-chown -R www-data:www-data /var/cemetery
-chmod 777 /var/cemetery/terminal
+mkdir -p /var/mil/outbox
+mkdir -p /var/mil/inbox
+mkdir -p /var/mil/dumps
+#mkdir -p /var/mil/media/ofiles
+chown -R www-data:www-data /var/mil
 
 #--configs
 cp configs/ubuntu/etc/network/interfaces /etc/network/interfaces
