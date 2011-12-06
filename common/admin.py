@@ -102,8 +102,9 @@ class BurialAdmin(admin.ModelAdmin):
             obj.creator = request.user
         obj.save()
 
-class RankAdmin(admin.ModelAdmin):
+class SortSearchAdmin(admin.ModelAdmin):
     search_fields = ['name', ]
+    ordering = ['name', ]
 
 class PersonAdmin(admin.ModelAdmin):
     class Media:
@@ -140,27 +141,32 @@ class PersonAdmin(admin.ModelAdmin):
 class DeadmanCategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'ordering',]
     list_editable = ['ordering',]
+    search_fields = ['name', ]
 
-admin.site.register(GeoCountry)
-admin.site.register(GeoRegion)
-admin.site.register(GeoCity)
-admin.site.register(GeoStreet)
-admin.site.register(Rank, RankAdmin)
-admin.site.register(Comissariat)
-admin.site.register(MilitaryUnit)
-admin.site.register(DeathCause)
+class MilitaryConflictTypeAdmin(admin.ModelAdmin):
+    search_fields = ['full', 'brief', ]
+    ordering = ['full', ]
+
+admin.site.register(GeoCountry, SortSearchAdmin)
+admin.site.register(GeoRegion, SortSearchAdmin)
+admin.site.register(GeoCity, SortSearchAdmin)
+admin.site.register(GeoStreet, SortSearchAdmin)
+admin.site.register(Rank, SortSearchAdmin)
+admin.site.register(Comissariat, SortSearchAdmin)
+admin.site.register(MilitaryUnit, SortSearchAdmin)
+admin.site.register(DeathCause, SortSearchAdmin)
 admin.site.register(DeadmanCategory, DeadmanCategoryAdmin)
-admin.site.register(DocumentsPlace)
-admin.site.register(BurialType)
-admin.site.register(MilitaryConflictType)
-admin.site.register(MilitaryConflict)
-admin.site.register(ClosureCause)
+admin.site.register(DocumentsPlace, SortSearchAdmin)
+admin.site.register(BurialType, SortSearchAdmin)
+admin.site.register(MilitaryConflictType, MilitaryConflictTypeAdmin)
+admin.site.register(MilitaryConflict, SortSearchAdmin)
+admin.site.register(ClosureCause, SortSearchAdmin)
 admin.site.register(Burial, BurialAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(ClosedBurial)
 #admin.site.register(PersonBurial)
 #admin.site.register(PersonDuty)
-admin.site.register(InformationSource)
-admin.site.register(Nationality)
-admin.site.register(MemorialState)
+admin.site.register(InformationSource, SortSearchAdmin)
+admin.site.register(Nationality, SortSearchAdmin)
+admin.site.register(MemorialState, SortSearchAdmin)
 
