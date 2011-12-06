@@ -313,8 +313,10 @@ class BurialEditCause(models.Model):
     date = models.DateField(u"Дата документа")
     date_edit = models.DateTimeField(auto_now_add=True)                     # Дата редактирования
     user = models.ForeignKey(User)                                          # Редактор
+
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name = (u'Основание для внесения изменения')
         verbose_name_plural = (u'Основания для внесения изменения')
@@ -633,7 +635,7 @@ class PersonEditCause(models.Model):
     name = models.CharField(u"Название документа", max_length=100)
     number = models.CharField(u"Номер документа", max_length=100)
     date = models.DateField(u"Дата документа")
-    file = models.FileField(u"Скан документа", null=True, upload_to='cause_docs')
+    file = models.FileField(u"Скан документа", null=True, upload_to='cause_docs', blank=True)
     date_edit = models.DateTimeField(auto_now=True)                             # Дата последнего редактирования записи
 
     def __unicode__(self):
