@@ -195,8 +195,11 @@ class PersonAdminForm(forms.ModelForm):
         super(PersonAdminForm, self).__init__(*args, **kwargs)
 
     def clean(self):
+        persons = Person.objects.all()
+        if self.instance:
+            persons = persons.exclude(pk=self.instance.pk)
         try:
-            person = Person.objects.filter(
+            person = persons.filter(
                 last_name = self.cleaned_data['last_name'],
                 first_name = self.cleaned_data['first_name'],
                 patronymic = self.cleaned_data['patronymic'],
@@ -210,7 +213,7 @@ class PersonAdminForm(forms.ModelForm):
                 self.fields['duplicate_ok'].widget = forms.CheckboxInput()
                 raise forms.ValidationError(u"Обнаружена дублирующая запись: %s %s %s (%s - %s). Необходимо подтвердить дублирование." % (
                     person.last_name, person.first_name, person.patronymic,
-                    person.birth_date, person.death_date
+                    person.birth_date or u'неизвестно', person.death_date or u'неизвестно'
                 ))
         return self.cleaned_data
 
