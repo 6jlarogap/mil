@@ -577,7 +577,8 @@ class PersonCall(models.Model):
     date = models.DateField(u"Дата призыва", blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s' % (self.duty.name)
+        return u'%s' % self.unit.name
+
     class Meta:
         verbose_name = (u'Место призыва')
         verbose_name_plural = (u'Место призыва')
