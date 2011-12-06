@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import pytils
+
 from django.contrib import admin
 from django import forms
 
@@ -81,7 +83,11 @@ class BurialAdmin(admin.ModelAdmin):
     ]
     form = BurialAdminForm
     search_fields = ['passportid', ]
-    readonly_fields = ['date_of_creation', 'date_of_update', 'creator', ]
+    readonly_fields = ['date_of_creation', 'date_of_update', 'creator', 'today', ]
+
+    def today(self, obj):
+        return pytils.dt.ru_strftime(date=datetime.date.today(), format=u'%d %B %Y', inflected=True)
+    today.short_description = u"По состоянию на"
 
     def change_view(self, request, object_id, extra_context=None):
         try:
