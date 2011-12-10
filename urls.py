@@ -20,4 +20,5 @@ urlpatterns += patterns('',
     url(r'^admin/sentry/', include('sentry.web.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^chaining/', include('smart_selects.urls')),
+    url(r'media/(?P<path>.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
