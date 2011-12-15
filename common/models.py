@@ -116,13 +116,13 @@ class MilitaryConflictType(models.Model):
     """
     Тип военного конфликта
     """
-    full = models.CharField(u"Полное название типа военного конфликта", max_length=100)
-    brief = models.CharField(u"Краткое название типа военного конфликта", max_length=100)
+    full = models.CharField(u"Название признака группировки при печати", max_length=100)
+    brief = models.CharField(u"Краткое название признака группировки при печати", max_length=100)
     def __unicode__(self):
         return self.full
     class Meta:
-        verbose_name = (u'Тип военного конфликта')
-        verbose_name_plural = (u'Типы военных конфликтов')
+        verbose_name = (u'Признак группировки при печати')
+        verbose_name_plural = (u'Признаки группировки при печати')
 
 class MilitaryConflict(models.Model):
     """
@@ -131,7 +131,7 @@ class MilitaryConflict(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Название военного конфликта", max_length=100)
     brief = models.CharField(u"Краткое название военного конфликта", max_length=100, blank=True, null=True)
-    type = models.ForeignKey(MilitaryConflictType, blank=True, null=True)          # Тип военного конфликта
+    type = models.ForeignKey(MilitaryConflictType, u"Признак группировки при печати", mblank=True, null=True)          # Тип военного конфликта
     comment = models.TextField(u"Комментарий", blank=True, null=True)
     def __unicode__(self):
         return self.name
