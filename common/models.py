@@ -104,7 +104,7 @@ class BurialType(models.Model):
     Тип воинского захоронения
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    name = models.CharField(u"Название типа захоронения", max_length=100)
+    name = models.CharField(u"Название типа захоронения", max_length=100, db_index=True)
     brief = models.CharField(u"Краткое название типа воинского захоронения", max_length=100, blank=True, null=True)
     def __unicode__(self):
         return self.name
@@ -116,7 +116,7 @@ class MilitaryConflictType(models.Model):
     """
     Тип военного конфликта
     """
-    full = models.CharField(u"Полное название типа военного конфликта", max_length=100)
+    full = models.CharField(u"Полное название типа военного конфликта", max_length=100, db_index=True)
     brief = models.CharField(u"Краткое название типа военного конфликта", max_length=100)
     def __unicode__(self):
         return self.full
@@ -129,7 +129,7 @@ class MilitaryConflict(models.Model):
     Военный конфликт
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    name = models.CharField(u"Название военного конфликта", max_length=100)
+    name = models.CharField(u"Название военного конфликта", max_length=100, db_index=True)
     brief = models.CharField(u"Краткое название военного конфликта", max_length=100, blank=True, null=True)
     type = models.ForeignKey(MilitaryConflictType, blank=True, null=True)          # Тип военного конфликта
     comment = models.TextField(u"Комментарий", blank=True, null=True)
@@ -143,7 +143,7 @@ class MemorialState(models.Model):
     """
     Состояние памятника
     """
-    name = models.CharField(u"Состояние памятника", max_length=100)
+    name = models.CharField(u"Состояние памятника", max_length=100, db_index=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -375,7 +375,7 @@ class DeathCause(models.Model):
     Причина гибели
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    name = models.CharField(u"Причина гибели", max_length=100)
+    name = models.CharField(u"Причина гибели", max_length=100, db_index=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -387,7 +387,7 @@ class DeadmanCategory(models.Model):
     Категория захороненного
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    name = models.CharField(u"Категория захороненного", max_length=100)
+    name = models.CharField(u"Категория захороненного", max_length=100, db_index=True)
     brief = models.CharField(u"Краткое название категории захороненных", max_length=100, blank=True, null=True)
     ordering = models.PositiveSmallIntegerField(u"сортировка", default=1)
 
@@ -450,7 +450,7 @@ class Nationality(models.Model):
     """
     Национальность
     """
-    name = models.CharField(u"Название", max_length=100)
+    name = models.CharField(u"Название", max_length=100, db_index=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -552,7 +552,7 @@ class MilitaryUnit(Location):
     """
     Воинское подразделение
     """
-    name = models.CharField(u"Воинское подразделение", max_length=100)
+    name = models.CharField(u"Воинское подразделение", max_length=100, db_index=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -563,7 +563,7 @@ class Comissariat(Location):
     """
     Военкомат
     """
-    name = models.CharField(u"Военкомат", max_length=100)
+    name = models.CharField(u"Военкомат", max_length=100, db_index=True)
     def __unicode__(self):
         return self.name
     class Meta:
@@ -589,7 +589,7 @@ class Post(models.Model):
     """
     Должность
     """
-    name = models.CharField(u"Должность", max_length=100)
+    name = models.CharField(u"Должность", max_length=100, db_index=True)
     
     def __unicode__(self):
         return self.name
@@ -602,7 +602,7 @@ class Rank(models.Model):
     Воинское звание.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    name = models.CharField(u"Звание", max_length=100)
+    name = models.CharField(u"Звание", max_length=100, db_index=True)
 
     def __unicode__(self):
         return self.name
