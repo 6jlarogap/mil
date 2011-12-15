@@ -132,7 +132,7 @@ class MilitaryConflict(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Название военного конфликта", max_length=100, db_index=True)
     brief = models.CharField(u"Краткое название военного конфликта", max_length=100, blank=True, null=True)
-    type = models.ForeignKey(MilitaryConflictType, u"Признак группировки при печати", mblank=True, null=True)          # Тип военного конфликта
+    type = models.ForeignKey(MilitaryConflictType, u"Признак группировки при печати", blank=True, null=True)          # Тип военного конфликта
     comment = models.TextField(u"Комментарий", blank=True, null=True)
     def __unicode__(self):
         return self.name
