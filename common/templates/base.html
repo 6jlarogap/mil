@@ -22,7 +22,7 @@
         {# Верхная строка с логотипом и меню #}
         <tr>
             <td align="left" width="70%">
-                {% if user.is_staff or user.is_superuser %}<a href="/admin/">[Управление]</a>&nbsp;&nbsp;|&nbsp;{% endif %}
+                <a href="/admin/">[Управление]</a>&nbsp;&nbsp;|&nbsp;
                 <a href="/persons/">[Воины]</a>&nbsp;&nbsp;|&nbsp;
                 <a href="/burials/">[Захоронения]</a>&nbsp;&nbsp;|&nbsp;
                 <a href="/burials/?template=reports/report_2a.html">[Захоронения Ф2а]</a>&nbsp;&nbsp;|&nbsp;
