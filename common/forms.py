@@ -166,6 +166,15 @@ class BurialAdminForm(forms.ModelForm):
         })
         super(BurialAdminForm, self).__init__(*args, **kwargs)
 
+    def clean_passportid(self):
+        try:
+            Burial.objects.get(passportid=self.cleaned_data['passportid'])
+        except Burial.DoesNotExist:
+            return self.cleaned_data['passportid']
+        except Burial.MultipleObjectsReturned:
+            pass
+        raise forms.ValidationError(u"Захоронение с этим номером уже существует")
+
     def save(self, *args, **kwargs):
         kwargs['commit'] = False
         obj = super(BurialAdminForm, self).save(*args, **kwargs)
