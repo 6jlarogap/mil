@@ -241,7 +241,10 @@ class Burial(models.Model):
         return count
 
     def location(self):
-        return Location.objects.get(pk=self.oblocationid)
+        try:
+            return self.locationburial
+        except LocationBurial.DoesNotExist:
+            return
 
     def get_last(self):
         last = self
