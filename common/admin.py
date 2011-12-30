@@ -57,7 +57,7 @@ class BurialCategoryInLine(admin.TabularInline):
     readonly_fields = ['category', 'known', ]
     can_delete = False
     template = 'tabular_burialcat.html'
-    fieldsets = [(None, {'fields': ['category', 'known', 'unknown', ]})]
+    fieldsets = [(None, {'fields': ['category', 'known', 'custom_known', 'unknown', ]})]
 
     def get_formset(self, request, obj=None):
         if not obj:
@@ -70,7 +70,7 @@ class BurialCategoryInLine(admin.TabularInline):
                     super(NewFormSetClass, self).__init__(*args, **kwargs)
                     self.initial = []
                     for i, c in enumerate(DeadmanCategory.objects.all()):
-                        self.forms[i].instance = BurialCategory(**{'category': c, 'known': 0})
+                        self.forms[i].instance = BurialCategory(**{'category': c, 'known': 0, 'custom_known': 0})
             return NewFormSetClass
         else:
             return super(BurialCategoryInLine, self).get_formset(request, obj)
