@@ -113,6 +113,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 CACHE_BACKEND = 'file:///tmp/django_cache/mil'
@@ -145,6 +147,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'django_extensions',
+    'debug_toolbar',
     'pytils',
     'south',
     'easy_thumbnails',
@@ -192,6 +195,8 @@ LOGIN_REDIRECT_URL = '/'
 
 # Уникальный ключ. Держать в секрете!
 SECRET_KEY = 'onixpauz!=fzxr@r1(4i&_awxbi+9h&%o8_zi4795w5)a*)wow'
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 try:
     from settings_local import *
