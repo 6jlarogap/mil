@@ -227,6 +227,7 @@ def importBurial(cursor):
                 'oblocationid': l[4],
                 'burial_type': BurialType.objects.get(obid=l[2]),
                 'military_conflict': MilitaryConflict.objects.get(obid=l[5]),
+                'is_registered': l[11],
 
                 'photo': '',
                 'scheme': '',
@@ -255,7 +256,7 @@ def importBurial(cursor):
         cursor,
         '''SELECT
             id, namegrave, categorygrave, dategrave, settlement, war, dateofsettingmemorial, descriptiongrave,
-            dateofsettingmark, foto, scheme
+            dateofsettingmark, foto, scheme, isaccount
         FROM grave;''',
         createBurial,
         offset = len(sys.argv) > 4 and int(sys.argv[4]) or 0

@@ -138,12 +138,14 @@ class BurialsForm(forms.ModelForm):
     in_trash = forms.BooleanField(required=False, label="В корзине")
     only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
     other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
+    only_not_registered = forms.BooleanField(required=False, label=u"Только неучтенные")
 
     def __init__(self, *args, **kwargs):
         super(BurialsForm, self).__init__(*args, **kwargs)
         for k in self.fields:
             if isinstance(self.fields[k], forms.DateField):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
+
     class Meta:
         model = LocationBurial
         fields = ['country', 'region', 'city']

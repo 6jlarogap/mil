@@ -182,13 +182,13 @@ class Burial(models.Model):
     date_memorial_no_month = models.BooleanField(default=False, editable=False)
     date_memorial_no_day = models.BooleanField(default=False, editable=False)
 
-
     photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
     scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
     creator = models.ForeignKey(User, blank=True, null=True, editable=False, verbose_name=u"Создатель записи")
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)
     date_of_update = models.DateTimeField(u"Дата обновления записи", auto_now=True)
     info = models.TextField(verbose_name=u"Дополнительная информация о захоронении", blank=True, null=True)
+    is_registered = models.BooleanField(u"Учтенное", default=True)
     is_trash = models.BooleanField(u"В корзине", default=False)
 
     def __unicode__(self):
