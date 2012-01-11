@@ -155,6 +155,8 @@ INSTALLED_APPS = (
     'common',
 )
 
+REDIS_DB = 0
+
 SENTRY_TESTING = True
 
 # A sample logging configuration. The only tangible logging

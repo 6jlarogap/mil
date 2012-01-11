@@ -168,7 +168,7 @@ class BurialAdminForm(forms.ModelForm):
 
     def clean_passportid(self):
         try:
-            Burial.objects.get(passportid=self.cleaned_data['passportid'])
+            Burial.objects.exclude(pk=self.instance and self.instance.pk or -1).get(passportid=self.cleaned_data['passportid'])
         except Burial.DoesNotExist:
             return self.cleaned_data['passportid']
         except Burial.MultipleObjectsReturned:

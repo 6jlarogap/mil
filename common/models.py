@@ -413,7 +413,7 @@ class BurialCategory(models.Model):
     category = models.ForeignKey(DeadmanCategory, related_name='burial_categories', verbose_name=u"Категория")
     burial = models.ForeignKey(Burial, related_name='burial_categories')
     custom_known = models.PositiveIntegerField(default=0, verbose_name=u"Известных")
-    known = models.PositiveIntegerField(default=0, verbose_name=u"Известных")
+    known = models.PositiveIntegerField(default=0, verbose_name=u"Известных (авто)")
     unknown = models.PositiveIntegerField(default=0, verbose_name=u"Неизвестных")
     updated = models.DateTimeField(auto_now=True)
 
