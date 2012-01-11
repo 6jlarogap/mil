@@ -112,6 +112,13 @@ class PersonsForm(forms.Form):
     death_date_from = UnclearDateField(required=False, label='Дата смерти с')
     death_date_to = UnclearDateField(required=False, label='Дата смерти по')
 
+    category = forms.ModelChoiceField(queryset=DeadmanCategory.objects.all(), required=False, label=u"Категория")
+    death_cause = forms.ModelChoiceField(queryset=DeathCause.objects.all(), required=False, label=u"Причина смерти")
+
+    record_date_from = UnclearDateField(required=False, label='Дата добавления с')
+    record_date_to = UnclearDateField(required=False, label='Дата добавления по')
+
+
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
     info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о воине")
     in_trash = forms.BooleanField(required=False, label="В корзине")

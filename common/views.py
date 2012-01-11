@@ -81,42 +81,20 @@ def persons(request):
                     persons = persons.filter(birth_date__gte = cd['birth_date_from'])
                 if cd['birth_date_to']:
                     persons = persons.filter(birth_date__lte = cd['birth_date_to'])
-                """
-                if cd['city_birth']:
-                    persons = persons.filter(location_birth__city__name__icontains = cd['city_birth'])
-                if cd['region_birth']:
-                    persons = persons.filter(location_birth__region__name__icontains = cd['region_birth'])
-                if cd['country_birth']:
-                    persons = persons.filter(location_birth__country__name__icontains = cd['country_birth'])
-                if cd['mu']:
-                    persons = persons.filter(personduty__unit__name = cd['duty'])
-                """
                 if cd['death_date_from']:
                     persons = persons.filter(death_date__gte = cd['death_date_from'])
                 if cd['death_date_to']:
                     persons = persons.filter(death_date__lte = cd['death_date_to'])
-#                if cd['death_cause']:
-#                    persons = persons.filter(death_cause__name = cd['death_cause'])
+                if cd['death_cause']:
+                    persons = persons.filter(death_cause = cd['death_cause'])
+                if cd['category']:
+                    persons = persons.filter(deadman_category = cd['category'])
                 if cd['burial_passportid']:
                     persons = persons.filter(burial__passportid = cd['burial_passportid'])
-                """
-                if cd['burial_date_from']:
-                    persons = persons.filter(burial_date__gte = cd['burial_date_from'])
-                if cd['burial_date_to']:
-                    persons = persons.filter(burial_date__lte = cd['burial_date_to'])
-                if cd['city_burial']:
-                    persons = persons.filter(burial__location__city__name__icontains = cd['city_burial'])
-                if cd['region_burial']:
-                    persons = persons.filter(burial__location__region__name__icontains = cd['region_burial'])
-                if cd['country_burial']:
-                    persons = persons.filter(burial__location__country__name__icontains = cd['country_burial'])
-                if cd['documents_place']:
-                    persons = persons.filter(documents_place__name = cd['documents_place'])
-                if cd['information_source']:
-                    persons = persons.filter(information_source__name = cd['information_source'])
-                if cd['deadman_category']:
-                    persons = persons.filter(deadman_category__name = cd['deadman_category'])
-                """
+                if cd['record_date_from']:
+                    persons = persons.filter(date_of_creation__gte = cd['record_date_from'])
+                if cd['record_date_to']:
+                    persons = persons.filter(date_of_creation__lte = cd['record_date_to'])
                 if cd['info']:
                     persons = persons.filter(info__icontains = cd['info'])
                 if persons:
