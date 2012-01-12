@@ -246,35 +246,35 @@ def importCountry(cursor):
     importUniversal(
         cursor,
         'SELECT id, text FROM country WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: l[1].strip('-') != '' and GeoCountry.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]))
+        lambda l: GeoCountry.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]))
     )
 
 def importRegion(cursor):
-    GeoCountry.objects.all().delete()
+    GeoRegion.objects.all().delete()
     importUniversal(
         cursor,
         'SELECT id, text, countryid FROM region WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: l[1].strip('-') != '' and GeoRegion.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), country=get_object_or_none(GeoCountry, obid=l[2]))
+        lambda l: GeoRegion.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), country=get_object_or_none(GeoCountry, obid=l[2]))
     )
 
 def importDistrict(cursor):
-    GeoCountry.objects.all().delete()
+    District.objects.all().delete()
     importUniversal(
         cursor,
         'SELECT id, text, regionid FROM district WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: l[1].strip('-') != '' and District.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), region=get_object_or_none(GeoRegion, obid=l[2]))
+        lambda l: District.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), region=get_object_or_none(GeoRegion, obid=l[2]))
     )
 
 def importMunicipalitet(cursor):
-    GeoCountry.objects.all().delete()
+    Municipalitet.objects.all().delete()
     importUniversal(
         cursor,
         'SELECT id, text, ruraladministration FROM ruraladministration WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: l[1].strip('-') != '' and Municipalitet.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), district=get_object_or_none(District, obid=l[2].strip('()').split(',')[-1]))
+        lambda l: Municipalitet.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), district=get_object_or_none(District, obid=l[2].strip('()').split(',')[-1]))
     )
 
 def importCity(cursor):
-    GeoCountry.objects.all().delete()
+    GeoCity.objects.all().delete()
     importUniversal(
         cursor,
         'SELECT id, text, countryid, districtid, ruraladministrationid FROM settlement WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
