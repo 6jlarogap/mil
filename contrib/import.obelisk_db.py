@@ -7,6 +7,7 @@ PATH = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(PATH)
 
 from django.core.management import setup_environ
+
 import settings
 setup_environ(settings)
 
@@ -18,8 +19,16 @@ from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django import db
+from django.shortcuts import _get_queryset
 
 from common.models import *
+
+def get_object_or_none(klass, *args, **kwargs):
+    queryset = _get_queryset(klass)
+    try:
+        return queryset.get(*args, **kwargs)
+    except queryset.model.DoesNotExist:
+        return None
 
 @transaction.commit_manually
 def importUniversal(cursor, sql, creator, sql_params=None, offset=0):
@@ -106,53 +115,23 @@ def setUnclearDate(params, name, value, str_comments):
     params[name+'_no_month'] = date_no_month
     params[name+'_no_day'] = date_no_day
 
-def importSettlement(cursor):
-    def createLocations(l):
-        location_name = None
-        try:
-            city = GeoCity.objects.get(obid=l[3])
-        except GeoCity.MultipleObjectsReturned:
-            for c in GeoCity.objects.filter(obid=l[3])[1:]:
-                c.delete()
-            city = GeoCity.objects.filter(obid=l[3])[0]
-        except GeoCity.DoesNotExist:
-            city = None
-            if l[5] and l[1]:
-                location_name = u"%s, %s" % (l[1], l[5].strip().capitalize())
-            elif l[5]:
-                location_name = u"%s" % l[5].strip().capitalize()
+def importLocations(cursor):
+    for city in GeoCity.objects.all():
+        ps = Person.objects.filter(oblocationid = city.obid)
+        for p in ps:
+            lb = LocationBirth.objects.get_or_create(person = p)[0]
+            lb.city = city
+            lb.region = city.region
+            lb.country = city.region and city.region.country
+            lb.save()
 
-        if city or location_name:
-            ps = Person.objects.filter(oblocationid = l[0])
-            for p in ps:
-                lb = LocationBirth.objects.get_or_create(person = p)[0]
-                if city:
-                    lb.city = city
-                    lb.region = lb.city.region
-                    lb.country = lb.city.region.country
-                if location_name:
-                    lb.info = location_name
-                lb.save()
-
-            bs = Burial.objects.filter(oblocationid = l[0])
-            for b in bs:
-                lb = LocationBurial.objects.get_or_create(burial = b)[0]
-                if city:
-                    lb.city = city
-                    lb.region = lb.city.region
-                    lb.country = lb.city.region.country
-                if location_name:
-                    lb.info = location_name
-                lb.save()
-
-    importUniversal(
-        cursor,
-        '''SELECT
-            s.id, s.text, s.countryid, s.districtid, ruraladministrationid, r.text
-        FROM settlement AS s LEFT JOIN ruraladministration AS r ON r.id = s.ruraladministrationid;''',
-        createLocations,
-        offset = len(sys.argv) > 6 and int(sys.argv[6]) or 0
-    )
+        bs = Burial.objects.filter(oblocationid = city.obid)
+        for b in bs:
+            lb = LocationBurial.objects.get_or_create(burial = b)[0]
+            lb.city = city
+            lb.region = city.region
+            lb.country = city.region and city.region.country
+            lb.save()
 
 def importPerson(cursor):
     def createPerson(l):
@@ -262,25 +241,50 @@ def importBurial(cursor):
         offset = len(sys.argv) > 4 and int(sys.argv[4]) or 0
     )
 
-def importCity(cursor):
+def importCountry(cursor):
+    GeoCountry.objects.all().delete()
     importUniversal(
         cursor,
-        'SELECT id, text, regionid FROM district WHERE text <>  \'\' AND text <> \'N\';',
-        lambda l: GeoCity.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), region=GeoRegion.objects.get(obid=l[2]))
+        'SELECT id, text FROM country WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
+        lambda l: l[1].strip('-') != '' and GeoCountry.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]))
     )
 
 def importRegion(cursor):
+    GeoCountry.objects.all().delete()
     importUniversal(
         cursor,
-        'SELECT id, text, countryid FROM region WHERE text <>  \'\' AND text <> \'N\';',
-        lambda l: GeoRegion.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), country=GeoCountry.objects.get(obid=l[2]))
+        'SELECT id, text, countryid FROM region WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
+        lambda l: l[1].strip('-') != '' and GeoRegion.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), country=get_object_or_none(GeoCountry, obid=l[2]))
     )
 
-def importCountry(cursor):
+def importDistrict(cursor):
+    GeoCountry.objects.all().delete()
     importUniversal(
         cursor,
-        'SELECT id, text FROM country WHERE text <>  \'\' AND text <> \'N\';',
-        lambda l: GeoCountry.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]))
+        'SELECT id, text, regionid FROM district WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
+        lambda l: l[1].strip('-') != '' and District.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), region=get_object_or_none(GeoRegion, obid=l[2]))
+    )
+
+def importMunicipalitet(cursor):
+    GeoCountry.objects.all().delete()
+    importUniversal(
+        cursor,
+        'SELECT id, text, ruraladministration FROM ruraladministration WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
+        lambda l: l[1].strip('-') != '' and Municipalitet.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), district=get_object_or_none(District, obid=l[2].strip('()').split(',')[-1]))
+    )
+
+def importCity(cursor):
+    GeoCountry.objects.all().delete()
+    importUniversal(
+        cursor,
+        'SELECT id, text, countryid, districtid, ruraladministrationid FROM settlement WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
+        lambda l: GeoCity.objects.get_or_create(
+            obid=l[0],
+            name=cleanup_db(l[1]),
+            country=get_object_or_none(GeoCountry, obid=l[2]),
+            district=get_object_or_none(District, obid=l[3]),
+            municipalitet=get_object_or_none(Municipalitet, obid=l[4]),
+        )
     )
 
 def importLists(cursor):
@@ -313,17 +317,26 @@ except IndexError:
 else:
     print sys.argv
 
-    importLists(connection.cursor())
-    print 'Lists imported'
+    if not '--skip_lists' in sys.argv:
+        importLists(connection.cursor())
+        print 'Lists imported'
 
-    importCountry(connection.cursor())
-    importRegion(connection.cursor())
-    importCity(connection.cursor())
-    print 'Geodata imported'
+    if not '--skip_geodata' in sys.argv:
+        importCountry(connection.cursor())
+        importRegion(connection.cursor())
+        importDistrict(connection.cursor())
+        importMunicipalitet(connection.cursor())
+        importCity(connection.cursor())
+        print 'Geodata imported'
 
-    importBurial(connection.cursor())
-    print 'Burials imported'
-    importPerson(connection.cursor())
-    print 'Persons imported'
-    importSettlement(connection.cursor())
-    print 'Location data imported'
+    if not '--skip_burials' in sys.argv:
+        importBurial(connection.cursor())
+        print 'Burials imported'
+
+    if not '--skip_persons' in sys.argv:
+        importPerson(connection.cursor())
+        print 'Persons imported'
+
+    if not '--skip_locations' in sys.argv:
+        importLocations(connection.cursor())
+        print 'Location data imported'

@@ -15,11 +15,11 @@ class GeoCountry(models.Model):
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Название", max_length=36, db_index=True, unique=True)
+
     def __unicode__(self):
         return self.name
+
     class Meta:
-        #managed = False
-        #db_table = "common_country"
         ordering = ['name']
         verbose_name = u'страна'
         verbose_name_plural = u'страны'
@@ -30,7 +30,7 @@ class GeoRegion(models.Model):
     Регион.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    country = models.ForeignKey(GeoCountry)
+    country = models.ForeignKey(GeoCountry, null=True)
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
@@ -38,8 +38,43 @@ class GeoRegion(models.Model):
 
     class Meta:
         unique_together = (("country", "name"),)
-        verbose_name = u'регион'
-        verbose_name_plural = u'регионы'
+        verbose_name = u'область'
+        verbose_name_plural = u'области'
+
+class District(models.Model):
+    """
+    Район.
+    """
+    obid = models.IntegerField(blank=True, null=True, editable=False)
+    region = models.ForeignKey(GeoRegion, null=True)
+    name = models.CharField(u"Название", max_length=36, db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = u'район'
+        verbose_name_plural = u'районы'
+
+class Municipalitet(models.Model):
+    """
+    Сельсовет.
+    """
+    obid = models.IntegerField(blank=True, null=True, editable=False)
+    district = models.ForeignKey(District)
+    name = models.CharField(u"Название", max_length=36, db_index=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        unique_together = (("district", "name"),)
+        verbose_name = u'сельсовет'
+        verbose_name_plural = u'сельсоветы'
+
+def capitalize_name(instance, **kwargs):
+    if instance.name[0] != instance.name.capitalize()[0]:
+        instance.name = instance.name.capitalize()
 
 class CityType(models.Model):
     """
@@ -61,7 +96,10 @@ class GeoCity(models.Model):
     Город.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    region = models.ForeignKey(GeoRegion)
+    country = models.ForeignKey(GeoCountry, verbose_name=u'Страна', null=True)
+    region = models.ForeignKey(GeoRegion, verbose_name=u'Область', null=True)
+    district = models.ForeignKey(District, verbose_name=u'Район', null=True)
+    municipalitet = models.ForeignKey(Municipalitet, verbose_name=u'Сельсовет', blank=True, null=True)
     type = models.ForeignKey(CityType, null=True, blank=True, verbose_name=u'Тип')
     name = models.CharField("Название", max_length=36, db_index=True)
 
@@ -75,26 +113,18 @@ class GeoCity(models.Model):
         verbose_name_plural = u'населенные пункты'
 
 
-class GeoStreet(models.Model):
-    """
-    Улица.
-    """
-    city = models.ForeignKey(GeoCity)  # Город.
-    name = models.CharField(max_length=99, db_index=True)  # Название.
-    class Meta:
-        ordering = ['city', 'name']
-        unique_together = (("city", "name"),)
-        verbose_name = (u'улица')
-        verbose_name_plural = (u'улицы')
-    def __unicode__(self):
-        return self.name
+models.signals.pre_save.connect(capitalize_name, sender=GeoCountry)
+models.signals.pre_save.connect(capitalize_name, sender=GeoRegion)
+models.signals.pre_save.connect(capitalize_name, sender=District)
+models.signals.pre_save.connect(capitalize_name, sender=Municipalitet)
+models.signals.pre_save.connect(capitalize_name, sender=GeoCity)
 
 class Location(models.Model):
     """
     Абстрактныадрес
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", blank=True, null=True)       # Страна
+    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
     region = ChainedForeignKey(GeoRegion, verbose_name=u"Регион", chained_field="country", chained_model_field="country", blank=True, null=True)
     city = ChainedForeignKey(GeoCity, verbose_name=u"Город", chained_field="region", chained_model_field="region", blank=True, null=True)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
@@ -578,8 +608,10 @@ class MilitaryUnit(Location):
     Воинское подразделение
     """
     name = models.CharField(u"Воинское подразделение", max_length=100, db_index=True)
+
     def __unicode__(self):
         return self.name
+
     class Meta:
         verbose_name = (u'Воинское подразделение')
         verbose_name_plural = (u'Воинские подразделения')
