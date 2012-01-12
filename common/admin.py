@@ -155,6 +155,7 @@ class MilitaryConflictTypeAdmin(admin.ModelAdmin):
 
 admin.site.register(GeoCountry, SortSearchAdmin)
 admin.site.register(GeoRegion, SortSearchAdmin)
+admin.site.register(CityType, SortSearchAdmin)
 admin.site.register(GeoCity, SortSearchAdmin)
 admin.site.register(GeoStreet, SortSearchAdmin)
 admin.site.register(Rank, SortSearchAdmin)

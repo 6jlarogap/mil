@@ -41,6 +41,20 @@ class GeoRegion(models.Model):
         verbose_name = u'регион'
         verbose_name_plural = u'регионы'
 
+class CityType(models.Model):
+    """
+    Тип нас.пунктов
+    """
+    name = models.CharField("Название", max_length=36, db_index=True)
+    full_name = models.CharField("Полное название", max_length=255, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = u'Тип населенных пунктов'
+        verbose_name_plural = u'Типы населенных пунктов'
+
 
 class GeoCity(models.Model):
     """
@@ -48,9 +62,12 @@ class GeoCity(models.Model):
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
     region = models.ForeignKey(GeoRegion)
+    type = models.ForeignKey(CityType, null=True, blank=True, verbose_name=u'Тип')
     name = models.CharField("Название", max_length=36, db_index=True)
 
     def __unicode__(self):
+        if self.type:
+            return u'%s, %s' % (self.name, self.type)
         return self.name
 
     class Meta:
