@@ -119,19 +119,21 @@ def importLocations(cursor):
     for city in GeoCity.objects.all():
         ps = Person.objects.filter(oblocationid = city.obid)
         for p in ps:
-            lb = LocationBirth.objects.get_or_create(person = p)[0]
-            lb.city = city
-            lb.region = city.region
-            lb.country = city.region and city.region.country
-            lb.save()
+            p.birth_location, _tmp = SimpleLocation.objects.get_or_create(
+                city = city,
+                region = city.region,
+                country = city.country,
+            )
+            p.save()
 
         bs = Burial.objects.filter(oblocationid = city.obid)
         for b in bs:
-            lb = LocationBurial.objects.get_or_create(burial = b)[0]
-            lb.city = city
-            lb.region = city.region
-            lb.country = city.region and city.region.country
-            lb.save()
+            b.birth_location, _tmp = SimpleLocation.objects.get_or_create(
+                city = city,
+                region = city.region,
+                country = city.country,
+            )
+            b.save()
 
 def importPerson(cursor):
     def createPerson(l):

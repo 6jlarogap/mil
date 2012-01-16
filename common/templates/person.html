@@ -11,7 +11,7 @@
     Имя: {{ person.first_name }}<br>
     Отчество: {{ person.patronymic }}<br>
     Дата роджения: {{ person.birth_date }}<br>
-    Место рождения: {{person.locationbirth}}<br>
+    Место рождения: {{ person.birth_location }}<br>
     Место нахождения документов: {{ person.documents_place|default:"нет" }}<br>
     Источник информации: {{ person.information_source }}<br>
     Категория погибшего: {{ person.deadman_category|default:"не известна" }}<br>
@@ -33,7 +33,7 @@
             <tr>
                 <td><a href="{% url burial person.burial.uuid %}">{{ person.burial.passportid }}</a></td>
                 <td>{{ person.burial.date_burried }}</td>
-                <td>{{ person.burial.locationburial }}</td>
+                <td>{{ person.burial.location }}</td>
             </tr>
             {% for old in  person.closed_burials.all %}
             <tr>
@@ -42,7 +42,7 @@
                     <a href="{% url burial old.uuid %}">{{ old.passportid }}</a>
                 </td>
                 <td>{{ old.date_burried }}</td>
-                <td>{{ old.locationburial }}</td>
+                <td>{{ old.location }}</td>
             </tr>
             {% endfor %}
         </table>

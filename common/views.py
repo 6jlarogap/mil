@@ -35,7 +35,7 @@ def persons(request):
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
                 if cd['country']:
-                    params = dict(burial__locationburial__city__region__country__pk = cd['country'].pk)
+                    params = dict(burial__location__city__region__country__pk = cd['country'].pk)
                     if cd['country_exclude']:
                         persons = persons.exclude(**params)
                     else:
@@ -176,14 +176,14 @@ def burials(request):
                 else:
                     burials = burials.exclude(passportid = u'')
                 if cd['city']:
-                    burials = burials.filter(locationburial__city = cd['city'])
+                    burials = burials.filter(location__city = cd['city'])
                 elif cd['region']:
-                    burials = burials.filter(locationburial__city__region = cd['region'])
+                    burials = burials.filter(location__region = cd['region'])
                 elif cd['country']:
                     if cd['other_countries']:
-                        burials = burials.exclude(locationburial__city__region__country = cd['country'])
+                        burials = burials.exclude(location__country = cd['country'])
                     else:
-                        burials = burials.filter(locationburial__city__region__country = cd['country'])
+                        burials = burials.filter(location__country = cd['country'])
                 if cd['burial_type']:
                     burials = burials.filter(burial_type__name = cd['burial_type'])
                 if cd['military_conflict']:
@@ -354,9 +354,9 @@ def burials(request):
 
                         def filter_data(burials_all, persons_all, region, city):
                             if city:
-                                burials_sel = burials_all.filter(locationburial__city=city)
+                                burials_sel = burials_all.filter(location__city=city)
                             elif region:
-                                burials_sel = burials_all.filter(locationburial__city__region=region)
+                                burials_sel = burials_all.filter(location__region=region)
                             else:
                                 burials_sel = burials_all
 

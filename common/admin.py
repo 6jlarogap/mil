@@ -27,18 +27,6 @@ class PersonEditCauseInline(admin.TabularInline):
     extra = 1
     can_delete = False
 
-class LocationBirthInLine(admin.TabularInline):
-    model = LocationBirth
-    can_delete = False
-
-    def __init__(self, *args, **kwargs):
-        super(LocationBirthInLine, self).__init__(*args, **kwargs)
-        self.opts.get_field_by_name('info')[0].verbose_name = u'Дополнительная информация о месте жительства и родственниках'
-
-class LocationBurialInLine(admin.TabularInline):
-    model = LocationBurial
-    can_delete = False
-
 class ClosedBurialFromInLine(admin.TabularInline):
     model = ClosedBurial
     fk_name = "burial_from"
@@ -77,13 +65,13 @@ class BurialCategoryInLine(admin.TabularInline):
 
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
-        LocationBurialInLine,
         BurialCategoryInLine,
         ClosedBurialFromInLine,
     ]
     form = BurialAdminForm
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', 'creator', 'today', ]
+    raw_id_fields = ['location', ]
 
     def today(self, obj):
         return pytils.dt.ru_strftime(date=datetime.date.today(), format=u'%d %B %Y', inflected=True)
@@ -119,13 +107,12 @@ class PersonAdmin(admin.ModelAdmin):
     inlines = [
         PersonCallInline,
         PersonDutyInline,
-        LocationBirthInLine,
         PersonEditCauseInline,
     ]
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
-
+    raw_id_fields = ['birth_location', ]
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)
@@ -153,13 +140,22 @@ class MilitaryConflictTypeAdmin(admin.ModelAdmin):
     search_fields = ['full', 'brief', ]
     ordering = ['full', ]
 
+class LocationAdmin(SortSearchAdmin):
+    raw_id_fields = ['location', ]
+
+class InternalLocationAdmin(admin.ModelAdmin):
+    search_fields = ['city__name', 'municipalitet__name', ]
+    list_filter = ['country', 'region',]
+
 admin.site.register(GeoCountry, SortSearchAdmin)
 admin.site.register(GeoRegion, SortSearchAdmin)
 admin.site.register(CityType, SortSearchAdmin)
 admin.site.register(GeoCity, SortSearchAdmin)
 admin.site.register(Rank, SortSearchAdmin)
-admin.site.register(Comissariat, SortSearchAdmin)
-admin.site.register(MilitaryUnit, SortSearchAdmin)
+admin.site.register(Comissariat, LocationAdmin)
+admin.site.register(MilitaryUnit, LocationAdmin)
+admin.site.register(SimpleLocation, InternalLocationAdmin)
+admin.site.register(StrictLocation, InternalLocationAdmin)
 admin.site.register(DeathCause, SortSearchAdmin)
 admin.site.register(DeadmanCategory, DeadmanCategoryAdmin)
 admin.site.register(DocumentsPlace, SortSearchAdmin)

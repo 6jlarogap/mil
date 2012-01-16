@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 import datetime
 from django.core.cache import cache
@@ -121,12 +122,9 @@ models.signals.pre_save.connect(capitalize_name, sender=GeoCity)
 
 class Location(models.Model):
     """
-    Абстрактныадрес
+    Абстрактный адрес
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
-    region = ChainedForeignKey(GeoRegion, verbose_name=u"Регион", chained_field="country", chained_model_field="country", blank=True, null=True)
-    city = ChainedForeignKey(GeoCity, verbose_name=u"Город", chained_field="region", chained_model_field="region", blank=True, null=True)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
     gps_x = models.FloatField(u"Координата X", blank=True, null=True)                            # GPS X-ось.
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)                            # GPS Y-ось.
@@ -135,7 +133,7 @@ class Location(models.Model):
     def __unicode__(self):
         ret = u"незаполненный адрес"
         if self.city:
-            ret = self.city
+            ret = u'%s' % self.city
             if self.city.region:
                 ret = u'%s %s' % (self.city.region, ret)
                 if self.city.region.country:
@@ -143,8 +141,29 @@ class Location(models.Model):
         if self.info:
             ret = u'%s %s' % (ret, self.info)
         return ret
+
     class Meta:
         abstract = True
+
+class SimpleLocation(Location):
+    """
+    С точностью до страны
+    """
+    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
+    region = ChainedForeignKey(GeoRegion, verbose_name=u"Область", chained_field="country", chained_model_field="country", blank=True, null=True)
+    district = ChainedForeignKey(District, verbose_name=u"Район", chained_field="region", chained_model_field="region", blank=True, null=True)
+    municipalitet = ChainedForeignKey(Municipalitet, verbose_name=u"Сельсовет", chained_field="district", chained_model_field="district", blank=True, null=True)
+    city = ChainedForeignKey(GeoCity, verbose_name=u"Нас. пункт", chained_field="district", chained_model_field="district", blank=True, null=True)
+
+class StrictLocation(Location):
+    """
+    С точностью до страны
+    """
+    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
+    region = ChainedForeignKey(GeoRegion, verbose_name=u"Область", chained_field="country", chained_model_field="country")
+    district = ChainedForeignKey(District, verbose_name=u"Район", chained_field="region", chained_model_field="region")
+    municipalitet = ChainedForeignKey(Municipalitet, verbose_name=u"Сельсовет", chained_field="district", chained_model_field="district", blank=True, null=True)
+    city = ChainedForeignKey(GeoCity, verbose_name=u"Нас. пункт", chained_field="district", chained_model_field="district")
 
 class BurialType(models.Model):
     """
@@ -212,6 +231,8 @@ class Burial(models.Model):
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
     names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
+
+    location = models.OneToOneField(StrictLocation, null=True, blank=True)
 
     date_gosznak = models.DateField(u"Дата установки государственного знака", blank=True, null=True, db_index=True)
     date_gosznak_no_month = models.BooleanField(default=False, editable=False)
@@ -289,12 +310,6 @@ class Burial(models.Model):
             for cb in self.burial_to.all():
                 count += cb.burial_from.get_qunknown()
         return count
-
-    def location(self):
-        try:
-            return self.locationburial
-        except LocationBurial.DoesNotExist:
-            return
 
     def get_last(self):
         last = self
@@ -414,15 +429,6 @@ class SearchObject(models.Model):
     class Meta:
         verbose_name = (u'Поисковый объект')
         verbose_name_plural = (u'Поисковые объекты')
-
-class LocationBurial(Location):
-    """
-    Адрес захоронения
-    """
-    burial = models.OneToOneField(Burial, primary_key=True)
-    class Meta:
-        verbose_name = (u'Место захоронения')
-        verbose_name_plural = (u'Место захоронения')
 
 class DeathCause(models.Model):
     """
@@ -558,6 +564,8 @@ class Person(models.Model):
     first_name = models.CharField(u"Имя", max_length=30, blank=True, db_index=True)
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True, db_index=True)
 
+    birth_location = models.OneToOneField(SimpleLocation, null=True, blank=True)
+
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True, db_index=True)
     birth_date_no_month = models.BooleanField(default=False, editable=False)
     birth_date_no_day = models.BooleanField(default=False, editable=False)
@@ -603,11 +611,12 @@ class Person(models.Model):
             setattr(self, field_name+'_no_day', ud.no_day)
             setattr(self, field_name+'_no_month', ud.no_month)
 
-class MilitaryUnit(Location):
+class MilitaryUnit(models.Model):
     """
     Воинское подразделение
     """
     name = models.CharField(u"Воинское подразделение", max_length=100, db_index=True)
+    location = models.OneToOneField(SimpleLocation, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
@@ -616,11 +625,13 @@ class MilitaryUnit(Location):
         verbose_name = (u'Воинское подразделение')
         verbose_name_plural = (u'Воинские подразделения')
 
-class Comissariat(Location):
+class Comissariat(models.Model):
     """
     Военкомат
     """
     name = models.CharField(u"Военкомат", max_length=100, db_index=True)
+    location = models.OneToOneField(SimpleLocation, null=True, blank=True)
+
     def __unicode__(self):
         return self.name
     class Meta:
@@ -713,14 +724,4 @@ class PersonInformationLinks(models.Model):
     class Meta:
         verbose_name = (u'Ссылка на информационные источники')
         verbose_name_plural = (u'Ссылки на информационные источники')
-
-class LocationBirth(Location):
-    """
-    Место рождения
-    """
-    person = models.OneToOneField(Person, primary_key=True)
-    class Meta:
-        verbose_name = (u'Место рождения')
-        verbose_name_plural = (u'Место рождения')
-
 

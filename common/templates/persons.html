@@ -89,7 +89,7 @@
                             <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>
                         </td>
                         <td>
-                            {% with person.burial.locationburial as location %}
+                            {% with person.burial.location as location %}
                                 {% if location.country %}{{ location.country }}{% if location.region or location.city %}, {% endif %}{% endif %}
                                 {% if location.region %}{{ location.region }}{% if location.city %}, {% endif %}{% endif %}
                                 {% if location.city %}{{ location.city }}{% endif %}

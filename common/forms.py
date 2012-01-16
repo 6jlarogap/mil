@@ -95,7 +95,7 @@ class LoginForm(AuthenticationForm): # Форма авторизации
     username = forms.CharField(max_length=30, label="E-mail ")
     password = forms.CharField(max_length=18, widget=forms.PasswordInput, label="Пароль ")
 
-COUNTRIES = GeoCountry.objects.filter(georegion__geocity__locationburial__isnull=False).distinct()
+COUNTRIES = GeoCountry.objects.filter(georegion__geocity__strictlocation__isnull=False).distinct()
 
 class PersonsForm(forms.Form):
     """Форма поиска воинов.
@@ -154,7 +154,7 @@ class BurialsForm(forms.ModelForm):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
 
     class Meta:
-        model = LocationBurial
+        model = StrictLocation
         fields = ['country', 'region', 'city']
 
 class BurialAdminForm(forms.ModelForm):
