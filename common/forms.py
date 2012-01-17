@@ -154,8 +154,8 @@ class BurialsForm(forms.ModelForm):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
 
     class Meta:
-        model = StrictLocation
-        fields = ['country', 'region', 'city']
+        model = SimpleLocation
+        fields = ['country', 'region', 'district', 'municipalitet', 'city']
 
 class BurialAdminForm(forms.ModelForm):
     date_gosznak = UnclearDateField(label=u"Дата установки государственного знака", required=False)

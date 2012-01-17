@@ -116,24 +116,35 @@ def setUnclearDate(params, name, value, str_comments):
     params[name+'_no_day'] = date_no_day
 
 def importLocations(cursor):
-    for city in GeoCity.objects.all():
-        ps = Person.objects.filter(oblocationid = city.obid)
-        for p in ps:
-            p.birth_location, _tmp = SimpleLocation.objects.get_or_create(
-                city = city,
-                region = city.region,
-                country = city.country,
-            )
-            p.save()
+    for city in GeoCity.objects.all().select_related():
+        params = dict(
+            city = city,
+            municipalitet = city.municipalitet,
+            district = city.district,
+            region = city.region,
+            country = city.country,
+        )
 
-        bs = Burial.objects.filter(oblocationid = city.obid)
-        for b in bs:
-            b.birth_location, _tmp = SimpleLocation.objects.get_or_create(
-                city = city,
-                region = city.region,
-                country = city.country,
-            )
-            b.save()
+        if not '--skip_person_locations' in sys.argv:
+            ps = Person.objects.filter(oblocationid = city.obid)
+            for p in ps:
+                try:
+                    p.birth_location = SimpleLocation.objects.get(city=city)
+                    StrictLocation.objects.filter(pk=p.birth_location.pk).update(**params)
+                except StrictLocation.DoesNotExist:
+                    p.birth_location = SimpleLocation.objects.create(**params)
+                p.save()
+
+        if not '--skip_burial_locations' in sys.argv:
+            if city.region and city.country:
+                bs = Burial.objects.filter(oblocationid = city.obid)
+                for b in bs:
+                    try:
+                        b.location = StrictLocation.objects.get(city=city)
+                        StrictLocation.objects.filter(pk=b.location.pk).update(**params)
+                    except StrictLocation.DoesNotExist:
+                        b.location = StrictLocation.objects.create(**params)
+                    b.save()
 
 def importPerson(cursor):
     def createPerson(l):
@@ -248,7 +259,7 @@ def importCountry(cursor):
     importUniversal(
         cursor,
         'SELECT id, text FROM country WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: GeoCountry.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]))
+        lambda l: GeoCountry.objects.create(obid=l[0], name=cleanup_db(l[1]))
     )
 
 def importRegion(cursor):
@@ -256,7 +267,7 @@ def importRegion(cursor):
     importUniversal(
         cursor,
         'SELECT id, text, countryid FROM region WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: GeoRegion.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), country=get_object_or_none(GeoCountry, obid=l[2]))
+        lambda l: GeoRegion.objects.create(obid=l[0], name=cleanup_db(l[1]), country=get_object_or_none(GeoCountry, obid=l[2]))
     )
 
 def importDistrict(cursor):
@@ -264,7 +275,7 @@ def importDistrict(cursor):
     importUniversal(
         cursor,
         'SELECT id, text, regionid FROM district WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: District.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), region=get_object_or_none(GeoRegion, obid=l[2]))
+        lambda l: District.objects.create(obid=l[0], name=cleanup_db(l[1]), region=get_object_or_none(GeoRegion, obid=l[2]))
     )
 
 def importMunicipalitet(cursor):
@@ -272,21 +283,30 @@ def importMunicipalitet(cursor):
     importUniversal(
         cursor,
         'SELECT id, text, ruraladministration FROM ruraladministration WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: Municipalitet.objects.get_or_create(obid=l[0], name=cleanup_db(l[1]), district=get_object_or_none(District, obid=l[2].strip('()').split(',')[-1]))
+        lambda l: Municipalitet.objects.create(obid=l[0], name=cleanup_db(l[1]), district=get_object_or_none(District, obid=l[2].strip('()').split(',')[-1]))
     )
 
 def importCity(cursor):
     GeoCity.objects.all().delete()
+
+    def createCity(l):
+        m = (l[4] and get_object_or_none(Municipalitet, obid=l[4]))
+        d = (l[3] and get_object_or_none(District, obid=l[3])) or (m and m.district) or None
+        c = (l[2] and get_object_or_none(GeoCountry, obid=l[2])) or (d and d.region and d.region.country) or None
+
+        GeoCity.objects.create(
+            obid=l[0],
+            name=cleanup_db(l[1]),
+            country=c,
+            region=d and d.region or None,
+            district=d,
+            municipalitet=m,
+        )
+
     importUniversal(
         cursor,
         'SELECT id, text, countryid, districtid, ruraladministrationid FROM settlement WHERE text <>  \'\' AND text <> \'N\' AND text <> \'-\';',
-        lambda l: GeoCity.objects.get_or_create(
-            obid=l[0],
-            name=cleanup_db(l[1]),
-            country=get_object_or_none(GeoCountry, obid=l[2]),
-            district=get_object_or_none(District, obid=l[3]),
-            municipalitet=get_object_or_none(Municipalitet, obid=l[4]),
-        )
+        createCity
     )
 
 def importLists(cursor):

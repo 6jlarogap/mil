@@ -157,7 +157,7 @@ class SimpleLocation(Location):
 
 class StrictLocation(Location):
     """
-    С точностью до страны
+    С точностью до района
     """
     country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
     region = ChainedForeignKey(GeoRegion, verbose_name=u"Область", chained_field="country", chained_model_field="country")
@@ -232,7 +232,7 @@ class Burial(models.Model):
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
     names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
 
-    location = models.OneToOneField(StrictLocation, null=True, blank=True)
+    location = models.ForeignKey(StrictLocation, null=True, blank=True)
 
     date_gosznak = models.DateField(u"Дата установки государственного знака", blank=True, null=True, db_index=True)
     date_gosznak_no_month = models.BooleanField(default=False, editable=False)
