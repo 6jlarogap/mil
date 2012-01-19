@@ -131,7 +131,7 @@ def importLocations(cursor):
                 try:
                     p.birth_location = SimpleLocation.objects.get(city=city)
                     StrictLocation.objects.filter(pk=p.birth_location.pk).update(**params)
-                except StrictLocation.DoesNotExist:
+                except SimpleLocation.DoesNotExist:
                     p.birth_location = SimpleLocation.objects.create(**params)
                 p.save()
 
