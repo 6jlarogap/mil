@@ -152,11 +152,22 @@ INSTALLED_APPS = (
     'south',
     'easy_thumbnails',
     'smart_selects',
-    'sentry',
-    'sentry.client',
 
     'common',
 )
+
+try:
+    import sentry, raven
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'djkombu'
+        'sentry',
+        'raven.contrib.django',
+    )
+    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
+        'sentry.middleware.SentryMiddleware',
+    )
+except ImportError:
+    pass
 
 REDIS_DB = 0
 

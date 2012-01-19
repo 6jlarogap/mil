@@ -22,3 +22,8 @@ urlpatterns += patterns('',
     url(r'^chaining/', include('smart_selects.urls')),
     url(r'media/(?P<path>.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
+
+if 'sentry' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        url(r'^admin/sentry/', include('sentry.web.urls')),
+    )
