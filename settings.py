@@ -159,7 +159,7 @@ INSTALLED_APPS = (
 try:
     import sentry, raven
     INSTALLED_APPS = INSTALLED_APPS + (
-        'djkombu'
+        'djkombu',
         'sentry',
         'raven.contrib.django',
     )
