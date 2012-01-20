@@ -237,6 +237,7 @@ def burials(request):
                     if template == 'reports/report_2a.html':
                         context.update({
                             'region': cd['region'],
+                            'district': cd['district'],
                             'city': cd['city'],
                             'burials': burials,
                         })
@@ -356,9 +357,9 @@ def burials(request):
                     if template == 'reports/report_4.html':
                         selected_persons = Person.objects.filter(burial__in=burials)
 
-                        def filter_data(burials_all, persons_all, region, city):
+                        def filter_data(burials_all, persons_all, region, district):
                             if city:
-                                burials_sel = burials_all.filter(location__city=city)
+                                burials_sel = burials_all.filter(location__district=district)
                             elif region:
                                 burials_sel = burials_all.filter(location__region=region)
                             else:
@@ -424,12 +425,12 @@ def burials(request):
                             context['data'] = filter_data(
                                 burials, selected_persons, form.cleaned_data['region'], None
                             )
-                            for city in form.cleaned_data['region'].geocity_set.all().order_by('name'):
-                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), city.pk)
+                            for district in form.cleaned_data['region'].district_set.all().order_by('name'):
+                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
-                                        burials, selected_persons, form.cleaned_data['region'], city
+                                        burials, selected_persons, form.cleaned_data['region'], district
                                     )
                                     cache.set(data_key, data, 86400)
                                 if not data['persons']['all'] and not data['burials']['all']:

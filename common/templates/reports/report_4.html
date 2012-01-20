@@ -308,7 +308,7 @@
 		<TD WIDTH=139 HEIGHT=19 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.05cm; padding-right: 0cm">
 			<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY><FONT SIZE=2 STYLE="font-size: 11pt">
                 {% if form.cleaned_data.region %}
-                    {{ r.city }} р-н
+                    {{ r.district }} р-н
                 {% else %}
                     {% if r.region.name == 'Г.минск' %}
                         {{ r.region }}

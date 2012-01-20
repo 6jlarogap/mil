@@ -31,7 +31,7 @@
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR>
 </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>КАТАЛОГ</B></FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>воинских захоронений {{ city }}
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>воинских захоронений {{ district }}
 района {{ region }} области</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г. (текущая
 дата)</FONT></P>
@@ -124,9 +124,9 @@
 Дата захоронения {{ b.date_burried|date:'d.m.Y' }}</FONT>
 </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.98cm; text-indent: -6.98cm; margin-bottom: 0cm">
-<FONT SIZE=2>область {{ region }}     Дата установки памятника {{ b.date_memorial|date:'d.m.Y'|default:'неизвестна' }}</FONT></P>
+<FONT SIZE=2>область {{ b.location.region }}     Дата установки памятника {{ b.date_memorial|date:'d.m.Y'|default:'неизвестна' }}</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.98cm; text-indent: -6.98cm; margin-bottom: 0cm">
-<FONT SIZE=2>район    {{ city }}</FONT>
+<FONT SIZE=2>район    {{ b.location.district }}</FONT>
 </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=2>НП        {{ b.location.info }}</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
