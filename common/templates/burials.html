@@ -23,6 +23,8 @@
     {# Заголовок страницы #}
     <h1>
         Поиск Захоронений
+        {% if template == 'reports/report_2a.html' %}Ф2а{% endif %}
+        {% if template == 'reports/report_2b.html' %}Ф2б{% endif %}
         {% if template == 'reports/report_3.html' %}Ф3{% endif %}
         {% if template == 'reports/report_4.html' %}Ф4{% endif %}
         {% if template == 'reports/report_5.html' %}Ф5{% endif %}
