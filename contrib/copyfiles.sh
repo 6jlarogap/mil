@@ -89,3 +89,10 @@ make install
 /etc/init.d/django restart
 /etc/init.d/nginx restart
 
+echo "Populating Redis DB..."
+
+cd /home/django/projects/mil/
+chmod +x ./manage.py
+./manage.py persons2redis
+
+echo "Finished"
