@@ -77,13 +77,14 @@ chmod 644 /etc/samba/smb.conf
 pip install -r ../pip_requirements.txt
 
 # install latest redis
-cd ./home/django/
 wget http://redis.googlecode.com/files/redis-2.4.6.tar.gz
 tar xzf redis-2.4.6.tar.gz
 cd redis-2.4.6
 make
 make install
 /etc/init.d/redis-server restart
+
+rm ./redis*
 
 # Start django daemon
 /etc/init.d/django restart
