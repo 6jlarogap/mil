@@ -6,6 +6,7 @@ PIL==1.1.7
 South==0.7.3
 anyjson==0.3.1
 django-admin-tools==0.4.0
+django-debug-toolbar==0.9.1
 django-extensions==0.6
 django-indexer==0.3.0
 django-paging==0.2.4
@@ -19,5 +20,6 @@ paramiko==1.7.7.1
 #psycopg2==2.4.2
 #pycrypto==2.3
 pytils==0.2.3
+redis==2.4.10
 #simplejson==2.1.2
 wsgiref==0.1.2
