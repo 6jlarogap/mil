@@ -94,6 +94,10 @@ echo "Populating Redis DB..."
 
 cd /home/django/projects/mil/
 chmod +x ./manage.py
+
+./manage.py syncdb
+./manage.py migrate
+
 ./manage.py persons2redis
 
 echo "Finished"
