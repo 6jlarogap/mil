@@ -9,6 +9,7 @@ from django_extensions.db.fields import UUIDField
 from django.contrib.auth.models import User
 
 from smart_selects.db_fields import ChainedForeignKey
+import cemetery_redis
 
 class GeoCountry(models.Model):
     """
@@ -273,22 +274,24 @@ class Burial(models.Model):
     def stats(self):
         stats = cache.get('stats_burial_%s' % self.pk)
         if not stats:
+            r = cemetery_redis.Redis()
+
             stats = {
                 'all': self.get_count(),
                 'known': self.get_count() - self.get_qunknown(),
                 'unknown': self.get_qunknown(),
-                'soldiers': self.person_set.filter(
-                    deadman_category__name__in=[u"Военнослужащий", ]
-                ).count(),
-                'resistance': self.person_set.filter(
-                    deadman_category__name__in=[u"Участник сопротивления", ]
-                ).count(),
-                'prey': self.person_set.filter(
-                    deadman_category__name__in=[u"Жертва войны", ]
-                ).count(),
-                'prisoners': self.person_set.filter(
-                    deadman_category__isnull=[u"Другие", ]
-                ).count(),
+                'soldiers': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
+                    name__in=[u"Военнослужащий", ]
+                )),
+                'resistance': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
+                    name__in=[u"Участник сопротивления", ]
+                )),
+                'prey': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
+                    name__in=[u"Жертва войны", ]
+                )),
+                'prisoners': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
+                    name__in=[u"Военнопленные", ]
+                )),
             }
             cache.set('stats_burial_%s' % self.pk, stats, 3600)
         return stats
