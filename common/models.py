@@ -290,7 +290,7 @@ class Burial(models.Model):
                     name__in=[u"Жертва войны", ]
                 )),
                 'prisoners': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
-                    name__in=[u"Военнопленные", ]
+                    name__in=[u"Другие", ]
                 )),
             }
             cache.set('stats_burial_%s' % self.pk, stats, 3600)
