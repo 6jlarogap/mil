@@ -35,6 +35,11 @@
 района {{ region }} области</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г. (текущая
 дата)</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
+    <FONT SIZE=2>Дата захоронения {{ b.date_burried|date:'d.m.Y' }}</FONT>
+</P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.98cm; text-indent: -6.98cm; margin-bottom: 0cm">
+    <FONT SIZE=2>Дата установки памятника {{ b.date_memorial|date:'d.m.Y'|default:'неизвестна' }}</FONT></P>
 <P LANG="" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><hr></P>
 {% for b in burials %}
     {% if burial.photo.url %}
@@ -120,11 +125,10 @@
 		</TR>
 	</TABLE>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
-<FONT SIZE=2>Номер захоронения № {{ b.passportid }}
-Дата захоронения {{ b.date_burried|date:'d.m.Y' }}</FONT>
+<FONT SIZE=2>Номер захоронения № {{ b.passportid }}</FONT>
 </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.98cm; text-indent: -6.98cm; margin-bottom: 0cm">
-<FONT SIZE=2>область {{ b.location.region }}     Дата установки памятника {{ b.date_memorial|date:'d.m.Y'|default:'неизвестна' }}</FONT></P>
+<FONT SIZE=2>область {{ b.location.region }}</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.98cm; text-indent: -6.98cm; margin-bottom: 0cm">
 <FONT SIZE=2>район    {{ b.location.district }}</FONT>
 </P>
