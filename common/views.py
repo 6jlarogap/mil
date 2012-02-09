@@ -247,7 +247,7 @@ def burials(request):
                     if template == 'reports/report_2b.html':
                         bcats = BurialCategory.objects.filter(burial__in=burials)
                         known_count = bcats.aggregate(known=models.Sum('custom_known'))['known'] or r.known_for_burial_list(burials)
-                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
+                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or r.unknown_for_burial_list(burials)
                         context.update({
                             'region': cd['region'],
                             'city': cd['city'],
@@ -297,7 +297,7 @@ def burials(request):
                     if template == 'reports/report_3.html' or template == 'reports/report_5.html':
                         bcats = BurialCategory.objects.filter(burial__in=burials)
                         known_count = bcats.aggregate(known=models.Sum('custom_known'))['known'] or r.known_for_burial_list(burials)
-                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or 0
+                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or r.unknown_for_burial_list(burials)
                         context.update({
                             'all': burials.count(),
                             'conflicts': {
@@ -370,7 +370,7 @@ def burials(request):
 
                             b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
                             bc_data = b_cats.aggregate(unknown=models.Sum('unknown'), known=models.Sum('custom_known'))
-                            unknown = bc_data['unknown'] or 0
+                            unknown = bc_data['unknown'] or r.unknown_for_burial_list(burials_sel)
                             known = bc_data['known'] or r.known_for_burial_list(burials_sel)
 
                             burials_count = len(burials_sel)

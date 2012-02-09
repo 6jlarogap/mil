@@ -32,9 +32,20 @@ class Redis():
             pk = burial
         return int(self.db.get('cemetery:burial:%s:known' % pk) or 0)
 
+    def unknown_for_burial(self, burial):
+        if isinstance(burial, models.Model):
+            pk = burial.pk
+        else:
+            pk = burial
+        return int(self.db.get('cemetery:burial:%s:unknown' % pk) or 0)
+
     def known_for_burial_list(self, burials):
         burial_pks = not isinstance(burials, list) and burials.order_by().values_list('pk', flat=True) or burials
         return sum([self.known_for_burial(b) for b in burial_pks], 0)
+
+    def unknown_for_burial_list(self, burials):
+        burial_pks = not isinstance(burials, list) and burials.order_by().values_list('pk', flat=True) or burials
+        return sum([self.unknown_for_burial(b) for b in burial_pks], 0)
 
     def known_for_burial_list_and_cat(self, burials, cat):
         burial_pks = not isinstance(burials, list) and burials.order_by().values_list('pk', flat=True) or burials
