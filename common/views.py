@@ -358,7 +358,7 @@ def burials(request):
                         selected_persons = Person.objects.filter(burial__in=burials)
 
                         def filter_data(burials_all, persons_all, region, district):
-                            if city:
+                            if district:
                                 burials_sel = burials_all.filter(location__district=district)
                             elif region:
                                 burials_sel = burials_all.filter(location__region=region)
