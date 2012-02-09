@@ -150,6 +150,7 @@ class BurialsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BurialsForm, self).__init__(*args, **kwargs)
         for k in self.fields:
+            self.fields[k].required = False
             if isinstance(self.fields[k], forms.DateField):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
 
