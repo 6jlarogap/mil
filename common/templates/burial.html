@@ -18,13 +18,13 @@
 
     Номер паспорта захоронения: {{ burial.passportid }}<br>
     Дата паспорта захоронения: {{ burial.date_passport }}<br>
-    Дата захоронения: {{ burial.date_burried }}<br>
-    Дата обнаружения: {{ burial.date_discovered }}<br>
+    Дата захоронения: {{ burial.get_unclear_date_burried }}<br>
+    Дата обнаружения: {{ burial.get_unclear_date_discovered }}<br>
     Адрес захоронения: {{ burial.location }}<br>
     Тип воинского захоронения: {{ burial.burial_type.name }}<br>
     Военный конфликт: {{ burial.military_conflict.name }}<br>
-    Дата установки памятника: {{ burial.date_memorial }}<br>
-    Дата установки госзнака: {{ burial.date_gosznak }}<br>
+    Дата установки памятника: {{ burial.get_unclear_date_memorial }}<br>
+    Дата установки госзнака: {{ burial.get_unclear_date_gosznak }}<br>
     Дополнительная информация о месте захоронения: {{ burial.info }}<br>
     <br>
     Количество захороненнных: {{ burial.get_count }}<br>
@@ -43,8 +43,8 @@
     {% for p in burial.person_set.all %}
         <tr>
             <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
-            <td>{{ p.birth_date }}</td>
-            <td>{{ p.death_date }}</td>
+            <td>{{ p.get_unclear_birth_date }}</td>
+            <td>{{ p.get_unclear_death_date }}</td>
             <td>{{ p.death_cause }}</td>
             <td>{{ burial.date_burried }}</td>
         </tr>
@@ -72,8 +72,8 @@
             {% for p in cb.burial_from.person_set.all %}
                 <tr>
                     <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
-                    <td>{{ p.birth_date }}</td>
-                    <td>{{ p.death_date }}</td>
+                    <td>{{ p.get_unclear_birth_date }}</td>
+                    <td>{{ p.get_unclear_death_date }}</td>
                     <td>{{ p.death_cause.name }}</td>
                     <td>{{ cb.burial_from.date_burried }}</td>
                 </tr>

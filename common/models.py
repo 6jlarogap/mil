@@ -329,8 +329,10 @@ class Burial(models.Model):
         tmp_date = UnclearDate(cur_date.year, cur_date.month, cur_date.day)
         if getattr(self, field_name+'_no_day'):
             tmp_date.day = None
+            tmp_date.no_day = True
         if getattr(self, field_name+'_no_month'):
             tmp_date.month = None
+            tmp_date.no_month = True
         return tmp_date
 
     def set_unclear_date(self, field_name, ud):
@@ -338,6 +340,22 @@ class Burial(models.Model):
         if ud:
             setattr(self, field_name+'_no_day', ud.no_day)
             setattr(self, field_name+'_no_month', ud.no_month)
+
+    @property
+    def get_unclear_date_gosznak(self):
+        return self.get_unclear_date('date_gosznak')
+
+    @property
+    def get_unclear_date_burried(self):
+        return self.get_unclear_date('date_burried')
+
+    @property
+    def get_unclear_date_discovered(self):
+        return self.get_unclear_date('date_discovered')
+
+    @property
+    def get_unclear_date_memorial(self):
+        return self.get_unclear_date('date_memorial')
 
 class ClosureCause(models.Model):
     """
@@ -532,10 +550,14 @@ class UnclearDate:
             format = format.replace('%d', '-')
         if self.no_month:
             format = format.replace('%m', '-')
+
         return self.d.strftime(format)
 
     def __repr__(self):
         return u'<UnclearDate: %s>' % self.strftime('%d.%m.%Y')
+
+    def __unicode__(self):
+        return self.strftime('%d.%m.%Y')
 
     @property
     def year(self):
@@ -613,6 +635,15 @@ class Person(models.Model):
         if ud:
             setattr(self, field_name+'_no_day', ud.no_day)
             setattr(self, field_name+'_no_month', ud.no_month)
+
+    @property
+    def get_unclear_birth_date(self):
+        return self.get_unclear_date('birth_date')
+
+    @property
+    def get_unclear_death_date(self):
+        return self.get_unclear_date('death_date')
+
 
 class MilitaryUnit(models.Model):
     """
