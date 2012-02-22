@@ -17,9 +17,9 @@ django-tagging==0.3.1
 django-templatetag-sugar==0.1
 easy-thumbnails==1.0-alpha-17
 paramiko==1.7.7.1
-psycopg2==2.4.2
-pycrypto==2.3
+#psycopg2==2.4.2
+#pycrypto==2.3
 pytils==0.2.3
 redis==2.4.10
-simplejson==2.1.2
+#simplejson==2.1.2
 wsgiref==0.1.2
