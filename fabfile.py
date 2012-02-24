@@ -14,4 +14,4 @@ def deploy():
 def deploy_sev():
     local('git push')
     with cd('/opt/mil/contrib/'):
-        run('sh ./update-online.sh')
+        run('sudo sh ./update-online.sh')
