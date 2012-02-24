@@ -10,8 +10,6 @@ def deploy():
         run('./manage.py migrate')
         run('sudo /etc/init.d/apache2 reload')
 
-    deploy_sev()
-
 @hosts(['sev-test.bsuir.by'])
 def deploy_sev():
     local('git push')
