@@ -66,16 +66,16 @@
             {% for burial in burials.object_list %}
                 <tr>
                     <td>{{ burial.passportid }}</td>
-                    <td>{{ burial.date_passport }}</td>
-                    <td>{{ burial.date_buried }}</td>
-                    <td>{{ burial.date_discovered }}</td>
-                    <td>{{ burial.location }}</td>
+                    <td>{{ burial.date_passport|default:"нет" }}</td>
+                    <td>{{ burial.get_unclear_date_burried|default:"нет" }}</td>
+                    <td>{{ burial.get_unclear_date_discovered|default:"нет" }}</td>
+                    <td>{{ burial.location|default:"нет" }}</td>
                     <td>{{ burial.burial_type }}</td>
-                    <td>{{ burial.military_conflict }}</td>
-                    <td>{{ burial.date_memorial }}</td>
-                    <td>{{ burial.state }}</td>
-                    <td>{{ burial.date_gosznak }}</td>
-                    <td>{{ burial.info }}</td>
+                    <td>{{ burial.military_conflict|default:"нет" }}</td>
+                    <td>{{ burial.get_unclear_date_memorial|default:"нет" }}</td>
+                    <td>{{ burial.state|default:"нет" }}</td>
+                    <td>{{ burial.get_unclear_date_gosznak|default:"нет" }}</td>
+                    <td>{{ burial.info|default:"" }}</td>
                     <td align="center">
                         <a href="{% url burial  burial.uuid %}">[Просмотр]</a>
                         {% if user.is_staff or user.is_superuser %}
