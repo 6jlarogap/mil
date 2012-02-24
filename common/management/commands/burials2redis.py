@@ -68,9 +68,6 @@ class Command(BaseCommand):
                     if all and not old:
                         r.db.set('cemetery:burial:%s:cause:%s' % (b.pk, dc.pk), all)
 
-                if known or unknown or all:
-                    print b.pk, known, unknown, all
-
                 max_burial += 1
             i += STEP
             db.reset_queries()
