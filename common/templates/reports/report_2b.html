@@ -22,6 +22,8 @@
 		P.ctl { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ar-SA }
 	-->
 	</STYLE>
+
+    {% load cache %}
 </HEAD>
 <BODY LANG="en-US" TEXT="#000000" DIR="LTR">
 <P LANG="ru-RU" CLASS="western" ALIGN=RIGHT STYLE="margin-bottom: 0cm;"><FONT SIZE=4>Форма 2б</FONT></P>
@@ -151,10 +153,10 @@
 			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.passportid }}</FONT></P>
 		</TD>
 		<TD WIDTH=200 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western"><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.location }}</FONT></P>
+			<P LANG="ru-RU" CLASS="western"><FONT SIZE=2 STYLE="font-size: 11pt">{% cache 300 burial_location b.pk %}{{ b.location }}{% endcache %}</FONT></P>
 		</TD>
 		<TD WIDTH=46 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.burial_type }}</FONT></P>
+			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{% cache 300 burial_type b.pk %}{{ b.burial_type }}{% endcache %}</FONT></P>
 		</TD>
 		<TD WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
 			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">{{ b.stats.all }}</FONT></P>

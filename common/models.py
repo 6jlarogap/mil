@@ -271,28 +271,29 @@ class Burial(models.Model):
         verbose_name_plural = (u'Захоронения')
         ordering = ['passportid']
 
-    def stats(self):
+    def stats(self, dead_cats=None):
         stats = cache.get('stats_burial_%s' % self.pk)
-        if not stats:
+        if not stats or False:
             r = cemetery_redis.Redis()
+
+            if not dead_cats:
+                dead_cats = [
+                    DeadmanCategory.objects.get(name=u"Военнослужащий"),
+                    DeadmanCategory.objects.get(name=u"Участник сопротивления"),
+                    DeadmanCategory.objects.get(name=u"Жертва войны"),
+                    DeadmanCategory.objects.get(name=u"Другие"),
+                ]
 
             stats = {
                 'all': r.all_for_burial(self),
                 'known': r.known_for_burial(self),
                 'unknown': r.unknown_for_burial(self),
-                'soldiers': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
-                    name__in=[u"Военнослужащий", ]
-                )),
-                'resistance': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
-                    name__in=[u"Участник сопротивления", ]
-                )),
-                'prey': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
-                    name__in=[u"Жертва войны", ]
-                )),
-                'prisoners': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
-                    name__in=[u"Другие", ]
-                )),
+                'soldiers': r.known_for_burial_list_and_cat([self], dead_cats[0]),
+                'resistance': r.known_for_burial_list_and_cat([self], dead_cats[1]),
+                'prey': r.known_for_burial_list_and_cat([self], dead_cats[2]),
+                'prisoners': r.known_for_burial_list_and_cat([self], dead_cats[3]),
             }
+
             cache.set('stats_burial_%s' % self.pk, stats, 3600)
         return stats
 

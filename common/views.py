@@ -246,15 +246,28 @@ def burials(request):
 
                     if template == 'reports/report_2b.html':
                         bcats = BurialCategory.objects.filter(burial__in=burials)
-                        known_count = r.known_for_burial_list(burials)
-                        unknown_count = r.unknown_for_burial_list(burials)
+
+                        dead_cats = [
+                            DeadmanCategory.objects.get(name=u"Военнослужащий"),
+                            DeadmanCategory.objects.get(name=u"Участник сопротивления"),
+                            DeadmanCategory.objects.get(name=u"Жертва войны"),
+                            DeadmanCategory.objects.get(name=u"Другие"),
+                        ]
+                        burial_list = list(burials.select_related().order_by('passportid'))
+                        for b in burial_list:
+                            b.stats = b.stats(dead_cats)
+
+                        burial_pks = [b.pk for b in burial_list]
+
+                        known_count = r.known_for_burial_list(burial_pks)
+                        unknown_count = r.unknown_for_burial_list(burial_pks)
 
                         context.update({
                             'region': cd['region'],
                             'district': cd['district'],
                             'city': cd['city'],
                             'all': burials.count(),
-                            'burials': burials.order_by('passportid'),
+                            'burials': burial_list,
                             'conflicts': {
                                 'WW': burials.filter(
                                     military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
@@ -288,11 +301,11 @@ def burials(request):
                                 'all': known_count + unknown_count,
                                 'known': known_count,
                                 'unknown': unknown_count,
-                                'soldiers': r.known_for_burial_list_and_cat(burials, DeadmanCategory.objects.get(name=u"Военнослужащий")),
-                                'resistance': r.known_for_burial_list_and_cat(burials, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
-                                'prey': r.known_for_burial_list_and_cat(burials, DeadmanCategory.objects.get(name=u"Жертва войны")),
-                                'prisoners': r.known_for_burial_list_and_cat(burials, DeadmanCategory.objects.get(name=u"Другие")),
-                                'nowhere': r.known_for_burial(None),
+                                'soldiers': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Военнослужащий")),
+                                'resistance': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
+                                'prey': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Жертва войны")),
+                                'prisoners': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Другие")),
+                                'nowhere': 0,
                             },
                         })
 
