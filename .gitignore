@@ -13,3 +13,5 @@ tmp
 media/documents/
 media/cause_docs/
 media/
+docs/
+manage_local.py
