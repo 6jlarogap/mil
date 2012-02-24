@@ -248,8 +248,10 @@ def burials(request):
                         bcats = BurialCategory.objects.filter(burial__in=burials)
                         known_count = bcats.aggregate(known=models.Sum('custom_known'))['known'] or r.known_for_burial_list(burials)
                         unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or r.unknown_for_burial_list(burials)
+
                         context.update({
                             'region': cd['region'],
+                            'district': cd['district'],
                             'city': cd['city'],
                             'all': burials.count(),
                             'burials': burials.order_by('passportid'),
