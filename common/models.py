@@ -277,9 +277,9 @@ class Burial(models.Model):
             r = cemetery_redis.Redis()
 
             stats = {
-                'all': self.get_count(),
-                'known': self.get_count() - self.get_qunknown(),
-                'unknown': self.get_qunknown(),
+                'all': r.all_for_burial(self),
+                'known': r.known_for_burial(self),
+                'unknown': r.unknown_for_burial(self),
                 'soldiers': r.known_for_burial_list_and_cat([self], DeadmanCategory.objects.get(
                     name__in=[u"Военнослужащий", ]
                 )),
