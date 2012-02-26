@@ -451,7 +451,7 @@ def burials(request):
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
-                                    'city': city,
+                                    'district': district,
                                     'data': data
                                 })
                         else:

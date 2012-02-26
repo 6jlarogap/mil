@@ -42,12 +42,12 @@
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.98cm; text-indent: -6.98cm; margin-bottom: 0cm">
     <FONT SIZE=2>Дата установки памятника {{ b.get_unclear_date_memorial|default:'неизвестна' }}</FONT></P>
 <P LANG="" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><hr></P>
-    {% if burial.photo.url %}
+    {% if b.photo %}
         <TABLE DIR="LTR" ALIGN=RIGHT WIDTH=176 HSPACE=6 CELLPADDING=7 CELLSPACING=0>
             <COL WIDTH=160>
             <TR>
                 <TD WIDTH=160 HEIGHT=184 VALIGN=TOP STYLE="border: 1px solid #000000; padding: 0cm 0.19cm">
-                    <img src="{{ burial.photo.url }}"/>
+                    <img src="{{ b.photo.url }}"/>
                 </TD>
             </TR>
         </TABLE>
