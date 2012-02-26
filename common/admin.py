@@ -18,10 +18,6 @@ class PersonCallInline(admin.TabularInline):
     extra = 1
     can_delete = False
 
-#class PersonBurialInline(admin.TabularInline):
-#    model = PersonBurial
-#    extra = 1
-
 class PersonEditCauseInline(admin.TabularInline):
     model = PersonEditCause
     extra = 1
@@ -33,11 +29,6 @@ class ClosedBurialFromInLine(admin.TabularInline):
     extra = 1
     max_num = 1
     can_delete = False
-
-#class ClosedBurialToInLine(admin.TabularInline):
-#    model = ClosedBurial
-#    fk_name = "burial_to"
-#    extra = 1
 
 class BurialCategoryInLine(admin.TabularInline):
     model = BurialCategory
@@ -149,6 +140,8 @@ class InternalLocationAdmin(admin.ModelAdmin):
 
 admin.site.register(GeoCountry, SortSearchAdmin)
 admin.site.register(GeoRegion, SortSearchAdmin)
+admin.site.register(District, SortSearchAdmin)
+admin.site.register(Municipalitet, SortSearchAdmin)
 admin.site.register(CityType, SortSearchAdmin)
 admin.site.register(GeoCity, SortSearchAdmin)
 admin.site.register(Rank, SortSearchAdmin)
