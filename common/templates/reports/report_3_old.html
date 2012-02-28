@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><HTML><HEAD>
+    <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+    <TITLE>Форма 3</TITLE>
+    <STYLE TYPE="text/css">	<!--P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ru-RU }		P.cjk { font-family: "Times New Roman", serif; font-size: 12pt }		P.ctl { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ar-SA }	-->	</STYLE>
+</HEAD>
+<BODY LANG="en-US" TEXT="#000000" DIR="LTR">
+<P LANG="ru-RU" CLASS="western" ALIGN=RIGHT STYLE="margin-bottom: 0cm;"><FONT SIZE=4>Форма&nbsp;3</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>Автоматизированный банк данных</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>«Книга памяти» Республики Беларусь»</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-right: 0; margin-bottom: 0cm"><BR></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-right: 0; margin-bottom: 0cm"><FONT SIZE=4><B>Статистическая информация</B></FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-right: 0; margin-bottom: 0cm"><FONT SIZE=4>(по Республике Беларусь{% if form.cleaned_data.region %}, область {{ form.cleaned_data.region }}{% endif %}{% if form.cleaned_data.city %}, {{ form.cleaned_data.city }}{% endif %})</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г.</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Всего воинских захоронений</B></FONT><FONT SIZE=4>	&mdash; {{ all }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4> 	1 МВ 	&mdash; {{ conflicts.WW }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	2 МВ 	&mdash; {{ conflicts.WWII }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	локальные войны 	&mdash; {{ conflicts.local }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	гражданская и другие 	&mdash; {{ conflicts.other }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4>	военные кладбища 	- {{ types.war }} </FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	братские могилы 	&mdash; {{ types.group }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	индивидуальные захоронения 	&mdash; {{ types.personal }} </FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	места массового уничтожения 	&mdash; {{ types.mass }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 4.45cm; margin-bottom: 0cm"><FONT SIZE=4>иностранные 	&mdash; {{ types.foreign }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Всего захоронено</B></FONT><FONT SIZE=4>			&mdash; {{ persons.all }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4> 		известных 	&mdash; {{ persons.known }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	неизвестных 	&mdash; {{ persons.unknown }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4> 	1 МВ 	&mdash; {{ persons.WW }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	2 МВ 	&mdash; {{ persons.WWII }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	локальные войны 	&mdash; {{ persons.local }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	гражданская и другие 	&mdash; {{ persons.other }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4>	военнослужащие	&mdash; {{ persons.soldiers }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	участники сопротивления	&mdash; {{ persons.resistance }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	жертвы войны	&mdash; {{ persons.prey }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	военнопленные	&mdash; {{ persons.prisoners }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Место захоронения не установлено &mdash; </B></FONT><FONT SIZE=4>{{ persons.nowhere|default:0 }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Пропал без вести &mdash; </B></FONT><FONT SIZE=4>{{ persons.mia|default:0 }}</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Место захоронения за пределами РБ &mdash; </B></FONT><FONT SIZE=4>{{ persons.outside_rb|default:0 }}</FONT></P>
+</BODY></HTML>

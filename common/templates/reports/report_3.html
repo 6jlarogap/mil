@@ -1,44 +1,846 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><HTML><HEAD>
-    <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
-    <TITLE>Форма 3</TITLE>
-    <STYLE TYPE="text/css">	<!--P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ru-RU }		P.cjk { font-family: "Times New Roman", serif; font-size: 12pt }		P.ctl { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ar-SA }	-->	</STYLE>
-</HEAD>
-<BODY LANG="en-US" TEXT="#000000" DIR="LTR">
-<P LANG="ru-RU" CLASS="western" ALIGN=RIGHT STYLE="margin-bottom: 0cm;"><FONT SIZE=4>Форма&nbsp;3</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>Автоматизированный банк данных</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>«Книга памяти» Республики Беларусь»</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-right: 0; margin-bottom: 0cm"><BR></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-right: 0; margin-bottom: 0cm"><FONT SIZE=4><B>Статистическая информация</B></FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-right: 0; margin-bottom: 0cm"><FONT SIZE=4>(по Республике Беларусь{% if form.cleaned_data.region %}, область {{ form.cleaned_data.region }}{% endif %}{% if form.cleaned_data.city %}, {{ form.cleaned_data.city }}{% endif %})</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г.</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Всего воинских захоронений</B></FONT><FONT SIZE=4>	&mdash; {{ all }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4> 	1 МВ 	&mdash; {{ conflicts.WW }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	2 МВ 	&mdash; {{ conflicts.WWII }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	локальные войны 	&mdash; {{ conflicts.local }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	гражданская и другие 	&mdash; {{ conflicts.other }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4>	военные кладбища 	- {{ types.war }} </FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	братские могилы 	&mdash; {{ types.group }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	индивидуальные захоронения 	&mdash; {{ types.personal }} </FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	места массового уничтожения 	&mdash; {{ types.mass }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 4.45cm; margin-bottom: 0cm"><FONT SIZE=4>иностранные 	&mdash; {{ types.foreign }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Всего захоронено</B></FONT><FONT SIZE=4>			&mdash; {{ persons.all }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4> 		известных 	&mdash; {{ persons.known }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	неизвестных 	&mdash; {{ persons.unknown }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4> 	1 МВ 	&mdash; {{ persons.WW }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	2 МВ 	&mdash; {{ persons.WWII }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	локальные войны 	&mdash; {{ persons.local }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	гражданская и другие 	&mdash; {{ persons.other }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	</FONT><FONT SIZE=4><I>из них</I></FONT><FONT SIZE=4>	военнослужащие	&mdash; {{ persons.soldiers }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	участники сопротивления	&mdash; {{ persons.resistance }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	жертвы войны	&mdash; {{ persons.prey }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	военнопленные	&mdash; {{ persons.prisoners }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Место захоронения не установлено &mdash; </B></FONT><FONT SIZE=4>{{ persons.nowhere|default:0 }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Пропал без вести &mdash; </B></FONT><FONT SIZE=4>{{ persons.mia|default:0 }}</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Место захоронения за пределами РБ &mdash; </B></FONT><FONT SIZE=4>{{ persons.outside_rb|default:0 }}</FONT></P>
-</BODY></HTML>
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+      xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+      xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 14">
+<meta name=Originator content="Microsoft Word 14">
+<!--[if !mso]>
+<style>
+    v\:* {behavior:url(#default#VML);}
+    o\:* {behavior:url(#default#VML);}
+    w\:* {behavior:url(#default#VML);}
+    .shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Форма 3</title>
+<!--[if gte mso 9]><xml>
+    <o:DocumentProperties>
+        <o:Author>админ</o:Author>
+        <o:Template>Normal</o:Template>
+        <o:LastAuthor>Vitaliy Drozd</o:LastAuthor>
+        <o:Revision>2</o:Revision>
+        <o:TotalTime>40</o:TotalTime>
+        <o:LastPrinted>2011-06-17T08:34:00Z</o:LastPrinted>
+        <o:Created>2012-02-20T06:08:00Z</o:Created>
+        <o:LastSaved>2012-02-20T06:08:00Z</o:LastSaved>
+        <o:Pages>3</o:Pages>
+        <o:Words>1114</o:Words>
+        <o:Characters>6353</o:Characters>
+        <o:Company>УПЗО</o:Company>
+        <o:Lines>52</o:Lines>
+        <o:Paragraphs>14</o:Paragraphs>
+        <o:CharactersWithSpaces>7453</o:CharactersWithSpaces>
+        <o:Version>14.00</o:Version>
+    </o:DocumentProperties>
+    <o:OfficeDocumentSettings>
+        <o:TargetScreenSize>800x600</o:TargetScreenSize>
+    </o:OfficeDocumentSettings>
+</xml><![endif]-->
+<!--[if gte mso 9]><xml>
+    <w:WordDocument>
+        <w:TrackMoves>false</w:TrackMoves>
+        <w:TrackFormatting/>
+        <w:ValidateAgainstSchemas/>
+        <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+        <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+        <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+        <w:DoNotPromoteQF/>
+        <w:LidThemeOther>RU</w:LidThemeOther>
+        <w:LidThemeAsian>X-NONE</w:LidThemeAsian>
+        <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
+        <w:Compatibility>
+            <w:BreakWrappedTables/>
+            <w:SnapToGridInCell/>
+            <w:WrapTextWithPunct/>
+            <w:UseAsianBreakRules/>
+            <w:UseWord2002TableStyleRules/>
+            <w:DontUseIndentAsNumberingTabStop/>
+            <w:FELineBreak11/>
+            <w:WW11IndentRules/>
+            <w:DontAutofitConstrainedTables/>
+            <w:AutofitLikeWW11/>
+            <w:HangulWidthLikeWW11/>
+            <w:UseNormalStyleForList/>
+            <w:DontVertAlignCellWithSp/>
+            <w:DontBreakConstrainedForcedTables/>
+            <w:DontVertAlignInTxbx/>
+            <w:Word11KerningPairs/>
+            <w:CachedColBalance/>
+        </w:Compatibility>
+        <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+        <m:mathPr>
+            <m:mathFont m:val="Cambria Math"/>
+            <m:brkBin m:val="before"/>
+            <m:brkBinSub m:val="&#45;-"/>
+            <m:smallFrac m:val="off"/>
+            <m:dispDef/>
+            <m:lMargin m:val="0"/>
+            <m:rMargin m:val="0"/>
+            <m:defJc m:val="centerGroup"/>
+            <m:wrapIndent m:val="1440"/>
+            <m:intLim m:val="subSup"/>
+            <m:naryLim m:val="undOvr"/>
+        </m:mathPr></w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+    <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="false"
+                    DefSemiHidden="false" DefQFormat="false" LatentStyleCount="267">
+        <w:LsdException Locked="false" QFormat="true" Name="Normal"/>
+        <w:LsdException Locked="false" QFormat="true" Name="heading 1"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 2"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 3"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 4"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 5"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 6"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 7"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 8"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="heading 9"/>
+        <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+                        QFormat="true" Name="caption"/>
+        <w:LsdException Locked="false" QFormat="true" Name="Title"/>
+        <w:LsdException Locked="false" QFormat="true" Name="Subtitle"/>
+        <w:LsdException Locked="false" QFormat="true" Name="Strong"/>
+        <w:LsdException Locked="false" QFormat="true" Name="Emphasis"/>
+        <w:LsdException Locked="false" Priority="99" SemiHidden="true"
+                        Name="Placeholder Text"/>
+        <w:LsdException Locked="false" Priority="1" QFormat="true" Name="No Spacing"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 1"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List Accent 1"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 1"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 1"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 1"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 1"/>
+        <w:LsdException Locked="false" Priority="99" SemiHidden="true" Name="Revision"/>
+        <w:LsdException Locked="false" Priority="34" QFormat="true"
+                        Name="List Paragraph"/>
+        <w:LsdException Locked="false" Priority="29" QFormat="true" Name="Quote"/>
+        <w:LsdException Locked="false" Priority="30" QFormat="true"
+                        Name="Intense Quote"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 1"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 1"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 1"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 1"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 1"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 1"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 1"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 1"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 2"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List Accent 2"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 2"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 2"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 2"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 2"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 2"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 2"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 2"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 2"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 2"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 2"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 2"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 2"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 3"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List Accent 3"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 3"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 3"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 3"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 3"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 3"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 3"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 3"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 3"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 3"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 3"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 3"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 3"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 4"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List Accent 4"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 4"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 4"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 4"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 4"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 4"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 4"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 4"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 4"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 4"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 4"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 4"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 4"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 5"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List Accent 5"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 5"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 5"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 5"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 5"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 5"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 5"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 5"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 5"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 5"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 5"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 5"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 5"/>
+        <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 6"/>
+        <w:LsdException Locked="false" Priority="61" Name="Light List Accent 6"/>
+        <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 6"/>
+        <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 6"/>
+        <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 6"/>
+        <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 6"/>
+        <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 6"/>
+        <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 6"/>
+        <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 6"/>
+        <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 6"/>
+        <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 6"/>
+        <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 6"/>
+        <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 6"/>
+        <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 6"/>
+        <w:LsdException Locked="false" Priority="19" QFormat="true"
+                        Name="Subtle Emphasis"/>
+        <w:LsdException Locked="false" Priority="21" QFormat="true"
+                        Name="Intense Emphasis"/>
+        <w:LsdException Locked="false" Priority="31" QFormat="true"
+                        Name="Subtle Reference"/>
+        <w:LsdException Locked="false" Priority="32" QFormat="true"
+                        Name="Intense Reference"/>
+        <w:LsdException Locked="false" Priority="33" QFormat="true" Name="Book Title"/>
+        <w:LsdException Locked="false" Priority="37" SemiHidden="true"
+                        UnhideWhenUsed="true" Name="Bibliography"/>
+        <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+                        UnhideWhenUsed="true" QFormat="true" Name="TOC Heading"/>
+    </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+    /* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+{mso-style-unhide:no;
+    mso-style-qformat:yes;
+    mso-style-parent:"";
+    margin:0cm;
+    margin-bottom:.0001pt;
+    mso-pagination:widow-orphan;
+    font-size:12.0pt;
+    font-family:"Times New Roman","serif";
+    mso-fareast-font-family:"Times New Roman";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+{mso-style-unhide:no;
+    margin:0cm;
+    margin-bottom:.0001pt;
+    mso-pagination:widow-orphan;
+    tab-stops:center 233.85pt right 467.75pt;
+    font-size:12.0pt;
+    font-family:"Times New Roman","serif";
+    mso-fareast-font-family:"Times New Roman";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+{mso-style-unhide:no;
+    margin:0cm;
+    margin-bottom:.0001pt;
+    mso-pagination:widow-orphan;
+    tab-stops:center 233.85pt right 467.75pt;
+    font-size:12.0pt;
+    font-family:"Times New Roman","serif";
+    mso-fareast-font-family:"Times New Roman";}
+p
+{mso-style-unhide:no;
+    mso-margin-top-alt:auto;
+    margin-right:0cm;
+    margin-bottom:5.95pt;
+    margin-left:0cm;
+    mso-pagination:widow-orphan;
+    font-size:12.0pt;
+    font-family:"Times New Roman","serif";
+    mso-fareast-font-family:"Times New Roman";}
+    /* Page Definitions */
+@page
+{mso-footnote-separator:url("Отчет%203.files/header.htm") fs;
+    mso-footnote-continuation-separator:url("Отчет%203.files/header.htm") fcs;
+    mso-endnote-separator:url("Отчет%203.files/header.htm") es;
+    mso-endnote-continuation-separator:url("Отчет%203.files/header.htm") ecs;}
+@page WordSection1
+{size:595.3pt 841.9pt;
+    margin:35.95pt 31.2pt 35.95pt 3.0cm;
+    mso-header-margin:35.45pt;
+    mso-footer-margin:35.45pt;
+    mso-title-page:yes;
+    mso-header:url("Отчет%203.files/header.htm") h1;
+    mso-footer:url("Отчет%203.files/header.htm") f1;
+    mso-paper-source:0;}
+div.WordSection1
+{page:WordSection1;}
+@page WordSection2
+{size:595.3pt 841.9pt;
+    margin:2.0cm 42.5pt 2.0cm 3.0cm;
+    mso-header-margin:35.4pt;
+    mso-footer-margin:35.4pt;
+    mso-header:url("Отчет%203.files/header.htm") h1;
+    mso-footer:url("Отчет%203.files/header.htm") f1;
+    mso-paper-source:0;}
+div.WordSection2
+{page:WordSection2;}
+@page WordSection3
+{size:841.9pt 595.3pt;
+    mso-page-orientation:landscape;
+    margin:70.9pt 1.0cm 1.0cm 1.0cm;
+    mso-header-margin:35.45pt;
+    mso-footer-margin:35.45pt;
+    mso-title-page:yes;
+    mso-header:url("Отчет%203.files/header.htm") h3;
+    mso-footer:url("Отчет%203.files/header.htm") f1;
+    mso-paper-source:0;}
+div.WordSection3
+{page:WordSection3;}
+@page WordSection4
+{size:595.3pt 841.9pt;
+    margin:2.0cm 1.0cm 1.0cm 70.9pt;
+    mso-header-margin:35.45pt;
+    mso-footer-margin:35.45pt;
+    mso-title-page:yes;
+    mso-header:url("Отчет%203.files/header.htm") h3;
+    mso-footer:url("Отчет%203.files/header.htm") f1;
+    mso-paper-source:0;}
+div.WordSection4
+{page:WordSection4;}
+    /* List Definitions */
+@list l0
+    {mso-list-id:591203756;
+    mso-list-type:hybrid;
+    mso-list-template-ids:1967561760 -304991688 68747289 68747291 68747279 68747289 68747291 68747279 68747289 68747291;}
+@list l0:level1
+    {mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l0:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l0:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l0:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l0:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l0:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l0:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l0:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l0:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l1
+    {mso-list-id:1104105759;
+    mso-list-type:hybrid;
+    mso-list-template-ids:1065774176 -1579120248 68747289 68747291 68747279 68747289 68747291 68747279 68747289 68747291;}
+@list l1:level1
+    {mso-level-start-at:11;
+    mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l1:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l1:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l1:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l1:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l1:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l1:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l1:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l1:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l2
+    {mso-list-id:1201940679;
+    mso-list-type:hybrid;
+    mso-list-template-ids:1158055214 68747279 68747289 68747291 68747279 68747289 68747291 68747279 68747289 68747291;}
+@list l2:level1
+    {mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l2:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l2:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l2:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l2:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l2:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l2:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l2:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l2:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l3
+    {mso-list-id:1335492683;
+    mso-list-template-ids:36481456;}
+@list l3:level1
+    {mso-level-start-at:11;
+    mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l3:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l3:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l3:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l3:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l3:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l3:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l3:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l3:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l4
+    {mso-list-id:1431467721;
+    mso-list-type:hybrid;
+    mso-list-template-ids:832965002 68747279 68747289 68747291 68747279 68747289 68747291 68747279 68747289 68747291;}
+@list l4:level1
+    {mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l4:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l4:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l4:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l4:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l4:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l4:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l4:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l4:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l5
+    {mso-list-id:1807312163;
+    mso-list-template-ids:411745366;}
+@list l5:level1
+    {mso-level-start-at:12;
+    mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l5:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l5:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l5:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l5:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l5:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l5:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l5:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l5:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l6
+    {mso-list-id:1808280618;
+    mso-list-template-ids:-1167532056;}
+@list l6:level1
+    {mso-level-start-at:11;
+    mso-level-tab-stop:36.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l6:level2
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:72.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l6:level3
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:108.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l6:level4
+    {mso-level-tab-stop:144.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l6:level5
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:180.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l6:level6
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:216.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+@list l6:level7
+    {mso-level-tab-stop:252.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l6:level8
+    {mso-level-number-format:alpha-lower;
+    mso-level-tab-stop:288.0pt;
+    mso-level-number-position:left;
+    text-indent:-18.0pt;}
+@list l6:level9
+    {mso-level-number-format:roman-lower;
+    mso-level-tab-stop:324.0pt;
+    mso-level-number-position:right;
+    text-indent:-9.0pt;}
+ol
+{margin-bottom:0cm;}
+ul
+{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+        /* Style Definitions */
+    table.MsoNormalTable
+    {mso-style-name:"Обычная таблица";
+        mso-tstyle-rowband-size:0;
+        mso-tstyle-colband-size:0;
+        mso-style-noshow:yes;
+        mso-style-unhide:no;
+        mso-style-parent:"";
+        mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+        mso-para-margin:0cm;
+        mso-para-margin-bottom:.0001pt;
+        mso-pagination:widow-orphan;
+        font-size:10.0pt;
+        font-family:"Times New Roman","serif";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+    <o:shapedefaults v:ext="edit" spidmax="1029"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+    <o:shapelayout v:ext="edit">
+        <o:idmap v:ext="edit" data="1"/>
+    </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=RU style='tab-interval:35.4pt'>
+
+<div class=WordSection1>
+
+    <p class=MsoNormal align=right style='text-align:right;page-break-before:always'><span
+            style='font-size:14.0pt'>Форма&nbsp;3<o:p></o:p></span></p>
+
+    <p class=MsoNormal align=center style='text-align:center'><span
+            style='font-size:14.0pt'>Автоматизированный банк данных<o:p></o:p></span></p>
+
+    <p class=MsoNormal align=center style='text-align:center'><span
+            style='font-size:14.0pt'>«Книга памяти» Республики Беларусь»<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='margin-right:-18.25pt;text-align:justify'><b
+            style='mso-bidi-font-weight:normal'><u><span style='font-size:14.0pt'><o:p><span
+            style='text-decoration:none'>&nbsp;</span></o:p></span></u></b></p>
+
+    <p class=MsoNormal style='margin-right:-18.25pt;text-align:justify;tab-stops:
+333.0pt'><b style='mso-bidi-font-weight:normal'><span style='font-size:14.0pt;
+text-transform:uppercase'>Статистическая информация</span></b><b
+            style='mso-bidi-font-weight:normal'><span style='font-size:14.0pt'><o:p></o:p></span></b></p>
+
+    <p class=MsoNormal style='margin-right:-18.25pt;text-align:justify;tab-stops:
+333.0pt'><span style='font-size:14.0pt'>(по Республике Беларусь{% if form.cleaned_data.region %}, область {{ form.cleaned_data.region }}{% endif %}{% if form.cleaned_data.city %}, {{ form.cleaned_data.city }}{% endif %})<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify'><span style='font-size:14.0pt'>По
+состоянию на {% now "d.m.Y" %} г. (текущая дата)<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify'><span style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:14.0pt'>Всего воинских захоронений</span></b><span
+            style='font-size:14.0pt'> <span style='mso-tab-count:1'>     </span>-
+{{ all }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:36.0pt 171.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>          </span><i
+            style='mso-bidi-font-style:normal'>из них</i><span style='mso-spacerun:yes'> 
+</span><span style='mso-tab-count:1'>                        </span>1 МВ <span
+            style='mso-tab-count:1'> </span>- {{ conflicts.WW }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:171.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                                              </span>2
+МВ <span style='mso-tab-count:1'> </span>- {{ conflicts.WWII }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:99.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                          </span>локальные
+войны <span style='mso-tab-count:1'>         </span>- {{ conflicts.local }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:72.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                   </span>гражданская
+и другие <span style='mso-tab-count:1'>         </span>- {{ conflicts.other }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:36.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>          </span><o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:36.0pt 90.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>          </span><i
+            style='mso-bidi-font-style:normal'>из них</i> <span style='mso-tab-count:1'>    </span>военные
+кладбища <span style='mso-tab-count:1'> </span>- {{ types.war }} </span>(сумма=ВК+СЗ)<span
+            style='font-size:14.0pt'><o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:99.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                          </span>братские
+могилы <span style='mso-tab-count:1'> </span>- {{ types.group }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:27.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>       </span>индивидуальные
+захоронения <span style='mso-tab-count:1'>        </span>- {{ types.personal }} </span>(сумма=ИМ+ЛВК)<span
+            style='font-size:14.0pt'><o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:27.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>       </span>места
+массового уничтожения <span style='mso-tab-count:1'>        </span>-
+{{ types.mass }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='margin-left:126.0pt;text-align:justify;tab-stops:
+81.0pt'><span style='font-size:14.0pt'>иностранные <span style='mso-tab-count:
+1'> </span>- {{ types.foreign }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:27.0pt'><span
+            style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:27.0pt'><b
+            style='mso-bidi-font-weight:normal'><span style='font-size:14.0pt'>Всего
+захоронено</span></b><span style='font-size:14.0pt'> <span style='mso-tab-count:
+3'>                         </span>- {{ persons.all }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:36.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>          </span><i
+            style='mso-bidi-font-style:normal'>из них</i><span style='mso-spacerun:yes'> 
+</span><span style='mso-tab-count:2'>                </span>известных <span
+            style='mso-tab-count:1'> </span>- {{ persons.known }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:126.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                                  </span>неизвестных
+<span style='mso-tab-count:1'> </span>- {{ persons.unknown }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:126.0pt'><span
+            style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:36.0pt 171.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>          </span><i
+            style='mso-bidi-font-style:normal'>из них</i><span style='mso-spacerun:yes'> 
+</span><span style='mso-tab-count:1'>                        </span>1 МВ <span
+            style='mso-tab-count:1'> </span>- {{ persons.WW }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:171.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                                              </span>2
+МВ <span style='mso-tab-count:1'> </span>- {{ persons.WWII }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:99.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                          </span>локальные
+войны <span style='mso-tab-count:1'>         </span>- {{ persons.local }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:72.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                   </span>гражданская
+и другие <span style='mso-tab-count:1'>         </span>- {{ persons.other }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:99.0pt'><span
+            style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:36.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>          </span><i
+            style='mso-bidi-font-style:normal'>из них</i> <span style='mso-tab-count:1'>        </span>военнослужащие<span
+            style='mso-tab-count:1'>          </span>- {{ persons.soldiers }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:54.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>              </span>участники
+сопротивления<span style='mso-tab-count:1'>         </span>- {{ persons.resistance }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:117.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                               </span>жертвы
+войны<span style='mso-tab-count:1'> </span>- {{ persons.prey }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:108.0pt'><span
+            style='font-size:14.0pt'><span style='mso-tab-count:1'>                             </span>военнопленные<span
+            style='mso-tab-count:1'>  </span>- {{ persons.prisoners }}<o:p></o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:162.0pt'><span
+            style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:162.0pt'><b
+            style='mso-bidi-font-weight:normal'><span style='font-size:14.0pt'>Место
+захоронения не установлено – </span></b><span style='font-size:14.0pt'>{{ persons.nowhere|default:0 }}<b
+            style='mso-bidi-font-weight:normal'><o:p></o:p></b></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:162.0pt'><span
+            style='font-size:14.0pt'><o:p>&nbsp;</o:p></span></p>
+
+    <p class=MsoNormal style='text-align:justify;tab-stops:162.0pt'><b
+            style='mso-bidi-font-weight:normal'><i style='mso-bidi-font-style:normal'><span
+            style='font-size:14.0pt'>Примечание.</span></i></b><i style='mso-bidi-font-style:
+normal'><span style='font-size:14.0pt'> В число погибших с не установленным
+местом захоронения включаются записи у которых отсутствует значение в поле
+Номер захоронения (идентификатор захоронения)</span></i><span style='font-size:
+14.0pt'><o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
