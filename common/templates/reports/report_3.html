@@ -704,7 +704,7 @@ text-transform:uppercase'>Статистическая информация</spa
             style='mso-bidi-font-weight:normal'><span style='font-size:14.0pt'><o:p></o:p></span></b></p>
 
     <p class=MsoNormal style='margin-right:-18.25pt;text-align:justify;tab-stops:
-333.0pt'><span style='font-size:14.0pt'>(по Республике Беларусь{% if form.cleaned_data.region %}, область {{ form.cleaned_data.region }}{% endif %}{% if form.cleaned_data.city %}, {{ form.cleaned_data.city }}{% endif %})<o:p></o:p></span></p>
+333.0pt'><span style='font-size:14.0pt'>(Республика Беларусь{% if form.cleaned_data.region %}, {{ form.cleaned_data.region }}{% endif %}{% if form.cleaned_data.district %}, {{ form.cleaned_data.district }}{% endif %})<o:p></o:p></span></p>
 
     <p class=MsoNormal style='text-align:justify'><span style='font-size:14.0pt'>По
 состоянию на {% now "d.m.Y" %} г. (текущая дата)<o:p></o:p></span></p>
