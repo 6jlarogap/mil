@@ -271,6 +271,9 @@ class Burial(models.Model):
         verbose_name_plural = (u'Захоронения')
         ordering = ['passportid']
 
+    def get_info(self):
+        return self.info.replace('.', '. ')
+
     def stats(self, dead_cats=None):
         stats = cache.get('stats_burial_%s' % self.pk)
         if not stats or False:
