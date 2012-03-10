@@ -1,221 +1,303 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
 <HTML>
 <HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
-	<TITLE>Форма 2б</TITLE>
-	<META NAME="GENERATOR" CONTENT="LibreOffice 3.4  (Unix)">
-	<META NAME="AUTHOR" CONTENT="админ">
-	<META NAME="CREATED" CONTENT="20110602;19250000">
-	<META NAME="CHANGEDBY" CONTENT="пользователь">
-	<META NAME="CHANGED" CONTENT="20110617;9340000">
-	<META NAME="Info 1" CONTENT="">
-	<META NAME="Info 2" CONTENT="">
-	<META NAME="Info 3" CONTENT="">
-	<META NAME="Info 4" CONTENT="">
-	<STYLE TYPE="text/css">
-	<!--
-		@page { size: 21cm 29.7cm; margin-right: 1.1cm; margin-top: 1.25cm; margin-bottom: 1.25cm }
-		@page:first { margin-top: 1.27cm; margin-bottom: 1.27cm }
-		P { margin-bottom: 0.21cm; direction: ltr; color: #000000; widows: 2; orphans: 2 }
-		P.western { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ru-RU }
-		P.cjk { font-family: "Times New Roman", serif; font-size: 12pt }
-		P.ctl { font-family: "Times New Roman", serif; font-size: 12pt; so-language: ar-SA }
-	-->
-	</STYLE>
 
-    {% load cache %}
+    <META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+    <TITLE>Форма 2б</TITLE>
+    <META NAME="GENERATOR" CONTENT="LibreOffice 3.5  (Linux)">
+    <META NAME="AUTHOR" CONTENT="Sergio">
+    <META NAME="CREATED" CONTENT="20111224;20031500">
+    <META NAME="CHANGEDBY" CONTENT="Sergio">
+    <META NAME="CHANGED" CONTENT="20120306;8324300">
+    <META NAME="AppVersion" CONTENT="14.0300">
+    <META NAME="DocSecurity" CONTENT="0">
+    <META NAME="HyperlinksChanged" CONTENT="false">
+    <META NAME="LinksUpToDate" CONTENT="false">
+    <META NAME="ScaleCrop" CONTENT="false">
+    <META NAME="ShareDoc" CONTENT="false">
+
+    <STYLE>
+        <!--
+        BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Calibri"; font-size:x-small }
+        -->
+    </STYLE>
+
 </HEAD>
-<BODY LANG="en-US" TEXT="#000000" DIR="LTR">
-<P LANG="ru-RU" CLASS="western" ALIGN=RIGHT STYLE="margin-bottom: 0cm;"><FONT SIZE=4>Форма 2б</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>Автоматизированный банк данных</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-bottom: 0cm"><FONT SIZE=4>«Книга памяти» Республики
-Беларусь»</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4><B>Сведения по воинским захоронениям</B></FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г. </FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>Место нахождения: {{ region }} область;</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><FONT SIZE=4>	 {{ district }} район.</FONT></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
-<BR>
-</P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">Всего захоронений    <U> 	</U> 	- <B>{{ all }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	<I>из них</I>  	1 МВ 	- <B>{{ conflicts.WW }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	2 МВ 	- <B>{{ conflicts.WWII }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	ЛВК 	- <B>{{ conflicts.local }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	ГВ и другие 	- <B>{{ conflicts.other }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	</P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	<I>из них</I> 	военные кладбища 	- <B>{{ types.war }}
-</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"><B>		</B>братские могилы 	- <B>{{ types.group }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	индивидуальные захоронения 	- <B>{{ types.personal }}
-</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">	места массового уничтожения	- <B>{{ types.mass }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">			иностранные	- <B>{{ types.foreign }}</B></P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
-<BR>
-</P>
-<TABLE WIDTH=652 CELLPADDING=7 CELLSPACING=0>
-	<COL WIDTH=30>
-	<COL WIDTH=200>
-	<COL WIDTH=46>
-	<COL WIDTH=46>
-	<COL WIDTH=31>
-	<COL WIDTH=31>
-	<COL WIDTH=31>
-	<COL WIDTH=31>
-	<COL WIDTH=31>
-	<COL WIDTH=31>
-	<TR>
-		<TD ROWSPAN=2 WIDTH=30 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER>№ <FONT SIZE=2>п/п</FONT></P>
-		</TD>
-		<TD ROWSPAN=2 WIDTH=200 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2 STYLE="font-size: 11pt">Наименование
-			населенного пункта</FONT></P>
-		</TD>
-		<TD ROWSPAN=2 WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>Вид захоронения</FONT></P>
-		</TD>
-		<TD ROWSPAN=2 WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>Количество похороненных</FONT></P>
-		</TD>
-		<TD COLSPAN=2 WIDTH=77 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>Из них</FONT></P>
-		</TD>
-		<TD COLSPAN=4 WIDTH=167 STYLE="border: 1px solid #000000; padding: 0cm 0.19cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>Из них</FONT></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>известных</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>неизвестных</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>военнослу-жащих</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>участников сопротивле-ния</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>жертв войны</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border: 1px solid #000000; padding: 0cm 0.19cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER STYLE="margin-left: 0.2cm; margin-right: 0.2cm">
-			<FONT SIZE=2>военнопленные</FONT></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=30 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>1</FONT></P>
-		</TD>
-		<TD WIDTH=200 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>2</FONT></P>
-		</TD>
-		<TD WIDTH=46 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>3</FONT></P>
-		</TD>
-		<TD WIDTH=46 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>4</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>5</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>6</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT SIZE=2>7</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1>8</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1>9</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="border: 1px solid #000000; padding: 0cm 0.19cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1>10</FONT></P>
-		</TD>
-	</TR>
-    {% for b in burials %}
-	<TR>
-		<TD WIDTH=30 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.passportid }}</FONT></P>
-		</TD>
-		<TD WIDTH=200 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western"><FONT size=1 STYLE="font-size: 11pt">{% cache 300 burial_location b.pk %}{{ b.location.city }}{% endcache %}</FONT></P>
-		</TD>
-		<TD WIDTH=46 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{% cache 300 burial_type b.pk %}{{ b.burial_type }}{% endcache %}</FONT></P>
-		</TD>
-		<TD WIDTH=46 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.all }}</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.known }}</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.unknown }}</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.soldiers }}</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.resistance }}</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.prey }}</FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border: 1px solid #000000; padding: 0cm 0.19cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt">{{ b.stats.prisoners }}</FONT></P>
-		</TD>
-	</TR>
-    {% endfor %}
-	<TR>
-		<TD WIDTH=30 VALIGN=TOP STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ burials|length }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=200 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western"><FONT size=1 STYLE="font-size: 11pt"><B>ВСЕГО
-			по району</B></FONT></P>
-		</TD>
-		<TD WIDTH=46 VALIGN=TOP STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><BR>
-			</P>
-		</TD>
-		<TD WIDTH=46 STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.all }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.known }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.unknown }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.soldiers }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.resistance }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: none; padding-top: 0cm; padding-bottom: 0cm; padding-left: 0.19cm; padding-right: 0cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.prey }}</B></FONT></P>
-		</TD>
-		<TD WIDTH=31 STYLE="; border: 1px solid #000000; padding: 0cm 0.19cm">
-			<P LANG="ru-RU" CLASS="western" ALIGN=CENTER><FONT size=1 STYLE="font-size: 11pt"><B>{{ persons.prisoners }}</B></FONT></P>
-		</TD>
-	</TR>
-</TABLE>
 
+<BODY TEXT="#000000">
+<TABLE CELLSPACING="0" COLS="10" BORDER="0">
+<COLGROUP WIDTH="44"></COLGROUP>
+<COLGROUP WIDTH="209"></COLGROUP>
+<COLGROUP SPAN="8" WIDTH="71"></COLGROUP>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="5"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Автоматизированный банк данных</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="5"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">&quot;Книга памяти&quot; Республики Беларусь</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Форма 2б</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="23" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="7"><B><FONT FACE="Times New Roman" SIZE=4 COLOR="#000000">СВЕДЕНИЯ ПО ВОИНСКИМ ЗАХОРОНЕНИЯМ</FONT></B></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="5"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">По состоянию на {% now "d.m.Y" %} г.</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="5"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">    Место нахождения: {{ region }} область</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">  {{ distinct }} район</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Всего захоронений   </FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"> -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ all }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><I><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">из них</FONT></I></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">1МВ -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ conflicts.WW }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">2МВ -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ conflicts.WWII }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">ЛВК -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ conflicts.local }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="2"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">ГВ и другие -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ conflicts.other }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><I><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">из них</FONT></I></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">военнные кладбища -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ types.war }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">братские могилы -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ types.group }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="4"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">индивидуальные захоронения -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ types.personal }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="4"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">места массового уничтожения -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ types.mass }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="4"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">иностранные -</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ types.foreign }}</FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
+</TR>
+<TR>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">№ п/п</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Наименование населенного пункта</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ROWSPAN=2 ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Вид захоронения</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ROWSPAN=2 ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Количество похороненных</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Из них</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=4 ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Из них</FONT></TD>
+</TR>
+<TR>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">известных</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">неизвестных</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">военнослужащих</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">участников сопротивления</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">жертв войны</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">военнопленных</FONT></TD>
+</TR>
+<TR>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT="20" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="1" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">1</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="2" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">2</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="3" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">3</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="4" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">4</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="5" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">5</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="6" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">6</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="7" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">7</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="8" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">8</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="9" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">9</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="10" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">10</FONT></TD>
+</TR>
+{% for b in burials %}
+<TR>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><I><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.passportid }}</FONT></I></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.location.city }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.burial_type }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.all }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.known }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.unknown }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.soldiers }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.resistance }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.prey }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.prisoners }}</FONT></TD>
+</TR>
+{% endfor %}
+<TR>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ burials|length }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="2"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Всего по району:</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.all }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.known }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.unknown }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.soldiers }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.resistance }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.prey }}</FONT></TD>
+    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ persons.prisoners }}</FONT></TD>
+</TR>
+</TABLE>
+<!-- ************************************************************************** -->
 </BODY>
+
 </HTML>
+
