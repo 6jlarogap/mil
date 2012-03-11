@@ -21,14 +21,19 @@
         <!--
         BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Calibri"; font-size:x-small }
 
-        font.vertical {
+        td.vertical {
+            vertical-align: middle;
+            text-align: center;
+            border: 1px solid #000000;
+        }
+
+        td.vertical font {
             -moz-transform: rotate(270deg);
             -o-transform: rotate(270deg);
             -webkit-transform: rotate(270deg);
             display: block;
-            border: 1px red solid;
             width: 150px;
-            margin: 0 -65px;
+            margin: 0 -65px 0 -55px;
         }
         -->
     </STYLE>
@@ -56,7 +61,7 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
-    <TD COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Форма 4</FONT></TD>
+    <TD COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Форма 4a</FONT></TD>
 </TR>
 <TR>
     <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
@@ -188,16 +193,16 @@
 </TR>
 <TR>
     <TD STYLE="border: 1px solid #000000;" HEIGHT="37" ALIGN="LEFT" VALIGN=BOTTOM ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
-    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=BOTTOM ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000" class="vertical">Всего захоронений</FONT></B></TD>
+    <TD class="vertical" ROWSPAN=2 ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Всего захоронений</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">В том числе по конфликтам</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=5 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Из них по категориям</FONT></B></TD>
-    <TD class="vertical" ROWSPAN=2 ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Всего захоронено</FONT></B></TD>
+    <TD class="vertical" ROWSPAN=2  ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Всего захоронено</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">В том числе</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">В том числе по конфликтам</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Из них</FONT></B></TD>
 </TR>
 <TR>
-    <TD STYLE="border: 1px solid #000000;" HEIGHT="167" ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3>Область</FONT></B></TD>
+    <TD STYLE="border: 1px solid #000000;" HEIGHT="167" ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3>Район</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" class="vertical" ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">1МВ</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" class="vertical" ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">2МВ</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" class="vertical" ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">локальные войны</FONT></B></TD>
@@ -245,11 +250,7 @@
 {% for r in rows %}
 <TR>
     <TD STYLE="border: 1px solid #000000;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">
-        {% if r.region.name == 'Г.минск' %}
-            {{ r.region }}
-        {% else %}
-            {{ r.region }} обл.
-        {% endif %}
+        {{ r.district }}
     </FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ r.data.burials.all }}</FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ r.data.burials.WW }}</FONT></TD>
@@ -275,7 +276,7 @@
 </TR>
 {% endfor %}
 <TR>
-    <TD STYLE="border: 1px solid #000000;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">По республике</FONT></B></TD>
+    <TD STYLE="border: 1px solid #000000;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">По {{ region }} обл.</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ data.burials.all }}</FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ data.burials.WW }}</FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ data.burials.WWII }}</FONT></TD>
