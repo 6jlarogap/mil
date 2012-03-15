@@ -144,6 +144,9 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'common',
+
     'django.contrib.admin',
 
     'django_extensions',
@@ -152,8 +155,6 @@ INSTALLED_APPS = (
     'south',
     'easy_thumbnails',
     'smart_selects',
-
-    'common',
 )
 
 try:
