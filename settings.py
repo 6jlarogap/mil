@@ -4,7 +4,7 @@
 from os.path import dirname, join
 ROOT_PATH = dirname(__file__)
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
