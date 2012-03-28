@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.forms.fields import MultiValueField
+from django.forms.widgets import MultiWidget, Select
 
 import settings
 import datetime
@@ -10,7 +12,7 @@ from django.conf import settings
 
 from common.models import *
 
-from smart_selects.form_fields import ChainedModelChoiceField
+from smart_selects.form_fields import ChainedModelChoiceField, ChainedSelect
 
 class UnclearSelectDateWidget(SelectDateWidget):
     month_unclear = False
@@ -158,11 +160,85 @@ class BurialsForm(forms.ModelForm):
         model = SimpleLocation
         fields = ['country', 'region', 'district', 'municipalitet', 'city']
 
+class LocationWidget(MultiWidget):
+    def __init__(self, *args, **kwargs):
+        countries = GeoCountry.objects.all()
+        widgets = (
+            forms.Select(choices=[(c.pk, c) for c in countries]),
+            ChainedSelect('common', 'GeoRegion', "location_0", "country", True, True),
+            ChainedSelect('common', 'District', "location_1", "region", True, True),
+            ChainedSelect('common', 'Municipalitet', "location_2", "district", True, True),
+            ChainedSelect('common', 'GeoCity', "location_2", "district", True, True),
+            forms.TextInput(),
+        )
+        for w,l in zip(widgets, [u'Страна', u'Область', u'Район', u'Сельсовет', u'Нас. пункт', ]):
+            w.choices = getattr(w, 'choices', [('', l), ])
+        widgets[0].queryset = GeoCountry.objects.all()
+        widgets[1].queryset = GeoRegion.objects.all()
+        widgets[2].queryset = District.objects.all()
+        widgets[3].queryset = Municipalitet.objects.all()
+        widgets[4].queryset = GeoCity.objects.all()
+        super(LocationWidget, self).__init__(widgets, *args, **kwargs)
+
+    def decompress(self, value):
+        if value:
+            value = StrictLocation.objects.get(pk=value)
+            return [
+                value.country and value.country.pk,
+                value.region and value.region.pk,
+                value.district and value.district.pk,
+                value.municipalitet and value.municipalitet.pk,
+                value.city and value.city.pk,
+                value.city and value.city.name,
+            ]
+        return [None, None, None, None, None]
+
+class LocationField(MultiValueField):
+    widget = LocationWidget
+    required = False
+
+    def __init__(self, *args, **kwargs):
+        fields = (
+            # country, region, district, municipalitet, city
+            forms.ModelChoiceField(GeoCountry, empty_label=u"Страна", required=False),
+            ChainedModelChoiceField('common', 'GeoRegion', "country", "country", True, True, empty_label=u"Область"),
+            ChainedModelChoiceField('common', 'District', "region", "region", True, True, empty_label=u"Район"),
+            ChainedModelChoiceField('common', 'Municipalitet', "district", "district", True, True, empty_label=u"Сельсовет"),
+            ChainedModelChoiceField('common', 'GeoCity', "district", "district", True, True, empty_label=u"Нас. пункт"),
+            forms.CharField(required=False)
+        )
+        fields[0].queryset = GeoCountry.objects.all()
+        fields[1].queryset = GeoRegion.objects.all()
+        fields[2].queryset = District.objects.all()
+        fields[3].queryset = Municipalitet.objects.all()
+        fields[4].queryset = GeoCity.objects.all()
+        for f in fields:
+            f.required = False
+        super(LocationField, self).__init__(fields, *args, **kwargs)
+
+    def compress(self, data_list):
+        city = data_list[4] or GeoCity.objects.get_or_create(
+            name=data_list[5],
+            country=data_list[0],
+            region=data_list[1],
+            district=data_list[2],
+            municipalitet=data_list[3],
+        )[0]
+        print 'data_list', data_list
+        return StrictLocation.objects.create(
+            country=data_list[0],
+            region=data_list[1],
+            district=data_list[2],
+            municipalitet=data_list[3],
+            city=city,
+        )
+
 class BurialAdminForm(forms.ModelForm):
     date_gosznak = UnclearDateField(label=u"Дата установки государственного знака", required=False)
     date_burried = UnclearDateField(label=u"Дата создания захоронения", required=False)
     date_discovered = UnclearDateField(label=u"Дата обнаружения захоронения", required=False)
     date_memorial = UnclearDateField(label=u"Дата установки памятника", required=False)
+    location = LocationField(label=u"Место захоронения", required=False)
 
     class Meta:
         model = Burial
@@ -200,8 +276,8 @@ class BurialAdminForm(forms.ModelForm):
 class PersonAdminForm(forms.ModelForm):
     birth_date = UnclearDateField(label=u"Дата рождения", required=False)
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
-
     duplicate_ok = forms.BooleanField(label=u"Да, создайте дублирующую запись", required=False, widget=forms.HiddenInput)
+    birth_location = LocationField(label=u"Место рождения", required=False)
 
     class Meta:
         model = Person
