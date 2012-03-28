@@ -224,7 +224,6 @@ class LocationField(MultiValueField):
             district=data_list[2],
             municipalitet=data_list[3],
         )[0]
-        print 'data_list', data_list
         return StrictLocation.objects.create(
             country=data_list[0],
             region=data_list[1],

@@ -502,6 +502,22 @@ class BurialCategory(models.Model):
         verbose_name = (u'Количество захороненных')
         verbose_name_plural = (u'Количество захороненных')
 
+    def save(self, *args, **kwargs):
+        if self.pk:
+            old = BurialCategory.objects.get(pk=self.pk)
+            r = cemetery_redis.Redis()
+            burial_id = self.burial.pk
+
+            pipe = r.db.pipeline()
+            k = self.custom_known or self.known
+            pipe.incr('cemetery:burial:%s:known' % burial_id, k - old.custom_known)
+            pipe.incr('cemetery:burial:%s:all' % burial_id, k + self.unknown - (old.custom_known or old.known) - old.unknown)
+            pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
+            pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
+            pipe.execute()
+
+        super(BurialCategory, self).save(*args, **kwargs)
+
     def update(self):
         self.known = self.burial.person_set.filter(deadman_category=self.category).count()
         if self.category.name == u'Другие':
