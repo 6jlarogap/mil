@@ -632,9 +632,9 @@ class Person(models.Model):
         cur_date = getattr(self, field_name)
         tmp_date = UnclearDate(cur_date.year, cur_date.month, cur_date.day)
         if getattr(self, field_name+'_no_day'):
-            tmp_date.day = None
+            tmp_date.no_day = True
         if getattr(self, field_name+'_no_month'):
-            tmp_date.month = None
+            tmp_date.no_month = True
         return tmp_date
 
     def set_unclear_date(self, field_name, ud):
