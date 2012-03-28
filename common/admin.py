@@ -66,7 +66,7 @@ class BurialAdmin(admin.ModelAdmin):
 
     def today(self, obj):
         return pytils.dt.ru_strftime(date=datetime.date.today(), format=u'%d %B %Y', inflected=True)
-    today.short_description = u"По состоянию на"
+    today.short_description = u"Cостояние на"
 
     def change_view(self, request, object_id, extra_context=None):
         try:
