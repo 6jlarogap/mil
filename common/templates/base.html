@@ -15,10 +15,13 @@
     </script>
     {{ form.media }}
     <title>{% block title %}{% endblock %}</title>
+    <style type="text/css" media="@print">
+        .top_nav { display: none; }
+    </style>
 </head>
 
 <body>
-    <table width="100%">
+    <table width="100%" class="top_nav">
         {# Верхная строка с логотипом и меню #}
         <tr>
             <td align="left" width="70%">
