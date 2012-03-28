@@ -165,10 +165,10 @@ class LocationWidget(MultiWidget):
         countries = GeoCountry.objects.all()
         widgets = (
             forms.Select(choices=[(c.pk, c) for c in countries]),
-            ChainedSelect('common', 'GeoRegion', "location_0", "country", True, True),
-            ChainedSelect('common', 'District', "location_1", "region", True, True),
-            ChainedSelect('common', 'Municipalitet', "location_2", "district", True, True),
-            ChainedSelect('common', 'GeoCity', "location_2", "district", True, True),
+            ChainedSelect('common', 'GeoRegion', "location_0", "country", False, True),
+            ChainedSelect('common', 'District', "location_1", "region", False, True),
+            ChainedSelect('common', 'Municipalitet', "location_2", "district", False, True),
+            ChainedSelect('common', 'GeoCity', "location_2", "district", False, True),
             forms.TextInput(),
         )
         for w,l in zip(widgets, [u'Страна', u'Область', u'Район', u'Сельсовет', u'Нас. пункт', ]):
@@ -201,10 +201,10 @@ class LocationField(MultiValueField):
         fields = (
             # country, region, district, municipalitet, city
             forms.ModelChoiceField(GeoCountry, empty_label=u"Страна", required=False),
-            ChainedModelChoiceField('common', 'GeoRegion', "country", "country", True, True, empty_label=u"Область"),
-            ChainedModelChoiceField('common', 'District', "region", "region", True, True, empty_label=u"Район"),
-            ChainedModelChoiceField('common', 'Municipalitet', "district", "district", True, True, empty_label=u"Сельсовет"),
-            ChainedModelChoiceField('common', 'GeoCity', "district", "district", True, True, empty_label=u"Нас. пункт"),
+            ChainedModelChoiceField('common', 'GeoRegion', "country", "country", False, True, empty_label=u"Область"),
+            ChainedModelChoiceField('common', 'District', "region", "region", False, True, empty_label=u"Район"),
+            ChainedModelChoiceField('common', 'Municipalitet', "district", "district", False, True, empty_label=u"Сельсовет"),
+            ChainedModelChoiceField('common', 'GeoCity', "district", "district", False, True, empty_label=u"Нас. пункт"),
             forms.CharField(required=False)
         )
         fields[0].queryset = GeoCountry.objects.all()
