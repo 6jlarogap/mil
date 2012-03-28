@@ -57,7 +57,7 @@ def persons(request):
                             regex = u"%s$" % regex
                     else:
                         regex = u"%s$" % regex
-                    persons = persons.filter(last_name__iregex=regex)
+                    persons = persons.filter(Q(last_name__iregex=regex) | Q(last_name__icontains=cd['last_name']))
                 if cd['first_name']:
                     regex = re.sub(r'\?', r'.', cd['first_name'].capitalize()) # capitalize is due to not working Iregexp
                     regex = re.sub(r'\*', r'.*', regex)
@@ -67,7 +67,7 @@ def persons(request):
                             regex = u"%s$" % regex
                     else:
                         regex = u"%s$" % regex
-                    persons = persons.filter(first_name__iregex=regex)
+                    persons = persons.filter(Q(first_name__iregex=regex) | Q(first_name__icontains=cd['first_name']))
                 if cd['patronymic']:
                     regex = re.sub(r'\?', r'.', cd['patronymic'].capitalize()) # capitalize is due to not working Iregexp
                     regex = re.sub(r'\*', r'.*', regex)
@@ -77,7 +77,7 @@ def persons(request):
                             regex = u"%s$" % regex
                     else:
                         regex = u"%s$" % regex
-                    persons = persons.filter(patronymic__iregex=regex)
+                    persons = persons.filter(Q(patronymic__iregex=regex) | Q(patronymic__icontains=cd['patronymic']))
                 if cd['birth_date_from']:
                     persons = persons.filter(birth_date__gte = cd['birth_date_from'])
                 if cd['birth_date_to']:
