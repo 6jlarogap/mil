@@ -10,7 +10,7 @@
     Фамилия: {{ person.last_name }}<br>
     Имя: {{ person.first_name }}<br>
     Отчество: {{ person.patronymic }}<br>
-    Дата роджения: {{ person.birth_date }}<br>
+    Дата роджения: {{ person.get_unclear_birth_date }}<br>
     Место рождения: {{ person.birth_location }}<br>
     Место нахождения документов: {{ person.documents_place|default:"нет" }}<br>
     Источник информации: {{ person.information_source }}<br>
@@ -20,7 +20,7 @@
     Место службы: {{ person.personduty.unit|default:"не известно" }}<br>
     Звание: {{ person.personduty.rank }}<br>
     Должность: {{ person.personduty.post }}<br>
-    Дата гибели: {{ person.death_date }}<br>
+    Дата гибели: {{ person.get_unclear_death_date }}<br>
     Причина гибели: {{ person.death_cause|default:"не известна" }}<br>
     <br>
     {% if person.burial %}
