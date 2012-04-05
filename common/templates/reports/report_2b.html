@@ -20,6 +20,29 @@
     <STYLE>
         <!--
         BODY,DIV,TABLE,THEAD,TBODY,TFOOT,TR,TH,TD,P { font-family:"Calibri"; font-size:x-small }
+
+        td.vertical {
+            vertical-align: middle;
+            text-align: center;
+            border: 1px solid #000000;
+            height: 100px;
+            padding-left: 15px;
+        }
+
+        td font {
+            font-size: 12px;
+        }
+
+        td.vertical font {
+            -moz-transform: rotate(270deg);
+            -o-transform: rotate(270deg);
+            -webkit-transform: rotate(270deg);
+            display: block;
+            width: 150px;
+            margin: 0 -65px 0 -55px;
+            font-size: 12px;
+        }
+
         tr.data td { text-align: left; vertical-align: middle; }
         tr.data td.number { text-align: center; vertical-align: middle; }
         -->
@@ -246,20 +269,20 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
 <TR>
-    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">№ п/п</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Наименование населенного пункта</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Вид захоронения</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Количество похороненных</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Из них</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Из них</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">№ п/п</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">Наименование населенного пункта</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">Вид захоронения</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Количество<br/>похороненных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
 </TR>
 <TR>
-    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">известных</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">неизвестных</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">военнослужащих</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">участников сопротивления</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">жертв войны</FONT></TD>
-    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">военнопленных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">известных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">неизвестных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">военнослужащих</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">участников<br/>сопротивления</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">жертв войны</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" class="vertical" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">военнопленных</FONT></TD>
 </TR>
 <TR>
     <TD STYLE="border: 1px solid #000000; font-size: 12px; font-weight: bold;" HEIGHT="20" ALIGN="CENTER" VALIGN=MIDDLE SDVAL="1" SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">1</FONT></TD>
