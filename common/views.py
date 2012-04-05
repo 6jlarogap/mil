@@ -98,7 +98,7 @@ def persons(request):
                     persons = persons.filter(date_of_creation__lte = cd['record_date_to'])
                 if cd['info']:
                     persons = persons.filter(info__icontains = cd['info'])
-                if persons:
+                if persons.exists():
                     persons_count = persons.count()
 
                     paginator = Paginator(persons, 20)
@@ -147,14 +147,14 @@ def person(request, obj):
     """
     try:
         person = Person.objects.get(pk=obj)
-    except:
+    except Person.DoesNotExist:
         return render_to_response('error.html', context_instance=RequestContext(request, {
             'error': 'Выбранный воин не обранужен.'
             }))
 
-    return render_to_response('person.html', context_instance=RequestContext(request, {
-        'person': person
-        }))
+    template = request.REQUEST.get('template', 'person.html')
+
+    return render_to_response(template, context_instance=RequestContext(request, {'person': person}))
 
 def burials(request):
     """
