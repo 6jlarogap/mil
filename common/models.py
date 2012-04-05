@@ -226,7 +226,6 @@ class Burial(models.Model):
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
     passportid = models.CharField(u"Номер паспорта воинского захоронения",  blank=True, null=True, max_length=128, db_index=True, unique=True)
-    date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True, db_index=True)
     date_closed = models.DateField(u"Дата закрытия", blank=True, null=True, editable=False, db_index=True)
     burial_type = models.ForeignKey(BurialType, verbose_name=u"Тип воинского захоронения", blank=True, null=True)
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
@@ -234,6 +233,10 @@ class Burial(models.Model):
     names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
 
     location = models.ForeignKey(StrictLocation, null=True, blank=True)
+
+    date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True, db_index=True)
+    date_passport_no_month = models.BooleanField(default=False, editable=False)
+    date_passport_no_day = models.BooleanField(default=False, editable=False)
 
     date_gosznak = models.DateField(u"Дата установки государственного знака", blank=True, null=True, db_index=True)
     date_gosznak_no_month = models.BooleanField(default=False, editable=False)
@@ -360,6 +363,10 @@ class Burial(models.Model):
     @property
     def get_unclear_date_memorial(self):
         return self.get_unclear_date('date_memorial')
+
+    @property
+    def get_unclear_date_passport(self):
+        return self.get_unclear_date('date_passport')
 
 class ClosureCause(models.Model):
     """
@@ -567,9 +574,9 @@ class UnclearDate:
 
     def strftime(self, format):
         if self.no_day:
-            format = format.replace('%d', '-')
+            format = format.replace('%d.', '')
         if self.no_month:
-            format = format.replace('%m', '-')
+            format = format.replace('%m.', '')
 
         if self.d.year < 1900:
             d1 = datetime.date(self.d.year+100, self.d.month, self.d.day)
