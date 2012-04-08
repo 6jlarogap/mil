@@ -125,7 +125,7 @@
     <TD STYLE="border-top: 3px solid #000000; padding-top: 20px;" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
 <TR>
-    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">область {{ b.location.region }} </FONT></TD>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">область {% if b.location %}{{ b.location.region }}{% endif %} </FONT></TD>
     <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Дата установки памятника {{ b.get_unclear_date_memorial|default:'неизвестна' }}</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
@@ -134,7 +134,7 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
 <TR>
-    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">район {{ b.location.district }}</FONT></TD>
+    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">район {% if b.location %}{{ b.location.district }}{% endif %}</FONT></TD>
     <TD ALIGN="RIGHT" VALIGN=BOTTOM SDNUM="1033;1033;General"><B><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></B></TD>
     <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="CENTER" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
@@ -148,7 +148,7 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
 <TR>
-    <TD HEIGHT="21" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">НП {{ b.location.city|default:b.location.info }}</FONT></TD>
+    <TD HEIGHT="21" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">НП {% if b.location %}{{ b.location.city|default:b.location.info }}{% endif %}</FONT></TD>
     <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">Количество похороненных</FONT></TD>
     <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1033;1033;General"><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
