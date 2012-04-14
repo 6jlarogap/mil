@@ -182,7 +182,7 @@ def importPerson(cursor):
             pd = PersonDuty.objects.get_or_create(person=p)[0]
             if l[10] and l[10].isdigit():
                 try:
-                    pd.unit = MilitaryUnit.objects.get(obid=l[10])
+                    pd.unit = MilitaryUnit.objects.get(location__obid=l[10])
                 except MilitaryUnit.DoesNotExist:
                     pass
             if l[4] and unicode(l[4]).isdigit():
