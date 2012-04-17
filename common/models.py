@@ -579,7 +579,7 @@ class UnclearDate:
             format = format.replace('%m.', '')
 
         if self.d.year < 1900:
-            d1 = datetime.date(self.d.year+100, self.d.month, self.d.day)
+            d1 = datetime.date(1900 + self.d.year % 100, self.d.month, self.d.day)
             return d1.strftime(format).replace(str(d1.year), str(self.d.year))
         return self.d.strftime(format)
 
