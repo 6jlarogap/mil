@@ -54,9 +54,13 @@ class BurialCategoryInLine(admin.TabularInline):
         else:
             return super(BurialCategoryInLine, self).get_formset(request, obj)
 
+class BurialMemPhotoInline(admin.TabularInline):
+    model = BurialPictures
+
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
         BurialCategoryInLine,
+        BurialMemPhotoInline,
         ClosedBurialFromInLine,
     ]
     form = BurialAdminForm

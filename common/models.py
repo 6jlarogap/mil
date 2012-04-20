@@ -438,9 +438,10 @@ class BurialPictures(models.Model):
 
     def __unicode__(self):
         return self.photo and os.path.basename(self.photo.path) or u'empty pic'
+
     class Meta:
-        verbose_name = (u'Фотография захоронения')
-        verbose_name_plural = (u'Фотографии захоронения')
+        verbose_name = (u'Фотография мемориальной плиты')
+        verbose_name_plural = (u'Фотографии мемориальной плиты')
 
 class BurialInformationLinks(models.Model):
     """
