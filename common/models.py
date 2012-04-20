@@ -269,6 +269,13 @@ class Burial(models.Model):
         else:
             return u'без паспорта'
 
+    @property
+    def passport_id_int(self):
+        try:
+            return int(self.passportid)
+        except ValueError:
+            return self.passportid
+
     class Meta:
         verbose_name = (u'Захоронение')
         verbose_name_plural = (u'Захоронения')

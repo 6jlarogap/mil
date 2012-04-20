@@ -113,7 +113,7 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
-{% for b in burials %}
+{% for b in burials|dictsort:"passport_id_int" %}
 <tbody style="page-break-inside: avoid;">
 <TR>
     <TD STYLE="border-top: 3px solid #000000; padding-top: 20px;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General" colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Номер захоронения № {{ b.passportid }}</FONT></TD>
