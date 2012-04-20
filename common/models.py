@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 import os
 
 import datetime
@@ -375,6 +376,14 @@ class Burial(models.Model):
     def get_unclear_date_passport(self):
         return self.get_unclear_date('date_passport')
 
+    def mem_photos_pairs(self):
+        mem_photos = list(self.mem_photos.all())
+        for i in range(0, int(math.ceil(float(len(mem_photos)) / 2))):
+            try:
+                yield (mem_photos[i*2], mem_photos[i*2+1])
+            except IndexError:
+                yield (mem_photos[i*2], None)
+
 class ClosureCause(models.Model):
     """
     Причина закрытия захоронения
@@ -432,7 +441,7 @@ class BurialEditCause(models.Model):
 class BurialPictures(models.Model):
     """Фотография захоронения
     """
-    burial = models.ForeignKey(u'Burial')
+    burial = models.ForeignKey(u'Burial', related_name='mem_photos')
     photo = models.ImageField(u"Фото", upload_to="bpics", null=True)
     comment = models.TextField(blank=True, null=True)                               # Дополнительная информация
 

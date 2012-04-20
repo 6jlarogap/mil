@@ -234,13 +234,18 @@ def burials(request):
                         'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                     }
 
+                    if template == 'reports/report_2.html':
+                        context.update({
+                            'burial': burials[0],
+                            })
+
                     if template == 'reports/report_2a.html':
                         context.update({
                             'region': cd['region'],
                             'district': cd['district'],
                             'city': cd['city'],
                             'burials': burials,
-                        })
+                            })
 
                     r = cemetery_redis.Redis()
 
