@@ -530,8 +530,6 @@ class BurialCategory(models.Model):
             pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
             pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
         else:
-            pipe.set('cemetery:burial:%s:known' % burial_id, k)
-            pipe.set('cemetery:burial:%s:all' % burial_id, k + self.unknown)
             pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
             pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
 
