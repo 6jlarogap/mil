@@ -30,9 +30,16 @@ except IndexError:
     print 'Arguments are: dbname username password'
 else:
     cursor = connection.cursor()
-    sql = 'SELECT id, quantitybury, quantityknown, quantityunknown FROM grave;'
+    sql = 'SELECT id, quantitybury, quantityknown, quantityunknown, quantitysoldier, quantityinsurrectionist, quantityvictim, quantityother FROM grave;'
     r = Redis()
     cnt = Burial.objects.all().count()
+
+    cats = [
+        DeadmanCategory.objects.get(name=u'Военнослужащий'),
+        DeadmanCategory.objects.get(name=u'Участник сопротивления'),
+        DeadmanCategory.objects.get(name=u'Жертва войны'),
+        DeadmanCategory.objects.get(name=u'Другие'),
+    ]
 
     cursor.execute(sql)
     for i,d in enumerate(cursor.fetchall()):
@@ -40,6 +47,9 @@ else:
         r.db.set('cemetery:burial:%s:all' % b.pk, d[1])
         r.db.set('cemetery:burial:%s:known' % b.pk, d[2])
         r.db.set('cemetery:burial:%s:unknown' % b.pk, d[3])
+
+        for j,c in enumerate(cats):
+            r.db.set('cemetery:burial:%s:category:%s' % (b.pk, c.pk), d[4 + j] or 0)
 
         if i % 500 == 0:
             print 'Processsed', i, 'of', cnt
