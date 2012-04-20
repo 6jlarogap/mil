@@ -49,7 +49,10 @@ else:
         r.db.set('cemetery:burial:%s:unknown' % b.pk, d[3])
 
         for j,c in enumerate(cats):
-            r.db.set('cemetery:burial:%s:category:%s' % (b.pk, c.pk), d[4 + j] or 0)
+            try:
+                BurialCategory.objects.get(burial=b, category=c)
+            except BurialCategory.DoesNotExist:
+                BurialCategory.objects.create(burial=b, category=c, custom_known=d[4 + j] or 0)
 
         if i % 500 == 0:
             print 'Processsed', i, 'of', cnt
