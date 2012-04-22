@@ -670,6 +670,9 @@ class Person(models.Model):
     def __unicode__(self):
         return u'%s' % self.last_name
 
+    def get_info(self):
+        return self.info.replace('.', '. ')
+
     def get_unclear_date(self, field_name):
         if not getattr(self, field_name, None):
             return None
