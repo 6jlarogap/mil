@@ -167,7 +167,7 @@ class StrictLocation(Location):
     municipalitet = ChainedForeignKey(Municipalitet, verbose_name=u"Сельсовет", chained_field="district", chained_model_field="district", blank=True, null=True)
     city = ChainedForeignKey(GeoCity, verbose_name=u"Нас. пункт", chained_field="district", chained_model_field="district")
 
-class PrintingGrop(models.Model):
+class PrintingGroup(models.Model):
     """
     Признак группировки при печати
     """
@@ -187,7 +187,7 @@ class BurialType(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Тип воинского захоронения", max_length=100, db_index=True)
     brief = models.CharField(u"Сокращенное наименование", max_length=100, blank=True, null=True)
-    type = models.ForeignKey(PrintingGroup, verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
+    type = models.ForeignKey('PrintingGroup', verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
     def __unicode__(self):
         return self.name
     class Meta:
@@ -201,7 +201,7 @@ class MilitaryConflict(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Название военного конфликта", max_length=100, db_index=True)
     brief = models.CharField(u"Сокращенное наименование", max_length=100, blank=True, null=True)
-    type = models.ForeignKey(PrintingGroup, verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
+    type = models.ForeignKey('PrintingGroup', verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
     def __unicode__(self):
         return self.name
     class Meta:
