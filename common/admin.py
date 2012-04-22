@@ -131,9 +131,9 @@ class DeadmanCategoryAdmin(admin.ModelAdmin):
     list_editable = ['ordering',]
     search_fields = ['name', ]
 
-class MilitaryConflictTypeAdmin(admin.ModelAdmin):
-    search_fields = ['full', 'brief', ]
-    ordering = ['full', ]
+class PrintingGroup(admin.ModelAdmin):
+    search_fields = ['name', 'description', ]
+    ordering = ['name', ]
 
 class LocationAdmin(SortSearchAdmin):
     raw_id_fields = ['location', ]

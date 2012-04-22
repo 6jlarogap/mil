@@ -167,31 +167,32 @@ class StrictLocation(Location):
     municipalitet = ChainedForeignKey(Municipalitet, verbose_name=u"Сельсовет", chained_field="district", chained_model_field="district", blank=True, null=True)
     city = ChainedForeignKey(GeoCity, verbose_name=u"Нас. пункт", chained_field="district", chained_model_field="district")
 
+class PrintingGrop(models.Model):
+    """
+    Признак группировки при печати
+    """
+    name = models.CharField(u"Признак группировки при печати", max_length=100, db_index=True)
+    description = models.CharField(u"Описание названия признака группировки при печати", max_length=100)
+
+    def __unicode__(self):
+        return self.name
+    class Meta:
+        verbose_name = (u'Признак группировки при печати')
+        verbose_name_plural = (u'Признаки группировки при печати')
+
 class BurialType(models.Model):
     """
     Тип воинского захоронения
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    name = models.CharField(u"Название типа захоронения", max_length=100, db_index=True)
-    brief = models.CharField(u"Краткое название типа воинского захоронения", max_length=100, blank=True, null=True)
+    name = models.CharField(u"Тип воинского захоронения", max_length=100, db_index=True)
+    brief = models.CharField(u"Сокращенное наименование", max_length=100, blank=True, null=True)
+    type = models.ForeignKey(PrintingGroup, verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
     def __unicode__(self):
         return self.name
     class Meta:
         verbose_name = ('Тип воинского захоронения')
         verbose_name_plural = ('Типы воинских захоронений')
-
-class MilitaryConflictType(models.Model):
-    """
-    Тип военного конфликта
-    """
-    full = models.CharField(u"Название признака группировки при печати", max_length=100, db_index=True)
-    brief = models.CharField(u"Краткое название признака группировки при печати", max_length=100)
-
-    def __unicode__(self):
-        return self.full
-    class Meta:
-        verbose_name = (u'Признак группировки при печати')
-        verbose_name_plural = (u'Признаки группировки при печати')
 
 class MilitaryConflict(models.Model):
     """
@@ -199,9 +200,8 @@ class MilitaryConflict(models.Model):
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
     name = models.CharField(u"Название военного конфликта", max_length=100, db_index=True)
-    brief = models.CharField(u"Краткое название военного конфликта", max_length=100, blank=True, null=True)
-    type = models.ForeignKey(MilitaryConflictType, verbose_name=u"Признак группировки при печати", blank=True, null=True)          # Тип военного конфликта
-    comment = models.TextField(u"Комментарий", blank=True, null=True)
+    brief = models.CharField(u"Сокращенное наименование", max_length=100, blank=True, null=True)
+    type = models.ForeignKey(PrintingGroup, verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
     def __unicode__(self):
         return self.name
     class Meta:
