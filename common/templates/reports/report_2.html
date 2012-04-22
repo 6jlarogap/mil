@@ -2557,15 +2557,18 @@
         <td style="text-align:left;width:2.858cm; " class="ce7"><p>{{ p.patronymic }}</p></td>
         <td style="text-align:left;width:1.658cm; " class="ce7"><p>{{ p.birth_date|date:"Y" }}</p></td>
         <td style="text-align:left;width:2.928cm; " class="ce9"><p>{{ p.birth_location|default:"" }}</p></td>
-        <td style="text-align:left;width:2.963cm; " class="ce9"><p>{{ p.personduty.unit|default:"" }}, {{ p.personduty.post|default:"" }}</p></td>
+        <td style="text-align:left;width:2.963cm; " class="ce9"><p>
+            {% if p.personduty.unit %}{{ p.personduty.unit|default:"" }}, {% endif %}
+            {{ p.personduty.post|default:"" }}
+        </p></td>
         <td style="text-align:left;width:1.87cm; " class="ce35"><p>{{ p.get_unclear_death_date }}</p></td>
         <td style="text-align:left;width:1.658cm; " class="ce7"><p>{{ p.death_cause|default:"" }}</p></td>
         <td style="text-align:left;width:1.446cm; " class="ce40"><p>{{ p.deadman_category|default:"" }}
         </p></td>
-        <td style="text-align:left;width:1.341cm; " class="ce9"><p>???</p></td>
-        <td style="text-align:left;width:2.046cm; " class="ce7"><p>???</p></td>
+        <td style="text-align:left;width:1.341cm; " class="ce9"><p>{{ p.burial.location|default:"" }}</p></td>
+        <td style="text-align:left;width:2.046cm; " class="ce7"><p>{{ p.info|default:"" }}</p></td>
         <td style="text-align:left;width:3.281cm; " class="ce9"><p>{{ p.personcall.unit|default:"" }}</p></td>
-        <td style="text-align:left;width:3.563cm; " class="ce9"><p>{{ p.info|default:"" }}</p></td>
+        <td style="text-align:left;width:3.563cm; " class="ce9"><p>{{ p.burial.info|default:"" }}</p></td>
         <td style="text-align:left;width:2.928cm; " class="ce1"> </td>
         <td style="text-align:left;width:2.928cm; " class="ce1"> </td>
         <td style="text-align:left;width:3.034cm; " class="ce1"> </td>
