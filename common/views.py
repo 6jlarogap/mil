@@ -36,7 +36,7 @@ def persons(request):
                 persons = Person.objects.all().select_related()
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
-                if cd['burial_location']:
+                if cd['burial_location'] and cd['burial_location'].country:
                     params = dict(burial__location__country = cd['burial_location'].country)
                     if cd['country_exclude']:
                         persons = persons.exclude(**params)
