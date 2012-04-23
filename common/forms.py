@@ -97,74 +97,11 @@ class LoginForm(AuthenticationForm): # Форма авторизации
     username = forms.CharField(max_length=30, label="E-mail ")
     password = forms.CharField(max_length=18, widget=forms.PasswordInput, label="Пароль ")
 
-COUNTRIES = GeoCountry.objects.filter(georegion__geocity__strictlocation__isnull=False).distinct()
-
-class PersonsForm(forms.Form):
-    """Форма поиска воинов.
-    """
-    country = forms.ModelChoiceField(queryset=COUNTRIES, required=False, label="Страна")
-    country_exclude = forms.BooleanField(required=False, initial=False, label="Все страны, кроме выбранной")
-    rank = forms.ModelChoiceField(queryset=Rank.objects.all(), required=False, label="Воинское звание")
-    last_name = forms.CharField(required=False, max_length=128, label="Фамилия ")
-    first_name = forms.CharField(required=False, max_length=30, label="Имя ")
-    patronymic = forms.CharField(required=False, max_length=30, label="Отчество ")
-
-    birth_date_from = UnclearDateField(required=False, label='Дата рождения c')
-    birth_date_to = UnclearDateField(required=False, label='Дата рождения по')
-    death_date_from = UnclearDateField(required=False, label='Дата смерти с')
-    death_date_to = UnclearDateField(required=False, label='Дата смерти по')
-
-    category = forms.ModelChoiceField(queryset=DeadmanCategory.objects.all(), required=False, label=u"Категория")
-    death_cause = forms.ModelChoiceField(queryset=DeathCause.objects.all(), required=False, label=u"Причина смерти")
-
-    record_date_from = UnclearDateField(required=False, label='Дата добавления с')
-    record_date_to = UnclearDateField(required=False, label='Дата добавления по')
-
-
-    burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
-    info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о воине")
-    in_trash = forms.BooleanField(required=False, label="В корзине")
-
-    def __init__(self, *args, **kwargs):
-        super(PersonsForm, self).__init__(*args, **kwargs)
-        for k in self.fields:
-            if isinstance(self.fields[k], forms.DateField):
-                self.fields[k].widget.attrs = {'class': 'DateField form-field'}
-
-class BurialsForm(forms.ModelForm):
-    """Форма поиска захоронений.
-    """
-    
-    burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
-    bemptypassport = forms.BooleanField(required=False, label="Показать без паспорта")
-
-    burried_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения c')
-    burried_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения по')
-    burial_type = forms.ModelChoiceField(queryset=BurialType.objects.all(), required=False, label="Тип захоронения")
-    military_conflict = forms.ModelChoiceField(queryset=MilitaryConflict.objects.all(), required=False, label="Военный конфликт")
-    info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о захоронении")
-    state = forms.ModelChoiceField(queryset=MemorialState.objects.all(), required=False, label="Состояние памятника")
-    in_trash = forms.BooleanField(required=False, label="В корзине")
-    only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
-    other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
-    only_not_registered = forms.BooleanField(required=False, label=u"Только неучтенные")
-
-    def __init__(self, *args, **kwargs):
-        super(BurialsForm, self).__init__(*args, **kwargs)
-        for k in self.fields:
-            self.fields[k].required = False
-            if isinstance(self.fields[k], forms.DateField):
-                self.fields[k].widget.attrs = {'class': 'DateField form-field'}
-
-    class Meta:
-        model = SimpleLocation
-        fields = ['country', 'region', 'district', 'municipalitet', 'city']
-
 class LocationWidget(MultiWidget):
     def __init__(self, *args, **kwargs):
         countries = GeoCountry.objects.all()
         widgets = (
-            forms.Select(choices=[(c.pk, c) for c in countries]),
+            forms.Select(choices=[('', u'Страна')] + [(c.pk, c) for c in countries]),
             ChainedSelect('common', 'GeoRegion', "location_0", "country", False, True),
             ChainedSelect('common', 'District', "location_1", "region", False, True),
             ChainedSelect('common', 'Municipalitet', "location_2", "district", False, True),
@@ -193,14 +130,21 @@ class LocationWidget(MultiWidget):
             ]
         return [None, None, None, None, None]
 
+class MockLocation(object):
+    def __init__(self, *args, **kwargs):
+        for k,v in kwargs.items():
+            setattr(self, k, v)
+
 class LocationField(MultiValueField):
     widget = LocationWidget
     required = False
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, partial=False, *args, **kwargs):
+        self.partial = partial
+
         fields = (
             # country, region, district, municipalitet, city
-            forms.ModelChoiceField(GeoCountry, empty_label=u"Страна", required=False),
+            forms.ModelChoiceField(GeoCountry, empty_label=u"Страна", required=False, ),
             ChainedModelChoiceField('common', 'GeoRegion', "country", "country", False, True, empty_label=u"Область"),
             ChainedModelChoiceField('common', 'District', "region", "region", False, True, empty_label=u"Район"),
             ChainedModelChoiceField('common', 'Municipalitet', "district", "district", False, True, empty_label=u"Сельсовет"),
@@ -217,20 +161,110 @@ class LocationField(MultiValueField):
         super(LocationField, self).__init__(fields, *args, **kwargs)
 
     def compress(self, data_list):
-        city = data_list[4] or GeoCity.objects.get_or_create(
-            name=data_list[5],
-            country=data_list[0],
-            region=data_list[1],
-            district=data_list[2],
-            municipalitet=data_list[3],
-        )[0]
-        return StrictLocation.objects.create(
-            country=data_list[0],
-            region=data_list[1],
-            district=data_list[2],
-            municipalitet=data_list[3],
-            city=city,
-        )
+        if not data_list:
+            return MockLocation(
+                country=None,
+                region=None,
+                district=None,
+                municipalitet=None,
+                city=None,
+            )
+        city = None
+        if len(data_list) > 4:
+            city = data_list[4] or (data_list[5] and GeoCity.objects.get_or_create(
+                name=data_list[5],
+                country=data_list[0],
+                region=data_list[1],
+                district=data_list[2],
+                municipalitet=data_list[3],
+            )[0]) or None
+        if self.partial:
+            loc = MockLocation(
+                country=data_list[0],
+                region=data_list[1],
+                district=data_list[2],
+                municipalitet=data_list[3],
+                city=city,
+            )
+        else:
+            loc = StrictLocation.objects.create(
+                country=data_list[0],
+                region=data_list[1],
+                district=data_list[2],
+                municipalitet=data_list[3],
+                city=city,
+            )
+        return loc
+
+class PersonsForm(forms.Form):
+    """Форма поиска воинов.
+    """
+    burial_location = LocationField(label=u"Место захоронения", required=False, partial=True)
+    country_exclude = forms.BooleanField(required=False, initial=False, label="Все страны, кроме выбранной")
+    rank = forms.ModelChoiceField(queryset=Rank.objects.all(), required=False, label="Воинское звание")
+    last_name = forms.CharField(required=False, max_length=128, label="Фамилия ")
+    first_name = forms.CharField(required=False, max_length=30, label="Имя ")
+    patronymic = forms.CharField(required=False, max_length=30, label="Отчество ")
+
+    birth_location = LocationField(label=u"Место рождения", required=False, partial=True)
+    birth_date_from = UnclearDateField(required=False, label='Дата рождения c')
+    birth_date_to = UnclearDateField(required=False, label='Дата рождения по')
+    death_date_from = UnclearDateField(required=False, label='Дата смерти с')
+    death_date_to = UnclearDateField(required=False, label='Дата смерти по')
+
+    category = forms.ModelChoiceField(queryset=DeadmanCategory.objects.all(), required=False, label=u"Категория")
+    death_cause = forms.ModelChoiceField(queryset=DeathCause.objects.all(), required=False, label=u"Причина смерти")
+
+    record_date_from = UnclearDateField(required=False, label='Дата добавления с')
+    record_date_to = UnclearDateField(required=False, label='Дата добавления по')
+
+
+    burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
+    info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о воине")
+    in_trash = forms.BooleanField(required=False, label="В корзине")
+
+    def __init__(self, *args, **kwargs):
+        super(PersonsForm, self).__init__(*args, **kwargs)
+        for k in self.fields:
+            if isinstance(self.fields[k], forms.DateField):
+                self.fields[k].widget.attrs = {'class': 'DateField form-field'}
+
+        for i,w in enumerate(self.fields['burial_location'].widget.widgets):
+            if i > 0:
+                w.chain_field = 'burial_location_%s' % (i-1)
+
+        for i,w in enumerate(self.fields['birth_location'].widget.widgets):
+            if i > 0:
+                w.chain_field = 'birth_location_%s' % (i-1)
+
+class BurialsForm(forms.ModelForm):
+    """Форма поиска захоронений.
+    """
+
+    burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
+    bemptypassport = forms.BooleanField(required=False, label="Показать без паспорта")
+
+    burried_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения c')
+    burried_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения по')
+    burial_type = forms.ModelChoiceField(queryset=BurialType.objects.all(), required=False, label="Тип захоронения")
+    military_conflict = forms.ModelChoiceField(queryset=MilitaryConflict.objects.all(), required=False, label="Военный конфликт")
+    info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о захоронении")
+    state = forms.ModelChoiceField(queryset=MemorialState.objects.all(), required=False, label="Состояние памятника")
+    in_trash = forms.BooleanField(required=False, label="В корзине")
+    only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
+    other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
+    only_not_registered = forms.BooleanField(required=False, label=u"Только неучтенные")
+
+    def __init__(self, *args, **kwargs):
+        super(BurialsForm, self).__init__(*args, **kwargs)
+        for k in self.fields:
+            self.fields[k].required = False
+            if isinstance(self.fields[k], forms.DateField):
+                self.fields[k].widget.attrs = {'class': 'DateField form-field'}
+
+    class Meta:
+        model = SimpleLocation
+        fields = ['country', 'region', 'district', 'municipalitet', 'city']
 
 class BurialAdminForm(forms.ModelForm):
     date_gosznak = UnclearDateField(label=u"Дата установки государственного знака", required=False)

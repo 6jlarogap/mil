@@ -14,6 +14,8 @@ from common.models import *
 from common.forms import *
 import cemetery_redis
 
+from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
+
 def persons_autocomplete(request):
     persons = Person.objects.filter(last_name__istartswith=request.GET.get('term')).values_list('last_name', flat=True)
     names = list(set(list(persons.order_by('last_name')[:100])))
@@ -34,13 +36,42 @@ def persons(request):
                 persons = Person.objects.all().select_related()
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
-                if cd['country']:
-                    params = dict(burial__location__city__region__country__pk = cd['country'].pk)
+                if cd['burial_location']:
+                    params = dict(burial__location__country = cd['burial_location'].country)
                     if cd['country_exclude']:
                         persons = persons.exclude(**params)
                     else:
                         persons = persons.filter(**params)
- # //rd-- fio search field regex rules
+
+                    if cd['burial_location'].region:
+                        persons = persons.filter(burial__location__region = cd['burial_location'].region)
+
+                    if cd['burial_location'].district:
+                        persons = persons.filter(burial__location__district = cd['burial_location'].district)
+
+                    if cd['burial_location'].municipalitet:
+                        persons = persons.filter(burial__location__municipalitet = cd['burial_location'].municipalitet)
+
+                    if cd['burial_location'].city:
+                        persons = persons.filter(burial__location__city = cd['burial_location'].city)
+
+                if cd['birth_location']:
+                    if cd['birth_location'].country:
+                        persons = persons.filter(birth_location__country = cd['birth_location'].country)
+
+                    if cd['birth_location'].region:
+                        persons = persons.filter(birth_location__region = cd['birth_location'].region)
+
+                    if cd['birth_location'].district:
+                        persons = persons.filter(birth_location__district = cd['birth_location'].district)
+
+                    if cd['birth_location'].municipalitet:
+                        persons = persons.filter(birth_location__municipalitet = cd['birth_location'].municipalitet)
+
+                    if cd['birth_location'].city:
+                        persons = persons.filter(birth_location__city = cd['birth_location'].city)
+
+                        # //rd-- fio search field regex rules
  # ".етер"   # ^
  # "етер"    # ^
  # "етер.*"  # ^
@@ -49,35 +80,18 @@ def persons(request):
  # ".*етер"  # $
  # ".*етер." # $
                 if cd['last_name']:
-                    regex = re.sub(r'\?', r'.', cd['last_name'].capitalize()) # capitalize is due to not working Iregexp
+                    regex = re.sub(r'\?', r'.', cd['last_name']) # capitalize is due to not working Iregexp
                     regex = re.sub(r'\*', r'.*', regex)
-                    if not regex.startswith(".*"):
-                        regex = u"^%s" % regex
-                        if regex.endswith("."):
-                            regex = u"%s$" % regex
-                    else:
-                        regex = u"%s$" % regex
-                    persons = persons.filter(Q(last_name__iregex=regex) | Q(last_name__icontains=cd['last_name']))
+                    persons = persons.filter(last_name__iregex=u'^%s' % regex)
                 if cd['first_name']:
-                    regex = re.sub(r'\?', r'.', cd['first_name'].capitalize()) # capitalize is due to not working Iregexp
+                    regex = re.sub(r'\?', r'.', cd['first_name']) # capitalize is due to not working Iregexp
                     regex = re.sub(r'\*', r'.*', regex)
-                    if not regex.startswith(".*"):
-                        regex = u"^%s" % regex
-                        if regex.endswith("."):
-                            regex = u"%s$" % regex
-                    else:
-                        regex = u"%s$" % regex
-                    persons = persons.filter(Q(first_name__iregex=regex) | Q(first_name__icontains=cd['first_name']))
+                    persons = persons.filter(first_name__iregex=u'^%s' % regex)
                 if cd['patronymic']:
-                    regex = re.sub(r'\?', r'.', cd['patronymic'].capitalize()) # capitalize is due to not working Iregexp
+                    regex = re.sub(r'\?', r'.', cd['patronymic']) # capitalize is due to not working Iregexp
                     regex = re.sub(r'\*', r'.*', regex)
-                    if not regex.startswith(".*"):
-                        regex = u"^%s" % regex
-                        if regex.endswith("."):
-                            regex = u"%s$" % regex
-                    else:
-                        regex = u"%s$" % regex
-                    persons = persons.filter(Q(patronymic__iregex=regex) | Q(patronymic__icontains=cd['patronymic']))
+                    persons = persons.filter(patronymic__iregex=u'^%s' % regex)
+
                 if cd['birth_date_from']:
                     persons = persons.filter(birth_date__gte = cd['birth_date_from'])
                 if cd['birth_date_to']:

@@ -48,6 +48,13 @@
             <td>{% block content %}{% endblock %}</td>
         </tr>
     </table>
+    {% if debug %}
+    <div style="clear: both">
+        {% for q in sql_queries %}
+        <br/>{{ q.time }}: {{ q.sql }}
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 
 </html>
