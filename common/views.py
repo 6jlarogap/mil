@@ -16,6 +16,18 @@ import cemetery_redis
 
 from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
 
+def lookup_cast(self, lookup_type):
+    if lookup_type == 'iregex':
+        return "UPPER(%s::text)"
+    else:
+        return super(DatabaseOperations, self).lookup_cast(lookup_type)
+
+def patch_iregex():
+    DatabaseOperations.lookup_cast = lookup_cast
+    DatabaseWrapper.operators['iregex'] = '~ UPPER(%s)'
+
+patch_iregex()
+
 def persons_autocomplete(request):
     persons = Person.objects.filter(last_name__istartswith=request.GET.get('term')).values_list('last_name', flat=True)
     names = list(set(list(persons.order_by('last_name')[:100])))
