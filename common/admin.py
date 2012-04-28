@@ -131,7 +131,11 @@ class DeadmanCategoryAdmin(admin.ModelAdmin):
     list_editable = ['ordering',]
     search_fields = ['name', ]
 
-class PrintingGroupAdmin(admin.ModelAdmin):
+class BurialPrintingGroupAdmin(admin.ModelAdmin):
+    search_fields = ['name', 'description', ]
+    ordering = ['name', ]
+
+class ConflictPrintingGroupAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description', ]
     ordering = ['name', ]
 
