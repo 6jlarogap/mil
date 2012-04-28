@@ -93,14 +93,18 @@ def persons(request):
  # ".*етер." # $
                 if cd['last_name']:
                     regex = re.sub(r'\?', r'.', cd['last_name']) # capitalize is due to not working Iregexp
+                    regex = re.sub(u'[еёЕЁ]', u'[еёЕЁ]', regex)
                     regex = re.sub(r'\*', r'.*', regex)
+                    print regex
                     persons = persons.filter(last_name__iregex=u'^%s' % regex)
                 if cd['first_name']:
                     regex = re.sub(r'\?', r'.', cd['first_name']) # capitalize is due to not working Iregexp
+                    regex = re.sub(u'[еёЕЁ]', u'[еёЕЁ]', regex)
                     regex = re.sub(r'\*', r'.*', regex)
                     persons = persons.filter(first_name__iregex=u'^%s' % regex)
                 if cd['patronymic']:
                     regex = re.sub(r'\?', r'.', cd['patronymic']) # capitalize is due to not working Iregexp
+                    regex = re.sub(u'[еёЕЁ]', u'[еёЕЁ]', regex)
                     regex = re.sub(r'\*', r'.*', regex)
                     persons = persons.filter(patronymic__iregex=u'^%s' % regex)
 
