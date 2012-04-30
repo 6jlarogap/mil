@@ -56,11 +56,19 @@ class BurialCategoryInLine(admin.TabularInline):
 
 class BurialMemPhotoInline(admin.TabularInline):
     model = BurialPictures
+    exclude = ['comment', ]
+
+class BurialAttachmentInline(admin.TabularInline):
+    model = BurialAttachment
+
+class PersonAttachmentInline(admin.TabularInline):
+    model = PersonAttachment
 
 class BurialAdmin(admin.ModelAdmin):
     inlines = [
         BurialCategoryInLine,
         BurialMemPhotoInline,
+        BurialAttachmentInline,
         ClosedBurialFromInLine,
     ]
     form = BurialAdminForm
@@ -102,6 +110,7 @@ class PersonAdmin(admin.ModelAdmin):
     inlines = [
         PersonCallInline,
         PersonDutyInline,
+        PersonAttachmentInline,
         PersonEditCauseInline,
     ]
     form = PersonAdminForm

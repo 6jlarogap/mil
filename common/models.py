@@ -465,6 +465,32 @@ class BurialPictures(models.Model):
         verbose_name = (u'Фотография мемориальной плиты')
         verbose_name_plural = (u'Фотографии мемориальной плиты')
 
+class BurialAttachment(models.Model):
+    """Приложение захоронения
+    """
+    burial = models.ForeignKey(u'Burial')
+    file = models.FileField(u"Приложение", upload_to="bfiles", null=True)
+
+    def __unicode__(self):
+        return self.file and os.path.basename(self.file.path) or u'empty pic'
+
+    class Meta:
+        verbose_name = (u'Приложение')
+        verbose_name_plural = (u'Приложения')
+
+class PersonAttachment(models.Model):
+    """Приложение воина
+    """
+    burial = models.ForeignKey(u'Person')
+    file = models.FileField(u"Приложение", upload_to="bfiles", null=True)
+
+    def __unicode__(self):
+        return self.file and os.path.basename(self.file.path) or u'empty pic'
+
+    class Meta:
+        verbose_name = (u'Приложение')
+        verbose_name_plural = (u'Приложения')
+
 class BurialInformationLinks(models.Model):
     """
     Ссылка на другие информационные источники
