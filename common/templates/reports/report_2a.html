@@ -113,8 +113,18 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
+</TABLE>
 {% for b in burials|dictsort:"passport_id_int" %}
-<tbody style="page-break-inside: avoid;">
+<TABLE CELLSPACING="0" COLS="11" BORDER="0" style="border-collapse: collapse; page-break-inside: avoid;">
+<COLGROUP WIDTH="79"></COLGROUP>
+<COLGROUP WIDTH="81"></COLGROUP>
+<COLGROUP WIDTH="100"></COLGROUP>
+<COLGROUP WIDTH="84"></COLGROUP>
+<COLGROUP WIDTH="72"></COLGROUP>
+<COLGROUP SPAN="2" WIDTH="104"></COLGROUP>
+<COLGROUP SPAN="3" WIDTH="76"></COLGROUP>
+<COLGROUP WIDTH="61"></COLGROUP>
+<tbody>
 <TR>
     <TD STYLE="border-top: 3px solid #000000; padding-top: 20px;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM  colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Номер захоронения № {{ b.passportid }}</FONT></TD>
     <TD STYLE="border-top: 3px solid #000000; padding-top: 20px;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM  colspan="3"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">Дата захоронения {{ b.get_unclear_date_burried }}</FONT></TD>
@@ -218,8 +228,8 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 </TR>
 </tbody>
-{% endfor %}
 </TABLE>
+{% endfor %}
 <!-- ************************************************************************** -->
 </BODY>
 
