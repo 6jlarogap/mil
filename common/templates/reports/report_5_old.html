@@ -23,13 +23,19 @@
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"> <FONT SIZE=4><B>Сведения по воинским захоронениям</B></FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"> <FONT SIZE=4>По состоянию на {% now "d.m.Y" %} г.</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"> <BR> </P>
-<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"> <FONT SIZE=4>Место нахождения: {{ form.cleaned_data.region }} область</FONT></P>
+<P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"> <FONT SIZE=4>
+    {% if form.cleaned_data.region %}
+        Место нахождения: {{ form.cleaned_data.region }} область
+    {% endif %}
+</FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm"> <FONT SIZE=4>
     {% if form.cleaned_data.district %}{{ form.cleaned_data.district }} район{% endif %}
 </FONT></P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm"> <BR> </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm">
-    <FONT SIZE=4>Военный конфликт {{ form.cleaned_data.military_conflict }}</FONT>
+    {% if form.cleaned_data.military_conflict %}
+        <FONT SIZE=4>Военный конфликт {{ form.cleaned_data.military_conflict }}</FONT>
+    {% endif %}
 </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-left: 6.99cm; text-indent: -6.99cm; margin-bottom: 0cm"> <BR> </P>
 <P LANG="ru-RU" CLASS="western" ALIGN=JUSTIFY STYLE="margin-bottom: 0cm">
