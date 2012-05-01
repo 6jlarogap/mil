@@ -48,21 +48,21 @@ class Redis():
         return int(self.db.get('cemetery:burial:%s:unknown' % pk) or 0)
 
     def known_for_burial_list(self, burials):
-        burial_pks = isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials
+        burial_pks = burials and isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials or []
         return sum([self.known_for_burial(b) for b in burial_pks], 0)
 
     def unknown_for_burial_list(self, burials):
-        burial_pks = isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials
+        burial_pks = burials and isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials or []
         return sum([self.unknown_for_burial(b) for b in burial_pks], 0)
 
     def known_for_burial_list_and_cat(self, burials, cat):
-        burial_pks = isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials
+        burial_pks = burials and isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials or []
         known = sum([int(self.db.get('cemetery:burial:%s:category:%s' % (b, cat.pk)) or 0) for b in burial_pks], 0)
         unknown = sum([int(self.db.get('cemetery:burial:%s:category:%s:unknown' % (b, cat.pk)) or 0) for b in burial_pks], 0)
         return known + unknown
 
     def known_for_burial_list_and_cause(self, burials, cause):
-        burial_pks = isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials
+        burial_pks = burials and isinstance(burials, list) and isinstance(burials[0], Model) and [b.pk for b in burials] or burials or []
         return sum([int(self.db.get('cemetery:burial:%s:cause:%s' % (b, cause.pk)) or 0) for b in burial_pks], 0)
 
     def clear_all(self):
