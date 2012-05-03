@@ -169,16 +169,16 @@ class StrictLocation(Location):
 
 class BurialPrintingGroup(models.Model):
     """
-    Признак группировки Захоронений при печати
+    Типы воинских захоронений при расчетах
     """
-    name = models.CharField(u"Признак группировки Захоронений при печати", max_length=100, db_index=True)
-    description = models.CharField(u"Описание названия признака группировки Захоронений при печати", max_length=100)
+    name = models.CharField(u"Тип воинского захоронения при расчетах", max_length=100, db_index=True)
+    description = models.CharField(u"Описание типа воинского захоронения при расчетах", max_length=100)
 
     def __unicode__(self):
         return self.name
     class Meta:
-        verbose_name = (u'Признак группировки захоронений при печати')
-        verbose_name_plural = (u'Признаки группировки захоронений при печати')
+        verbose_name = (u'Тип воинского захоронения при расчетах')
+        verbose_name_plural = (u'Типы воинских захоронений при расчетах')
 
 class BurialType(models.Model):
     """
@@ -196,16 +196,16 @@ class BurialType(models.Model):
 
 class ConflictPrintingGroup(models.Model):
     """
-    Признак группировки Конфликтов при печати
+    Типы военных конфликтов при расчетах
     """
-    name = models.CharField(u"Признак группировки Конфликтов при печати", max_length=100, db_index=True)
-    description = models.CharField(u"Описание названия признака группировки Конфликтов при печати", max_length=100)
+    name = models.CharField(u"Тип военного конфликта при расчетах", max_length=100, db_index=True)
+    description = models.CharField(u"Описание типа военного конфликта при расчетах", max_length=100)
 
     def __unicode__(self):
         return self.name
     class Meta:
-        verbose_name = (u'Признак группировки конфликтов при печати')
-        verbose_name_plural = (u'Признаки группировки конфликтов при печати')
+        verbose_name = (u'Тип военного конфликта при расчетах')
+        verbose_name_plural = (u'Типы военных конфликтов при расчетах')
 
 class MilitaryConflict(models.Model):
     """
