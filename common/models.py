@@ -283,6 +283,9 @@ class Burial(models.Model):
         else:
             return u'без паспорта'
 
+    def get_full_persons(self):
+        return self.person_set.all().select_related()
+
     @property
     def passport_id_int(self):
         try:
