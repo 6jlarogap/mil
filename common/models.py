@@ -586,7 +586,11 @@ class BurialCategory(models.Model):
         r = cemetery_redis.Redis()
         pipe = r.db.pipeline()
         burial_id = self.burial.pk
-        k = self.custom_known or self.known
+
+        if self.custom_known is not None:
+            k = self.custom_known
+        else:
+            k = self.known
 
         if self.pk:
             old = BurialCategory.objects.get(pk=self.pk)
