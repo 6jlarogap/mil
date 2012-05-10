@@ -176,6 +176,7 @@ class BurialPrintingGroup(models.Model):
 
     def __unicode__(self):
         return self.name
+    
     class Meta:
         verbose_name = (u'Тип воинского захоронения при расчетах')
         verbose_name_plural = (u'Типы воинских захоронений при расчетах')
@@ -188,8 +189,13 @@ class BurialType(models.Model):
     name = models.CharField(u"Тип воинского захоронения", max_length=100, db_index=True)
     brief = models.CharField(u"Сокращенное наименование", max_length=100, blank=True, null=True)
     type = models.ForeignKey('BurialPrintingGroup', verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
+
     def __unicode__(self):
         return self.name
+
+    def short_name(self):
+        return self.type or self.brief or self.name
+
     class Meta:
         verbose_name = ('Тип воинского захоронения')
         verbose_name_plural = ('Типы воинских захоронений')
@@ -215,8 +221,13 @@ class MilitaryConflict(models.Model):
     name = models.CharField(u"Название военного конфликта", max_length=100, db_index=True)
     brief = models.CharField(u"Сокращенное наименование", max_length=100, blank=True, null=True)
     type = models.ForeignKey('ConflictPrintingGroup', verbose_name=u"Признак группировки при печати", blank=True, null=True)       # Признак группировки при печати
+
     def __unicode__(self):
         return self.name
+
+    def short_name(self):
+        return self.type or self.brief or self.name
+
     class Meta:
         verbose_name = (u'Военный конфликт')
         verbose_name_plural = (u'Военные конфликты')
@@ -544,6 +555,9 @@ class DeadmanCategory(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def short_name(self):
+        return self.type or self.brief or self.name
 
     class Meta:
         ordering = ['ordering', ]

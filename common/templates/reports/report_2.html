@@ -153,7 +153,11 @@
 <TR>
     <TD HEIGHT="21" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
     <TD ALIGN="CENTER" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD COLSPAN=3 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>{{ burial.location.municipalitet|default:"&mdash;" }} с/с</FONT></TD>
+    <TD COLSPAN=3 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>
+        {% if burial.location.municipalitet %}
+            {{ burial.location.municipalitet }} с/с
+        {% endif %}
+    </FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
@@ -168,37 +172,16 @@
 <TR>
     <TD HEIGHT="21" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
     <TD ALIGN="CENTER" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD COLSPAN=3 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>{{ burial.location.city }} НП</FONT></TD>
+    <TD COLSPAN=3 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>НП: {{ burial.location.city }}</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD STYLE="{% if burial.photo %}border: 1px solid #000000;{% endif %}" COLSPAN=4 ROWSPAN=7 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
+    <TD STYLE="{% if burial.photo %}border: 1px solid #000000;{% endif %}" COLSPAN=4 ROWSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
         {% if burial.photo %}<img src="{% thumbnail burial.photo 390x200 crop %}"/>{% endif %}
     </FONT></B></TD>
     <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
-    <TD STYLE="{% if burial.scheme %}border: 1px solid #000000;{% endif %}" COLSPAN=3 ROWSPAN=7 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
+    <TD STYLE="{% if burial.scheme %}border: 1px solid #000000;{% endif %}" COLSPAN=3 ROWSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
         {% if burial.scheme %}<img src="{% thumbnail burial.scheme 258x200 crop %}"/>{% endif %}
     </FONT></B></TD>
-</TR>
-<TR>
-    <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
-    <TD ALIGN="CENTER" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="CENTER" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
-</TR>
-<TR>
-    <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
-    <TD COLSPAN=5 ROWSPAN=3 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>Дополнительные сведения {{ burial.get_info }}</FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
-</TR>
-<TR>
-    <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
 </TR>
 <TR>
     <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
@@ -207,13 +190,13 @@
 </TR>
 <TR>
     <TD HEIGHT="22" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
-    <TD COLSPAN=5 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>Тип воиского захоронения {{ burial.burial_type|default:"&mdash;" }}</FONT></TD>
+    <TD COLSPAN=5 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>Тип воиского захоронения {{ burial.burial_type.short_name|default:"&mdash;" }}</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
 </TR>
 <TR>
     <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><B><FONT><BR></FONT></B></TD>
-    <TD COLSPAN=5 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>Боевые действия {{ burial.military_conflict|default:"&mdash;" }}</FONT></TD>
+    <TD COLSPAN=5 ALIGN="LEFT" VALIGN=MIDDLE ><FONT>Боевые действия {{ burial.military_conflict.short_name|default:"&mdash;" }}</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
 </TR>
@@ -275,9 +258,9 @@
 </TR>
 <TR>
     <TD HEIGHT="21" ALIGN="CENTER" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">Количество похороненных</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=3 ROWSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">Количество похороненных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=2 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
@@ -286,12 +269,12 @@
 </TR>
 <TR>
     <TD HEIGHT="32" ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">известных</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">неизвестных</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">военнослу-жащих</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">участников сопротивле-ния</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">жертв войны</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">военноплен-ных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">известных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">неизвестных</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">военнослу-жащих</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">участников сопротивле-ния</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">жертв войны</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">военноплен-ных</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
@@ -300,13 +283,13 @@
 </TR>
 <TR>
     <TD HEIGHT="21" ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=3 ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.all }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.known }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.unknown }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.soldiers }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.resistance }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.prey }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.prisoners }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=3 ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.all }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.known }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.unknown }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.soldiers }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.resistance }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.prey }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT>{{ burial.stats.prisoners }}</FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
@@ -333,14 +316,6 @@
 <TR>
     <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD COLSPAN=13 ROWSPAN=3 ALIGN="CENTER" VALIGN=MIDDLE ><FONT>Описание захоронения {{ burial.get_info }}</FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
-</TR>
-<TR>
-    <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
-</TR>
-<TR>
-    <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
 </TR>
 <TR>
@@ -414,30 +389,13 @@
 </TR>
 <TR>
     <TD HEIGHT="20" ALIGN="RIGHT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=5 ROWSPAN=14 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT><img src="{% thumbnail p.0.photo 252x280 crop %}"/></FONT></B></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=5 ROWSPAN=14 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT><img src="{% thumbnail p.0.photo 252x280 crop %}"/></FONT></B></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" COLSPAN=6 ROWSPAN=14 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>{% if p.1 %}<img src="{% thumbnail p.1.photo 252x280 crop %}"/>{% endif %}</FONT></B></TD>
+    <TD STYLE="border: 1px solid #000000;" COLSPAN=6 ROWSPAN=14 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>{% if p.1 %}<img src="{% thumbnail p.1.photo 252x280 crop %}"/>{% endif %}</FONT></B></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
 </TR>
 {% endfor %}
-<TR>
-    <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
-</TR>
 <TR>
     <TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
@@ -471,44 +429,44 @@
     <COLGROUP WIDTH="135"></COLGROUP>
 <THEAD style="display: table-header-group;">
     <TR>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT="123" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">№ п/п</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">воинское звание </FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">фамилия</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">имя</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">отчество</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">год рождения</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место рождения</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место службы, должность</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">дата гибели</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">Причи на гибели</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">Кате гория погиб шего</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место захо роне ния</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">дополнительная информация о месте жительства и родственниках</FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место призыва </FONT></TH>
-        <TH STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">дополнительная информация о месте захоронения</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">№ п/п</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">воинское звание </FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">фамилия</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">имя</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">отчество</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">год рождения</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место рождения</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место службы, должность</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">дата гибели</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">Причи на гибели</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">Кате гория погиб шего</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место захо роне ния</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">дополнительная информация о месте жительства и родственниках</FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">место призыва </FONT></TH>
+        <TH STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=TOP ><FONT FACE="Times New Roman" COLOR="#000000">дополнительная информация о месте захоронения</FONT></TH>
     </TR>
 </THEAD>
 <TBODY>
 {% for p in burial.get_full_persons %}
 <TR>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" HEIGHT="51" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ forloop.counter }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.personduty.rank|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.last_name|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.first_name }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.patronymic }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.birth_date|date:"Y" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.birth_location|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">
+    <TD STYLE="border: 1px solid #000000;" HEIGHT="51" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ forloop.counter }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.personduty.rank|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.last_name|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.first_name }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.patronymic }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.birth_date|date:"Y" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.birth_location|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">
         {% if p.personduty.unit %}{{ p.personduty.unit|default:"" }}, {% endif %}
         {{ p.personduty.post|default:"" }}
     </FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1049;1049;DD.MM.YYYY"><FONT COLOR="#000000">{{ p.get_unclear_death_date }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.death_cause|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT COLOR="#000000">{{ p.deadman_category|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.burial.location|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.get_info|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.personcall.unit|default:"" }}</FONT></TD>
-    <TD STYLE="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.burial.get_info|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1049;1049;DD.MM.YYYY"><FONT COLOR="#000000">{{ p.get_unclear_death_date }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.death_cause|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT COLOR="#000000">{{ p.deadman_category|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.burial.location|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.get_info|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.personcall.unit|default:"" }}</FONT></TD>
+    <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000"></FONT></TD>
 </TR>
 {% endfor %}
 </TBODY>
