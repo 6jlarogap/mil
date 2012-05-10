@@ -304,7 +304,7 @@
 <TR class="data">
     <TD STYLE="border: 1px solid #000000;" HEIGHT="24" ALIGN="LEFT" VALIGN=BOTTOM><I><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.passportid }}</FONT></I></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{% if b.location %}{{ b.location.city }}{% endif %}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.burial_type }}</FONT></TD>
+    <TD class="number" STYLE="border: 1px solid #000000;"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.burial_type.short_name }}</FONT></TD>
     <TD class="number" STYLE="border: 1px solid #000000;"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.all }}</FONT></TD>
     <TD class="number" STYLE="border: 1px solid #000000;"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.known }}</FONT></TD>
     <TD class="number" STYLE="border: 1px solid #000000;"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">{{ b.stats.unknown }}</FONT></TD>

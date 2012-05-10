@@ -176,7 +176,7 @@ class BurialPrintingGroup(models.Model):
 
     def __unicode__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = (u'Тип воинского захоронения при расчетах')
         verbose_name_plural = (u'Типы воинских захоронений при расчетах')
