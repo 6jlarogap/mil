@@ -198,7 +198,7 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
 </TR>
 <TR>
-    <TD STYLE="border: 1px solid #000000;" HEIGHT="37" ALIGN="LEFT" VALIGN=BOTTOM ><B><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></B></TD>
+    <TD STYLE="border: 1px solid #000000; height: 150px;" ALIGN="CENTER" VALIGN=MIDDLE ROWSPAN="2"><B><FONT FACE="Times New Roman" SIZE=3>Район</FONT></B></TD>
     <TD class="vertical" ROWSPAN=2 ><B><FONT FACE="Times New Roman" COLOR="#000000">Всего захоронений</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" COLOR="#000000">В том числе по конфликтам</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" COLSPAN=5 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" COLOR="#000000">Из них по категориям</FONT></B></TD>
@@ -208,7 +208,6 @@
     <TD STYLE="border: 1px solid #000000;" COLSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" COLOR="#000000">Из них</FONT></B></TD>
 </TR>
 <TR>
-    <TD STYLE="border: 1px solid #000000; height: 110px;" ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT FACE="Times New Roman" SIZE=3>Район</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" class="vertical" ><B><FONT FACE="Times New Roman" COLOR="#000000">1МВ</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" class="vertical" ><B><FONT FACE="Times New Roman" COLOR="#000000">2МВ</FONT></B></TD>
     <TD STYLE="border: 1px solid #000000;" class="vertical" ><B><FONT FACE="Times New Roman" COLOR="#000000">локальные<br/>войны</FONT></B></TD>
@@ -281,30 +280,6 @@
     <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ r.data.persons.prisoners }}</FONT></TD>
 </TR>
 {% endfor %}
-<TR style="font-weight: bold;" class="data">
-    <TD STYLE="border: 1px solid #000000;" HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM ><B><FONT FACE="Times New Roman" COLOR="#000000">По {{ region }} обл.</FONT></B></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.all }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.WW }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.WWII }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.local }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.other }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.war }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.group }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.personal }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.mass }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.burials.foreign }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.all }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.known }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.unknown }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.WW }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.WWII }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.local }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.other }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.soldiers }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.resistance }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.prey }}</FONT></TD>
-    <TD class="number" STYLE="border: 1px solid #000000;" ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000">{{ data.persons.prisoners }}</FONT></TD>
-</TR>
 </TABLE>
 <!-- ************************************************************************** -->
 </BODY>
