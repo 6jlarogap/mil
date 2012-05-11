@@ -3,10 +3,9 @@
 import pytils
 
 from django.contrib import admin
-from django import forms
 
 from common.models import *
-from common.forms import PersonAdminForm, BurialAdminForm
+from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
@@ -149,7 +148,11 @@ class ConflictPrintingGroupAdmin(admin.ModelAdmin):
     ordering = ['name', ]
 
 class LocationAdmin(SortSearchAdmin):
-    raw_id_fields = ['location', ]
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        if db_field.rel.to in [SimpleLocation, StrictLocation]:
+            can_be_partial = db_field.rel.to == SimpleLocation
+            return LocationField(widget=LocationWidget, required=False, partial=can_be_partial)
+        return super(LocationAdmin, self).formfield_for_foreignkey(db_field, request=request, **kwargs)
 
 class InternalLocationAdmin(admin.ModelAdmin):
     search_fields = ['city__name', 'municipalitet__name', ]
@@ -164,8 +167,6 @@ admin.site.register(GeoCity, SortSearchAdmin)
 admin.site.register(Rank, SortSearchAdmin)
 admin.site.register(Comissariat, LocationAdmin)
 admin.site.register(MilitaryUnit, LocationAdmin)
-#admin.site.register(SimpleLocation, InternalLocationAdmin)
-#admin.site.register(StrictLocation, InternalLocationAdmin)
 admin.site.register(DeathCause, SortSearchAdmin)
 admin.site.register(DeadmanCategory, DeadmanCategoryAdmin)
 admin.site.register(DocumentsPlace, SortSearchAdmin)

@@ -1,2 +1,13 @@
 {% extends "admin/change_form.html" %}
 
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript">
+    django.jQuery(function($) {
+        setInterval(function() {
+            django.jQuery('.dynamic-personcall .datetimeshortcuts').each(function(){
+                $(this).find('a:last').siblings().remove();
+            });
+        }, 100);
+    })
+</script>
+{% endblock %}

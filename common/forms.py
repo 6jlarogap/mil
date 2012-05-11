@@ -98,7 +98,7 @@ class LoginForm(AuthenticationForm): # Форма авторизации
     password = forms.CharField(max_length=18, widget=forms.PasswordInput, label="Пароль ")
 
 class LocationWidget(MultiWidget):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, partial=False, *args, **kwargs):
         countries = GeoCountry.objects.all()
         widgets = (
             forms.Select(choices=[('', u'Страна')] + [(c.pk, c) for c in countries]),
@@ -116,10 +116,13 @@ class LocationWidget(MultiWidget):
         widgets[3].queryset = Municipalitet.objects.all()
         widgets[4].queryset = GeoCity.objects.all()
         super(LocationWidget, self).__init__(widgets, *args, **kwargs)
+        self.choices = []
+        self.partial = partial
 
     def decompress(self, value):
         if value:
-            value = StrictLocation.objects.get(pk=value)
+            model_klass = self.partial and SimpleLocation or StrictLocation
+            value = model_klass.objects.get(pk=value)
             return [
                 value.country and value.country.pk,
                 value.region and value.region.pk,
@@ -159,6 +162,7 @@ class LocationField(MultiValueField):
         for f in fields:
             f.required = False
         super(LocationField, self).__init__(fields, *args, **kwargs)
+        self.widget.partial = self.partial
 
     def compress(self, data_list):
         if not data_list:
@@ -173,7 +177,7 @@ class LocationField(MultiValueField):
                 municipalitet=data_list[3],
             )[0]) or None
         if self.partial:
-            loc = SimpleLocation(
+            loc = SimpleLocation.objects.create(
                 country=data_list[0],
                 region=data_list[1],
                 district=data_list[2],
@@ -188,7 +192,7 @@ class LocationField(MultiValueField):
                 municipalitet=data_list[3],
                 city=city,
             )
-        return loc
+        return loc.pk
 
 class PersonsForm(forms.Form):
     """Форма поиска воинов.
