@@ -32,6 +32,14 @@
         -->
     </STYLE>
 
+    <SCRIPT SRC="http://yandex.st/jquery/1.7.2/jquery.min.js" TYPE="text/javascript"></SCRIPT>
+    <SCRIPT SRC="http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.min.js" TYPE="text/javascript"></SCRIPT>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+        });
+    </script>
+    <LINK REL="stylesheet" HREF="http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.css" />
 </HEAD>
 
 <BODY TEXT="#000000">
@@ -176,11 +184,11 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD STYLE="{% if burial.photo %}border: 1px solid #000000;{% endif %}" COLSPAN=4 ROWSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
-        {% if burial.photo %}<img src="{% thumbnail burial.photo 390x200 crop %}"/>{% endif %}
+        {% if burial.photo %}<a href="{{ b.photo.url }}" class="fancybox"><img src="{% thumbnail burial.photo 390x200 crop %}"/></a>{% endif %}
     </FONT></B></TD>
     <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
     <TD STYLE="{% if burial.scheme %}border: 1px solid #000000;{% endif %}" COLSPAN=3 ROWSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
-        {% if burial.scheme %}<img src="{% thumbnail burial.scheme 258x200 crop %}"/>{% endif %}
+        {% if burial.scheme %}<a href="{{ b.scheme.url }}" class="fancybox"><img src="{% thumbnail burial.scheme 258x200 crop %}"/></a>{% endif %}
     </FONT></B></TD>
 </TR>
 <TR>
