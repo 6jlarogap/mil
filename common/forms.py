@@ -162,13 +162,7 @@ class LocationField(MultiValueField):
 
     def compress(self, data_list):
         if not data_list:
-            return MockLocation(
-                country=None,
-                region=None,
-                district=None,
-                municipalitet=None,
-                city=None,
-            )
+            return None
         city = None
         if len(data_list) > 4:
             city = data_list[4] or (data_list[5] and GeoCity.objects.get_or_create(
@@ -179,7 +173,7 @@ class LocationField(MultiValueField):
                 municipalitet=data_list[3],
             )[0]) or None
         if self.partial:
-            loc = MockLocation(
+            loc = SimpleLocation(
                 country=data_list[0],
                 region=data_list[1],
                 district=data_list[2],
