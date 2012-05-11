@@ -184,11 +184,11 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT><BR></FONT></TD>
     <TD STYLE="{% if burial.photo %}border: 1px solid #000000;{% endif %}" COLSPAN=4 ROWSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
-        {% if burial.photo %}<a href="{{ b.photo.url }}" class="fancybox"><img src="{% thumbnail burial.photo 390x200 crop %}"/></a>{% endif %}
+        {% if burial.photo %}<a href="{{ burial.photo.url }}" class="fancybox"><img src="{% thumbnail burial.photo 390x200 crop %}"/></a>{% endif %}
     </FONT></B></TD>
     <TD ALIGN="LEFT" VALIGN=MIDDLE ><B><FONT><BR></FONT></B></TD>
     <TD STYLE="{% if burial.scheme %}border: 1px solid #000000;{% endif %}" COLSPAN=3 ROWSPAN=4 ALIGN="CENTER" VALIGN=MIDDLE ><B><FONT>
-        {% if burial.scheme %}<a href="{{ b.scheme.url }}" class="fancybox"><img src="{% thumbnail burial.scheme 258x200 crop %}"/></a>{% endif %}
+        {% if burial.scheme %}<a href="{{ burial.scheme.url }}" class="fancybox"><img src="{% thumbnail burial.scheme 258x200 crop %}"/></a>{% endif %}
     </FONT></B></TD>
 </TR>
 <TR>
