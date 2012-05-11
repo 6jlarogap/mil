@@ -373,7 +373,7 @@ def burials(request):
                                     burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
                                 ).count(),
                                 'mass': burials.filter(
-                                    burial_type__name__in=[u"Место массов.уничтож."]
+                                    burial_type__name__in=[u"Место массового уничтожения"]
                                 ).count(),
                                 'foreign': burials.filter(
                                     burial_type__name__in=[u"Иностранное"]
