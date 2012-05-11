@@ -292,6 +292,11 @@ class BurialAdminForm(forms.ModelForm):
             pass
         raise forms.ValidationError(u"Захоронение с этим номером уже существует")
 
+    def clean_location(self):
+        if not isinstance(self.cleaned_data['location'], StrictLocation):
+            return StrictLocation.objects.get(pk=self.cleaned_data['location'])
+        return self.cleaned_data['location']
+
     def save(self, *args, **kwargs):
         kwargs['commit'] = False
         obj = super(BurialAdminForm, self).save(*args, **kwargs)
