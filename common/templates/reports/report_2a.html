@@ -115,7 +115,7 @@
 </TR>
 </TABLE>
 {% for b in burials|dictsort:"passport_id_int" %}
-<TABLE CELLSPACING="0" COLS="11" BORDER="0" style="border-collapse: collapse; page-break-inside: avoid;">
+<TABLE CELLSPACING="0" COLS="11" BORDER="0" style="border-collapse: collapse; {% if forloop.counter|add:-3|divisibleby:4 %}page-break-before: always;{% endif %}">
 <COLGROUP WIDTH="79"></COLGROUP>
 <COLGROUP WIDTH="81"></COLGROUP>
 <COLGROUP WIDTH="100"></COLGROUP>
