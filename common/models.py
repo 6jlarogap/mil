@@ -777,11 +777,13 @@ class Comissariat(models.Model):
     """
     Военкомат
     """
-    name = models.CharField(u"Военкомат", max_length=100, db_index=True)
-    location = models.OneToOneField(SimpleLocation, null=True, blank=True)
+    name = models.CharField(u"Название военкомата", max_length=100, blank=True, null=True)
+    location = models.OneToOneField(SimpleLocation, null=True, blank=True, verbose_name=u'Местоположение')
 
     def __unicode__(self):
-        return self.name
+        name = self.name or (self.location and self.location.district) or u'Неизвестный'
+        return u'%s' % name
+
     class Meta:
         verbose_name = (u'Военкомат')
         verbose_name_plural = (u'Военкоматы')

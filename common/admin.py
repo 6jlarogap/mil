@@ -151,7 +151,7 @@ class LocationAdmin(SortSearchAdmin):
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         if db_field.rel.to in [SimpleLocation, StrictLocation]:
             can_be_partial = db_field.rel.to == SimpleLocation
-            return LocationField(widget=LocationWidget, required=False, partial=can_be_partial)
+            return LocationField(widget=LocationWidget, required=False, partial=can_be_partial, label=u'Местоположение')
         return super(LocationAdmin, self).formfield_for_foreignkey(db_field, request=request, **kwargs)
 
 class InternalLocationAdmin(admin.ModelAdmin):
