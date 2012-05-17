@@ -139,13 +139,11 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="CENTER" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
-    <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
+    <TD ALIGN="CENTER" VALIGN=BOTTOM COLSPAN="7" ><FONT FACE="Times New Roman" COLOR="#000000">
+        Страна: {{ form.cleaned_data.country }}<br/>
+        {% if form.cleaned_data.region %}Область: {{ form.cleaned_data.region }}<br/>{% endif %}
+        {% if form.cleaned_data.district %}Район: {{ form.cleaned_data.district }}<br/>{% endif %}
+    </FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" COLOR="#000000"><BR></FONT></TD>

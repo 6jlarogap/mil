@@ -404,7 +404,7 @@ def burials(request):
                             },
                         })
 
-                    if template == 'reports/report_4.html':
+                    if template == 'reports/report_4.html' or template == 'reports/report_4a.html':
                         selected_persons = Person.objects.filter(burial__in=burials)
 
                         def filter_data(burials_all, persons_all, region, district):
@@ -472,12 +472,12 @@ def burials(request):
 
                         rows = []
                         context['region'] = form.cleaned_data.get('region')
-                        if form.cleaned_data.get('region'):
+                        if template == 'reports/report_4a.html':
                             districts = form.cleaned_data['region'].district_set.all().order_by('name')
                             if form.cleaned_data.get('district'):
                                 districts = districts.filter(pk=form.cleaned_data.get('district').pk)
                             for district in districts:
-                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                                data_key = 'form4a_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
@@ -490,28 +490,20 @@ def burials(request):
                                     'district': district,
                                     'data': data
                                 })
-
-                            template = 'reports/report_4a.html'
                         else:
-                            if form.cleaned_data['country']:
-                                regions = form.cleaned_data['country'].georegion_set.all().order_by('name')
-                            else:
-                                regions = GeoRegion.objects.all().order_by('name')
-                            context['data'] = filter_data(
-                                burials, selected_persons, None, None
-                            )
-                            for region in regions:
-                                data_key = 'form4_data_%s_%s' % (region.pk, '')
+                            districts = form.cleaned_data['region'].district_set.all().order_by('name')
+                            for district in districts:
+                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
-                                        burials, selected_persons, region, None
+                                        burials, selected_persons, form.cleaned_data['region'], district
                                     )
                                     cache.set(data_key, data, 86400)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
-                                    'region': region,
+                                    'district': district,
                                     'data': data
                                 })
 
