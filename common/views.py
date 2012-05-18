@@ -506,6 +506,9 @@ def burials(request):
                                     'district': district,
                                     'data': data
                                 })
+                            context['data'] = filter_data(
+                                burials, selected_persons, form.cleaned_data['region'], None
+                            )
 
                         context['rows'] = rows
 
