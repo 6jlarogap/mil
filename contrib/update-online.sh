@@ -9,6 +9,7 @@ git pull
 
 python ./manage.py syncdb
 python ./manage.py migrate
+python ./manage.py collectstatic --noinput
 
 # Start django daemon
 /etc/init.d/django restart
