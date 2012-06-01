@@ -343,11 +343,11 @@ class PersonAdminForm(forms.ModelForm):
             persons = persons.exclude(pk=self.instance.pk)
         try:
             person = persons.filter(
-                last_name = self.cleaned_data['last_name'],
-                first_name = self.cleaned_data['first_name'],
-                patronymic = self.cleaned_data['patronymic'],
-                birth_date = self.cleaned_data['birth_date'],
-                death_date = self.cleaned_data['death_date'],
+                last_name = self.cleaned_data.get('last_name') or '',
+                first_name = self.cleaned_data.get('first_name') or '',
+                patronymic = self.cleaned_data.get('patronymic') or '',
+                birth_date = self.cleaned_data.get('birth_date') or '',
+                death_date = self.cleaned_data.get('death_date') or '',
             )[0]
         except IndexError:
             pass
