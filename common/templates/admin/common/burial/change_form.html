@@ -13,7 +13,8 @@
             sum3 += parseInt($(this).find('td:eq(4) input').val());
         });
 
-        $('#id_count_known, #id_count_unknown').parents('tr').hide();
+        $('#id_count_known, #id_count_unknown').parents('.form-row').hide();
+        $('#id_count_known, #id_count_unknown').css('width', '5em');
 
         ef.find('td:eq(1)').css('text-align', 'right').html('<p>всего: ' + ((sum2 || sum1) + sum3) + '</p>');
         ef.find('td:eq(2)').html('<p>'+sum1+'</p>');
