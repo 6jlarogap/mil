@@ -71,6 +71,7 @@ class BurialAdmin(admin.ModelAdmin):
         ClosedBurialFromInLine,
     ]
     form = BurialAdminForm
+    save_on_top = True
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', 'creator', 'today', ]
     raw_id_fields = ['location', ]

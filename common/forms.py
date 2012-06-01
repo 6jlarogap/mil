@@ -271,15 +271,22 @@ class BurialAdminForm(forms.ModelForm):
     date_memorial = UnclearDateField(label=u"Дата установки памятника", required=False)
     location = LocationField(label=u"Место захоронения", required=False)
 
+    count_known = forms.IntegerField(label=u"Известных")
+    count_unknown = forms.IntegerField(label=u"Неизвестных")
+
     class Meta:
         model = Burial
 
     def __init__(self, *args, **kwargs):
+        r = cemetery_redis.Redis()
+        b = kwargs.get('instance', Burial())
         kwargs.setdefault('initial', {}).update({
-            'date_gosznak': kwargs.get('instance', Burial()).get_unclear_date('date_gosznak'),
-            'date_burried': kwargs.get('instance', Burial()).get_unclear_date('date_burried'),
-            'date_discovered': kwargs.get('instance', Burial()).get_unclear_date('date_discovered'),
-            'date_memorial': kwargs.get('instance', Burial()).get_unclear_date('date_memorial'),
+            'date_gosznak': b.get_unclear_date('date_gosznak'),
+            'date_burried': b.get_unclear_date('date_burried'),
+            'date_discovered': b.get_unclear_date('date_discovered'),
+            'date_memorial': b.get_unclear_date('date_memorial'),
+            'count_known': r.known_for_burial(b) or 0,
+            'count_unknown': r.unknown_for_burial(b) or 0,
         })
         super(BurialAdminForm, self).__init__(*args, **kwargs)
 
@@ -307,6 +314,11 @@ class BurialAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_month', getattr(obj, f) and self.fields[f].widget.no_month or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
         obj.save()
+
+        r = cemetery_redis.Redis()
+        r.db.set('cemetery:burial:%s:known' % obj.pk, self.cleaned_data['count_known'])
+        r.db.set('cemetery:burial:%s:all' % obj.pk, self.cleaned_data['count_known'] + self.cleaned_data['count_unknown'])
+
         return obj
 
 class PersonAdminForm(forms.ModelForm):
