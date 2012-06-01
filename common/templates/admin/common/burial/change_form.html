@@ -17,8 +17,8 @@
 
         ef.find('td:eq(1)').css('text-align', 'right').html('<p>всего: ' + ((sum2 || sum1) + sum3) + '</p>');
         ef.find('td:eq(2)').html('<p>'+sum1+'</p>');
-        ef.find('td:eq(3)').append($('#id_count_known'));
-        ef.find('td:eq(4)').append($('#id_count_unknown'));
+        ef.find('td:eq(3)').html('').append($('#id_count_known'));
+        ef.find('td:eq(4)').html('').append($('#id_count_unknown'));
         ef.removeClass('empty-form');
     }
 
