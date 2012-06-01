@@ -28,6 +28,7 @@ class ClosedBurialFromInLine(admin.TabularInline):
     extra = 1
     max_num = 1
     can_delete = False
+    raw_id_fields = ['burial_to', ]
 
 class BurialCategoryInLine(admin.TabularInline):
     model = BurialCategory
