@@ -325,7 +325,7 @@ class PersonAdminForm(forms.ModelForm):
     birth_date = UnclearDateField(label=u"Дата рождения", required=False)
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
     duplicate_ok = forms.BooleanField(label=u"Да, создайте дублирующую запись", required=False, widget=forms.HiddenInput)
-    birth_location = LocationField(label=u"Место рождения", required=False)
+    birth_location = LocationField(label=u"Место рождения", required=False, partial=True)
 
     class Meta:
         model = Person
