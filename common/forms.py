@@ -326,6 +326,7 @@ class PersonAdminForm(forms.ModelForm):
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
     duplicate_ok = forms.BooleanField(label=u"Да, создайте дублирующую запись", required=False, widget=forms.HiddenInput)
     birth_location = LocationField(label=u"Место рождения", required=False, partial=True)
+    birth_location_info = forms.CharField(label=u"Доп.информация о месте рождения", required=False, widget=forms.Textarea)
 
     class Meta:
         model = Person
@@ -370,6 +371,11 @@ class PersonAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_month', getattr(obj, f) and self.fields[f].widget.no_month or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
         obj.save()
+
+        if self.cleaned_data.get('birth_location_info') and obj.birth_location:
+            obj.birth_location.info = self.cleaned_data['birth_location_info']
+            obj.birth_location.save()
+
         return obj
 
 class PersonCallForm(forms.ModelForm):
