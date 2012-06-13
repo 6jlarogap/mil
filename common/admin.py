@@ -5,7 +5,7 @@ import pytils
 from django.contrib import admin
 
 from common.models import *
-from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget
+from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget, PersonCallForm
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
@@ -14,6 +14,7 @@ class PersonDutyInline(admin.TabularInline):
 
 class PersonCallInline(admin.TabularInline):
     model = PersonCall
+    form = PersonCallForm
     extra = 1
     can_delete = False
 

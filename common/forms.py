@@ -371,3 +371,27 @@ class PersonAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
         obj.save()
         return obj
+
+class PersonCallForm(forms.ModelForm):
+    date = UnclearDateField(label=u"Дата рождения", required=False)
+
+    class Meta:
+        model = PersonCall
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('initial', {}).update({
+            'date': kwargs.get('instance', Person()).get_unclear_date('date'),
+        })
+        super(PersonCallForm, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        kwargs['commit'] = False
+        obj = super(PersonCallForm, self).save(*args, **kwargs)
+        for f in self.fields:
+            if isinstance(self.fields[f], UnclearDateField):
+                setattr(obj, f, self.cleaned_data[f])
+                self.fields[f].widget.value_from_datadict(data=self.data, files=None, name=f)
+                setattr(obj, f+'_no_month', getattr(obj, f) and self.fields[f].widget.no_month or False)
+                setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
+        obj.save()
+        return obj

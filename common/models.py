@@ -795,6 +795,8 @@ class PersonCall(models.Model):
     person = models.OneToOneField(Person, primary_key=True)  
     unit = models.ForeignKey(Comissariat, verbose_name=u"Военкомат", blank=True, null=True)
     date = models.DateField(u"Дата призыва", blank=True, null=True)
+    date_no_month = models.BooleanField(default=False, editable=False)
+    date_no_day = models.BooleanField(default=False, editable=False)
 
     def __unicode__(self):
         return u'%s' % self.unit.name
@@ -802,6 +804,29 @@ class PersonCall(models.Model):
     class Meta:
         verbose_name = (u'Место призыва')
         verbose_name_plural = (u'Место призыва')
+
+    def get_unclear_date(self, field_name):
+        if not getattr(self, field_name, None):
+            return None
+        cur_date = getattr(self, field_name)
+        tmp_date = UnclearDate(cur_date.year, cur_date.month, cur_date.day)
+        if getattr(self, field_name+'_no_day'):
+            tmp_date.day = None
+            tmp_date.no_day = True
+        if getattr(self, field_name+'_no_month'):
+            tmp_date.month = None
+            tmp_date.no_month = True
+        return tmp_date
+
+    def set_unclear_date(self, field_name, ud):
+        setattr(self, field_name, ud)
+        if ud:
+            setattr(self, field_name+'_no_day', ud.no_day)
+            setattr(self, field_name+'_no_month', ud.no_month)
+
+    @property
+    def get_unclear_date(self):
+        return self.get_unclear_date('date')
 
 class Post(models.Model):
     """
