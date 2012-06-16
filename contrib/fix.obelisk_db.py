@@ -222,7 +222,7 @@ else:
     cnt = 0
 
     for b in Burial.objects.all():
-        our_count = Person.objects.filter(burial=b)
+        our_count = Person.objects.filter(burial=b).count()
         sql = 'SELECT COUNT(id) FROM bury WHERE grave=%s;' % b.obid
         cursor.execute(sql)
         obelisk_count = cursor.fetchone()[0]
