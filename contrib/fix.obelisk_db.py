@@ -233,10 +233,10 @@ else:
         if obelisk_count > our_count:
             print 'Processing burial %s: %s > %s' % (b.obid, obelisk_count, our_count)
 
-            importPerson(cursor, b.pk)
+            importPerson(cursor, b.obid)
             print 'Persons imported'
 
-            importLocations(cursor, b.pk)
+            importLocations(cursor, b.obid)
             print 'Location data imported'
 
             cnt += 1
