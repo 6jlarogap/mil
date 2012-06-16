@@ -227,6 +227,9 @@ else:
         cursor.execute(sql)
         obelisk_count = cursor.fetchone()[0]
 
+        if str(b.obid) in ['2138', '3191', '3192']:
+            print 'Our', our_count, 'obelisk', obelisk_count
+
         if obelisk_count > our_count:
             print 'Processing burial %s: %s > %s' % (b.obid, obelisk_count, our_count)
 
@@ -238,4 +241,4 @@ else:
 
             cnt += 1
 
-        print 'Finished %s items' % cnt
+    print 'Finished %s items' % cnt
