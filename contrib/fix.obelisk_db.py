@@ -128,22 +128,14 @@ def importLocations(cursor, grave_pk):
         if not '--skip_person_locations' in sys.argv:
             ps = Person.objects.filter(oblocationid = city.obid, burial__obid = grave_pk)
             for p in ps:
-                try:
-                    p.birth_location = SimpleLocation.objects.get(city=city)
-                    SimpleLocation.objects.filter(pk=p.birth_location.pk).update(**params)
-                except SimpleLocation.DoesNotExist:
-                    p.birth_location = SimpleLocation.objects.create(**params)
+                p.birth_location = SimpleLocation.objects.create(**params)
                 p.save()
 
         if not '--skip_burial_locations' in sys.argv:
             if city.region and city.country:
                 bs = Burial.objects.filter(oblocationid = city.obid, obid = grave_pk)
                 for b in bs:
-                    try:
-                        b.location = StrictLocation.objects.get(city=city)
-                        StrictLocation.objects.filter(pk=b.location.pk).update(**params)
-                    except StrictLocation.DoesNotExist:
-                        b.location = StrictLocation.objects.create(**params)
+                    b.location = StrictLocation.objects.create(**params)
                     b.save()
 
 def importPerson(cursor, grave_pk):
