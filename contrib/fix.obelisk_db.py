@@ -43,12 +43,15 @@ def importUniversal(cursor, sql, creator, sql_params=None, offset=0):
                 print 'Commit %s' % i
                 transaction.commit()
                 gc.collect()
+                db.reset_queries()
 
     except Exception, err_descr:
         transaction.rollback()
         raise
     else:
         transaction.commit()
+
+    db.reset_queries()
 
 def setUnclearDate(params, name, value, str_comments):
     date = value
