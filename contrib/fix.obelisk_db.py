@@ -173,18 +173,21 @@ def importPerson(cursor, grave_pk):
 
             p = Person.objects.create(**params)
 
-        if l[10] or l[4] or l[11]:
-            pd = PersonDuty.objects.get_or_create(person=p)[0]
-            if l[10] and l[10].isdigit():
-                try:
-                    pd.unit = MilitaryUnit.objects.get(location__obid=l[10])
-                except MilitaryUnit.DoesNotExist:
-                    pass
-            if l[4] and unicode(l[4]).isdigit():
-                pd.rank = Rank.objects.get(obid=l[4])
-            if l[11]:
-                pd.post = Post.objects.get_or_create(name=l[11])[0]
-            pd.save()
+            if l[10] or l[4] or l[11]:
+                pd = PersonDuty.objects.get_or_create(person=p)[0]
+                if l[10] and l[10].isdigit():
+                    try:
+                        pd.unit = MilitaryUnit.objects.get(location__obid=l[10])
+                    except MilitaryUnit.DoesNotExist:
+                        pass
+                if l[4] and unicode(l[4]).isdigit():
+                    pd.rank = Rank.objects.get(obid=l[4])
+                if l[11]:
+                    pd.post = Post.objects.get_or_create(name=l[11])[0]
+                pd.save()
+
+        p.burial = Burial.objects.get(obid=grave_pk)
+        p.save()
 
     cursor.execute('SELECT count(id) FROM bury;')
     if cursor.fetchone()[0] <= Person.objects.all().count():
@@ -222,17 +225,15 @@ else:
         cursor.execute(sql)
         obelisk_count = cursor.fetchone()[0]
 
-        if str(b.obid) in ['2138', '3191', '3192']:
-            print 'Our', our_count, 'obelisk', obelisk_count
-
         if obelisk_count > our_count:
             print 'Processing burial %s: %s > %s' % (b.obid, obelisk_count, our_count)
 
             importPerson(cursor, b.obid)
             print 'Persons imported'
 
-            importLocations(cursor, b.obid)
-            print 'Location data imported'
+            if not '--skip_all_locations' in sys.argv:
+                importLocations(cursor, b.obid)
+                print 'Location data imported'
 
             cnt += 1
 
