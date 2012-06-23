@@ -220,21 +220,22 @@ else:
     cnt = 0
 
     for b in Burial.objects.all():
-        our_count = Person.objects.filter(burial=b).count()
-        sql = 'SELECT COUNT(id) FROM bury WHERE grave=%s;' % b.obid
-        cursor.execute(sql)
-        obelisk_count = cursor.fetchone()[0]
+        if b.obid:
+            our_count = Person.objects.filter(burial=b).count()
+            sql = 'SELECT COUNT(id) FROM bury WHERE grave=%s;' % b.obid
+            cursor.execute(sql)
+            obelisk_count = cursor.fetchone()[0]
 
-        if obelisk_count > our_count:
-            print 'Processing burial %s: %s > %s' % (b.obid, obelisk_count, our_count)
+            if obelisk_count > our_count:
+                print 'Processing burial %s: %s > %s' % (b.obid, obelisk_count, our_count)
 
-            importPerson(cursor, b.obid)
-            print 'Persons imported'
+                importPerson(cursor, b.obid)
+                print 'Persons imported'
 
-            if not '--skip_all_locations' in sys.argv:
-                importLocations(cursor, b.obid)
-                print 'Location data imported'
+                if not '--skip_all_locations' in sys.argv:
+                    importLocations(cursor, b.obid)
+                    print 'Location data imported'
 
-            cnt += 1
+                cnt += 1
 
     print 'Finished %s items' % cnt
