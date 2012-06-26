@@ -60,6 +60,10 @@ class UnclearSelectDateWidget(SelectDateWidget):
 class UnclearDateField(forms.DateField):
     widget = UnclearSelectDateWidget(years=range(datetime.date.today().year, 1850, -1))
 
+    def __init__(self, *args, **kwargs):
+        super(UnclearDateField, self).__init__(*args, **kwargs)
+        self.widget.required = self.required
+
     def to_python(self, value):
         if isinstance(value, UnclearDate):
             return value
