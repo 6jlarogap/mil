@@ -118,12 +118,13 @@ class PersonAdmin(admin.ModelAdmin):
     form = PersonAdminForm
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
-    raw_id_fields = ['birth_location', ]
+    raw_id_fields = ['birth_location', 'burial' ]
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)
         self.opts.get_field_by_name('info')[0].verbose_name = u'Дополнительная информация о месте захоронения'
         self.opts.get_field_by_name('closed_burials')[0].help_text = None
+        self.opts.get_field_by_name('burial')[0].help_text = u'Необходимо кликнуть на "лупу", ввод номера не сработает'
 
     def get_fieldsets(self, *args, **kwargs):
         fieldsets = super(PersonAdmin, self).get_fieldsets(*args, **kwargs)
