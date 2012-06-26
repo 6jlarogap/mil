@@ -120,7 +120,6 @@ class PersonAdmin(admin.ModelAdmin):
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
     raw_id_fields = ['birth_location', 'burial' ]
     list_display = ['last_name', 'first_name', 'patronymic', 'get_unclear_birth_date', 'get_unclear_death_date', 'creator', 'date_of_creation', 'last_edit']
-    exclude = ['creator', 'date_of_creation', 'last_edit']
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)

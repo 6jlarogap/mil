@@ -716,8 +716,8 @@ class Person(models.Model):
     information_source = models.ForeignKey(InformationSource, verbose_name=u"Источник информации", blank=True, null=True)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True, editable=False)
-    date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)
-    is_trash = models.BooleanField(u"Удалена", default=False, db_index=True)
+    date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True, editable=False)
+    is_trash = models.BooleanField(u"Удалена", default=False, db_index=True, editable=False)
 
     edit_causes = property(lambda self: self.personeditcause_set.all().order_by('-date_edit'))
     last_edit = property(lambda self: (self.edit_causes and self.edit_causes[0].date_edit or self.date_of_creation).strftime(u'%d.%m.%Y %H:%M'))
