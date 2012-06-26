@@ -59,17 +59,22 @@ class UnclearSelectDateWidget(SelectDateWidget):
 
 class UnclearDateField(forms.DateField):
     widget = UnclearSelectDateWidget(years=range(datetime.date.today().year, 1850, -1))
+    empty_strings_allowed = True
 
     def __init__(self, *args, **kwargs):
         super(UnclearDateField, self).__init__(*args, **kwargs)
         self.widget.required = self.required
 
     def to_python(self, value):
+        if not value:
+            return None
         if isinstance(value, UnclearDate):
             return value
         return super(UnclearDateField, self).to_python(value)
 
     def prepare_value(self, value):
+        if not value:
+            return None
         if isinstance(value, UnclearDate):
             return value
         return value
@@ -347,13 +352,12 @@ class PersonAdminForm(forms.ModelForm):
         if self.instance:
             persons = persons.exclude(pk=self.instance.pk)
         try:
-            person = persons.filter(
-                last_name = self.cleaned_data.get('last_name') or '',
-                first_name = self.cleaned_data.get('first_name') or '',
-                patronymic = self.cleaned_data.get('patronymic') or '',
-                birth_date = self.cleaned_data.get('birth_date') or '',
-                death_date = self.cleaned_data.get('death_date') or '',
-            )[0]
+            filters = {}
+            for f in ['last_name', 'first_name', 'patronymic', 'birth_date', 'death_date']:
+                if self.cleaned_data.get(f):
+                    filters[f] = self.cleaned_data.get(f)
+
+            person = persons.filter(**filters)[0]
         except IndexError:
             pass
         else:
