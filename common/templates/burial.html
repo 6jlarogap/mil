@@ -43,10 +43,10 @@
     {% for p in burial.person_set.all %}
         <tr>
             <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
-            <td>{{ p.get_unclear_birth_date }}</td>
-            <td>{{ p.get_unclear_death_date }}</td>
+            <td>{{ p.get_unclear_birth_date|default:"" }}</td>
+            <td>{{ p.get_unclear_death_date|default:"" }}</td>
             <td>{{ p.death_cause|default:"" }}</td>
-            <td>{{ burial.get_unclear_date_burried }}</td>
+            <td>{{ burial.get_unclear_date_burried|default:"" }}</td>
         </tr>
     {% endfor %}
     </table>
@@ -72,10 +72,10 @@
             {% for p in cb.burial_from.person_set.all %}
                 <tr>
                     <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
-                    <td>{{ p.get_unclear_birth_date }}</td>
-                    <td>{{ p.get_unclear_death_date }}</td>
+                    <td>{{ p.get_unclear_birth_date|default:"" }}</td>
+                    <td>{{ p.get_unclear_death_date|default:"" }}</td>
                     <td>{{ p.death_cause.name|default:"" }}</td>
-                    <td>{{ cb.burial_from.get_unclear_date_burried }}</td>
+                    <td>{{ cb.burial_from.get_unclear_date_burried|default:"" }}</td>
                 </tr>
             {% endfor %}
         {% endfor %}
