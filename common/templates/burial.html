@@ -46,7 +46,7 @@
             <td>{{ p.get_unclear_birth_date }}</td>
             <td>{{ p.get_unclear_death_date }}</td>
             <td>{{ p.death_cause }}</td>
-            <td>{{ burial.date_burried }}</td>
+            <td>{{ burial.get_unclear_date_burried }}</td>
         </tr>
     {% endfor %}
     </table>
@@ -75,7 +75,7 @@
                     <td>{{ p.get_unclear_birth_date }}</td>
                     <td>{{ p.get_unclear_death_date }}</td>
                     <td>{{ p.death_cause.name }}</td>
-                    <td>{{ cb.burial_from.date_burried }}</td>
+                    <td>{{ cb.burial_from.get_unclear_date_burried }}</td>
                 </tr>
             {% endfor %}
         {% endfor %}
