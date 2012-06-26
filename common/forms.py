@@ -387,7 +387,7 @@ class PersonAdminForm(forms.ModelForm):
         return obj
 
 class PersonCallForm(forms.ModelForm):
-    date = UnclearDateField(label=u"Дата рождения", required=False)
+    date = UnclearDateField(label=u"Дата призыва", required=False)
 
     class Meta:
         model = PersonCall
