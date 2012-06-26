@@ -24,7 +24,7 @@ class UnclearSelectDateWidget(SelectDateWidget):
         y = data.get(self.year_field % name)
         m = data.get(self.month_field % name)
         d = data.get(self.day_field % name)
-        if y == m == d == "0":
+        if y == m == d == "0" or y == m == d == "":
             return None
 
         self.no_day = self.no_month = False
