@@ -34,7 +34,7 @@ class Redis():
         return int(self.db.get('cemetery:burial:%s:known' % pk) or 0)
 
     def all_for_burial(self, burial):
-        return self.known_for_burial() + self.unknown_for_burial()
+        return self.known_for_burial(burial) + self.unknown_for_burial(burial)
 
     def unknown_for_burial(self, burial):
         if isinstance(burial, models.Model):
