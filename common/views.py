@@ -357,9 +357,9 @@ def burials(request):
                                 'WWII': burials.filter(
                                     military_conflict__brief=u"2МВ"
                                 ).count(),
-                                'local': burials.filter(military_conflict__brief=u"2МВ").count(),
+                                'local': burials.filter(military_conflict__brief=u"ДЛВК").count(),
                                 'other': burials.exclude(
-                                    military_conflict__brief__in=[u"1МВ", u"2МВ", u"2МВ", ]
+                                    military_conflict__brief__in=[u"1МВ", u"2МВ", u"ДЛВК", ]
                                 ).count(),
                             },
                             'types': {
