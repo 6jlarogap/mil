@@ -37,7 +37,7 @@ class BurialCategoryInLine(admin.TabularInline):
     readonly_fields = ['category', 'known', ]
     can_delete = False
     template = 'tabular_burialcat.html'
-    fieldsets = [(None, {'fields': ['category', 'known', 'custom_known', 'unknown', ]})]
+    fieldsets = [(None, {'fields': ['category', 'custom_known', 'unknown', 'known', ]})]
 
     def get_formset(self, request, obj=None):
         if not obj:

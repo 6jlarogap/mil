@@ -8,18 +8,18 @@
         var ef = $('#burial_categories-group .empty-form');
         var sum1 = 0, sum2 = 0, sum3 = 0;
         $('#burial_categories-group tbody tr').each(function() {
-            sum1 += parseInt($(this).find('td:eq(2) p').text());
-            sum2 += parseInt($(this).find('td:eq(3) input').val());
-            sum3 += parseInt($(this).find('td:eq(4) input').val());
+            sum2 += parseInt($(this).find('td:eq(2) input').val());
+            sum3 += parseInt($(this).find('td:eq(3) input').val());
+            sum1 += parseInt($(this).find('td:eq(4) p').text());
         });
 
         $('#id_count_known, #id_count_unknown').parents('.form-row').hide();
         $('#id_count_known, #id_count_unknown').css('width', '5em');
 
         ef.find('td:eq(1)').css('text-align', 'right').html('<p>всего: ' + ((sum2 || sum1) + sum3) + '</p>');
-        ef.find('td:eq(2)').html('<p>'+sum1+'</p>');
-        ef.find('td:eq(3)').find('input').replaceWith($('#id_count_known'));
-        ef.find('td:eq(4)').find('input').replaceWith($('#id_count_unknown'));
+        ef.find('td:eq(2)').find('input').replaceWith($('#id_count_known'));
+        ef.find('td:eq(3)').find('input').replaceWith($('#id_count_unknown'));
+        ef.find('td:eq(4)').html('<p>'+sum1+'</p>');
         ef.removeClass('empty-form');
     }
 
@@ -29,6 +29,26 @@
         $('#locationburial-group').css({margin: '0', border: 'none'});
         $('#burial_categories-group :input').change(updateCatsCounts);
         updateCatsCounts();
+        $('form').submit(function() {
+            var ef = $('#burial_categories-empty');
+            var sum1 = 0, sum2 = 0, sum3 = 0;
+            $('#burial_categories-group tbody tr').not(':last').each(function() {
+                sum2 += parseInt($(this).find('td:eq(2) input').val());
+                sum3 += parseInt($(this).find('td:eq(3) input').val());
+            });
+            var final2 = parseInt(ef.find('td:eq(2) input').val());
+            var final3 = parseInt(ef.find('td:eq(3) input').val());
+
+            if (sum2 != final2) {
+                alert('Сумма счетчиков известных ('+sum2+') не совпадает с указанным значением итого ('+final2+')');
+                return false;
+            }
+            if (sum3 != final3) {
+                alert('Сумма счетчиков неизвестных ('+sum3+') не совпадает с указанным значением итого ('+final3+')');
+                return false;
+            }
+            return true;
+        });
     })
 </script>
 {% endblock %}
