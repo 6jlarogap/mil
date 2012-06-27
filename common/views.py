@@ -220,7 +220,7 @@ def burials(request):
                 if cd['burial_type']:
                     burials = burials.filter(burial_type__name = cd['burial_type'])
                 if cd['military_conflict']:
-                    burials = burials.filter(military_conflict__name = cd['military_conflict'])
+                    burials = burials.filter(military_conflict = cd['military_conflict'])
                 if cd['burried_date_from']:
                     burials = burials.filter(date_burried__gte = cd['burried_date_from'])
                 if cd['burried_date_to']:
@@ -304,14 +304,14 @@ def burials(request):
                             'burials': burial_list,
                             'conflicts': {
                                 'WW': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                    military_conflict__brief=u"1МВ"
                                 ).count(),
                                 'WWII': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                    military_conflict__brief=u"2МВ"
                                 ).count(),
-                                'local': burials.filter(military_conflict__name=u"Локальные военные конфликты").count(),
+                                'local': burials.filter(military_conflict__brief=u"ДЛВК").count(),
                                 'other': burials.exclude(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                    military_conflict__brief__in=[u"1МВ", u"2МВ", u"ДЛВК"]
                                 ).count(),
                             },
                             'types': {
@@ -352,14 +352,14 @@ def burials(request):
                             'all': burials.count(),
                             'conflicts': {
                                 'WW': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                    military_conflict__brief=u"1МВ"
                                 ).count(),
                                 'WWII': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                    military_conflict__brief=u"2МВ"
                                 ).count(),
-                                'local': burials.filter(military_conflict__name=u"Локальные военные конфликты").count(),
+                                'local': burials.filter(military_conflict__brief=u"2МВ").count(),
                                 'other': burials.exclude(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                    military_conflict__brief__in=[u"1МВ", u"2МВ", u"2МВ", ]
                                 ).count(),
                             },
                             'types': {
@@ -384,16 +384,16 @@ def burials(request):
                                 'known': known_count,
                                 'unknown': unknown_count,
                                 'WW': r.known_for_burial_list(list(burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                    military_conflict__brief=u"1МВ"
                                 ))),
                                 'WWII': r.known_for_burial_list(list(burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                    military_conflict__brief=u"2МВ"
                                 ))),
                                 'local': r.known_for_burial_list(list(burials.filter(
-                                    military_conflict__name=u"Локальные военные конфликты"
+                                    military_conflict__brief=u"ДЛВК"
                                 ))),
                                 'other': r.known_for_burial_list(list(burials.exclude(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                    military_conflict__brief__in=[u"1МВ", u"2МВ", u"ДЛВК", ]
                                 ))),
                                 'soldiers': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Военнослужащий")),
                                 'resistance': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
