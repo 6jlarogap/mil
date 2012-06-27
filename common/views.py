@@ -373,7 +373,7 @@ def burials(request):
                                     burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
                                 ).count(),
                                 'mass': burials.filter(
-                                    burial_type__name__in=[u"Место массового уничтожения"]
+                                    burial_type__name__in=[u"Место массов.уничтож."]
                                 ).count(),
                                 'foreign': burials.filter(
                                     burial_type__name__in=[u"Иностранное"]
@@ -433,10 +433,10 @@ def burials(request):
 
                                 burials_data = {
                                     'all': burials_count,
-                                    'WW': sum([c.count for c in conflicts if c.name in [u"Иностранные 1мв", u"Первая мировая война"]], 0),
-                                    'WWII': sum([c.count for c in conflicts if c.name in [u"Иностранные 2мв", u"Вторая мировая война"]], 0),
-                                    'local': sum([c.count for c in conflicts if c.name in [u"Локальные военные конфликты"]], 0),
-                                    'other': sum([c.count for c in conflicts if c.name not in [u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]], 0),
+                                    'WW': sum([c.count for c in conflicts if c.brief in [u"1МВ"]], 0),
+                                    'WWII': sum([c.count for c in conflicts if c.brief in [u"2МВ"]], 0),
+                                    'local': sum([c.count for c in conflicts if c.brief in [u"ДЛВК"]], 0),
+                                    'other': sum([c.count for c in conflicts if c.brief not in [u"1МВ", u"2МВ", u"ДЛВК", ]], 0),
                                     'war': sum([b.count for b in burial_types if b.name in [u"Воинское кладбище", u"Смешанное"]], 0),
                                     'group': sum([b.count for b in burial_types if b.name in [u"Братская могила"]], 0),
                                     'personal': sum([b.count for b in burial_types if b.name in [u"Индивидуальная могила", u"Локальные войны"]], 0),
@@ -455,10 +455,10 @@ def burials(request):
                                     'all': known + unknown,
                                     'known': known,
                                     'unknown': unknown,
-                                    'WW': sum([c.count for c in conflicts if c.name in [u"Иностранные 1мв", u"Первая мировая война"]], 0),
-                                    'WWII': sum([c.count for c in conflicts if c.name in [u"Иностранные 2мв", u"Вторая мировая война"]], 0),
-                                    'local': sum([c.count for c in conflicts if c.name in [u"Локальные военные конфликты"]], 0),
-                                    'other': sum([c.count for c in conflicts if c.name not in [u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]], 0),
+                                    'WW': sum([c.count for c in conflicts if c.brief in [u"1МВ"]], 0),
+                                    'WWII': sum([c.count for c in conflicts if c.brief in [u"2МВ"]], 0),
+                                    'local': sum([c.count for c in conflicts if c.brief in [u"ДЛВК"]], 0),
+                                    'other': sum([c.count for c in conflicts if c.brief not in [u"1МВ", u"2МВ", u"ДЛВК", ]], 0),
                                     'soldiers': sum([d.count for d in deadman_cats if d.name in [u"Военнослужащий",]], 0),
                                     'resistance': sum([d.count for d in deadman_cats if d.name in [u"Участник сопротивления",]], 0),
                                     'prey': sum([d.count for d in deadman_cats if d.name in [u"Жертва войны",]], 0),
