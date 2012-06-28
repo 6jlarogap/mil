@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'south',
     'easy_thumbnails',
     'smart_selects',
+    'djcelery',
 )
 
 try:
@@ -171,6 +172,7 @@ except ImportError:
     pass
 
 REDIS_DB = 0
+BROKER_URL = "redis://localhost:6379/1"
 
 SENTRY_TESTING = True
 
@@ -215,4 +217,5 @@ try:
 except ImportError:
     pass
 
-
+import djcelery
+djcelery.setup_loader()

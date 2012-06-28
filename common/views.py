@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+from django.views.generic.simple import direct_to_template
 import simplejson
 
 from django.shortcuts import render_to_response
@@ -12,6 +13,7 @@ from django.core.cache import cache
 
 from common.models import *
 from common.forms import *
+from common.tasks import report_2_deferred
 import cemetery_redis
 
 from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
@@ -264,9 +266,13 @@ def burials(request):
                     }
 
                     if template == 'reports/report_2.html':
+                        b = burials[0]
                         context.update({
-                            'burial': burials[0],
-                            })
+                            'burial': b,
+                        })
+                        if b.person_set.all().count() > 0:
+                            report_2_deferred.delay(b.pk, request.user.email)
+                            return direct_to_template(request, 'reports/report_2_deferred.html', context)
 
                     if template == 'reports/report_2a.html':
                         context.update({
