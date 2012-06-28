@@ -270,7 +270,7 @@ def burials(request):
                         context.update({
                             'burial': b,
                         })
-                        if b.person_set.all().count() > 0:
+                        if b.person_set.all().count() > 100:
                             report_2_deferred.delay(b.pk, request.user.email)
                             return direct_to_template(request, 'reports/report_2_deferred.html', context)
 
