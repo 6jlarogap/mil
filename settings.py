@@ -158,19 +158,6 @@ INSTALLED_APPS = (
     'djcelery',
 )
 
-try:
-    import sentry, raven
-    INSTALLED_APPS = INSTALLED_APPS + (
-        'djkombu',
-        'sentry',
-        'raven.contrib.django',
-    )
-    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
-        'sentry.middleware.SentryMiddleware',
-    )
-except ImportError:
-    pass
-
 REDIS_DB = 0
 BROKER_URL = "redis://localhost:6379/1"
 
