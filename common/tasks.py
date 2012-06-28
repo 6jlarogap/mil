@@ -19,10 +19,9 @@ def report_2_deferred(burial_id, email):
     f.close()
 
     zip_path = os.tempnam()
-    with ZipFile(zip_path, 'w') as myzip:
-        myzip.write(html_path, 'report_2.html')
-
-    print 'settings.DEFAULT_FROM_EMAIL', settings.DEFAULT_FROM_EMAIL
+    zip = ZipFile(zip_path, 'w')
+    zip.write(html_path, 'report_2.html')
+    zip.close()
 
     email = EmailMessage(subject=u'Форма 2', body=u'См. прикрепленный файл', to=[email], from_email=settings.DEFAULT_FROM_EMAIL)
     email.attach_file(zip_path)
