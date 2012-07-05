@@ -49,6 +49,8 @@
             }
             return true;
         });
+
+        $('#burial_categories-group td p:contains("(Ничего)")').parents('tr').hide();
     })
 </script>
 {% endblock %}
