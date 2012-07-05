@@ -8,11 +8,11 @@
 <script type="text/javascript">
     $(function() {
         $( ".DateField" ).datepicker({
-			changeMonth: true,
-			changeYear: true,
+            changeMonth: true,
+            changeYear: true,
             dateFormat: 'dd.mm.yy',
             yearRange: '1600:{% now "Y" %}'
-		});
+        });
     })
 </script>
 {% endblock %}
@@ -20,89 +20,95 @@
 {% block title %}MIL.ORG - Поиск захоронений{% endblock %}
 
 {% block content %}
-    {# Заголовок страницы #}
-    <h1>
-        Поиск Захоронений
-        {% if template == 'reports/report_2a.html' %}Ф2а{% endif %}
-        {% if template == 'reports/report_2b.html' %}Ф2б{% endif %}
-        {% if template == 'reports/report_3.html' %}Ф3{% endif %}
-        {% if template == 'reports/report_4.html' %}Ф4{% endif %}
-        {% if template == 'reports/report_4a.html' %}Ф4а{% endif %}
-        {% if template == 'reports/report_5.html' %}Ф5{% endif %}
-    </h1>
-    {# Форма поиска #}
-    <form action="" method="get">
-        <table>
-            <input type="hidden" name="template" value="{{ template }}"/>
-            {{ form.as_table }}
-            <tr>
-                <td style="vertical-align: middle;">
-                    <input type="submit" value="Поиск" name="search" id="isok" style="padding: 10px 50px; " />
-                </td>
-                <td style="vertical-align: middle; text-align: right;">
-                    <input type="submit" value="Сброс" name="search" id="iscancel" />
-                </td>
-            </tr>
-        </table>
-    </form>
-    <br>
-    {# Вывод результатов поиска в виде таблицы #}
-    {% if burials %}
-        <table width="100%">
-            <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ burials_count }}&nbsp;записей</caption>
-                <thead>
-                    <td>Паспорт</td>
-                    <td>Дата паспорта</td>
-                    <td>Создано</td>
-                    <td>Обнаружено</td>
-                    <td>Адрес</td>
-                    <td>Тип</td>
-                    <td>Военный конфликт</td>
-                    <td>Памятник</td>
-                    <td>Состояние</td>
-                    <td>Госзнак</td>
-                    <td>Информация</td>
-                    <td align="center">Опции</td>
-                </thead>
-            {% for burial in burials.object_list %}
-                <tr>
-                    <td>{{ burial.passportid }}</td>
-                    <td>{{ burial.get_unclear_date_passport|default:"нет" }}</td>
-                    <td>{{ burial.get_unclear_date_burried|default:"нет" }}</td>
-                    <td>{{ burial.get_unclear_date_discovered|default:"нет" }}</td>
-                    <td>{{ burial.location|default:"нет" }}</td>
-                    <td>{{ burial.burial_type }}</td>
-                    <td>{{ burial.military_conflict|default:"нет" }}</td>
-                    <td>{{ burial.get_unclear_date_memorial|default:"нет" }}</td>
-                    <td>{{ burial.state|default:"нет" }}</td>
-                    <td>{{ burial.get_unclear_date_gosznak|default:"нет" }}</td>
-                    <td>{{ burial.info|default:"" }}</td>
-                    <td align="center">
-                        <a href="{% url burial  burial.uuid %}">[Просмотр]</a>
-                        {% if user.is_staff or user.is_superuser %}
-                            <br/><a href="{% url admin:common_burial_change burial.uuid %}">[Редактирование]</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-        <br/>
-        <center>
-            {% if burials.has_previous %}
-                <a href="?{{ query_vars }}&p={{ burials.previous_page_number }}"><< Пред</a>
+{# Заголовок страницы #}
+<h1>
+    Поиск Захоронений
+    {% if template == 'reports/report_2a.html' %}Ф2а{% endif %}
+    {% if template == 'reports/report_2b.html' %}Ф2б{% endif %}
+    {% if template == 'reports/report_3.html' %}Ф3{% endif %}
+    {% if template == 'reports/report_4.html' %}Ф4{% endif %}
+    {% if template == 'reports/report_4a.html' %}Ф4а{% endif %}
+    {% if template == 'reports/report_5.html' %}Ф5{% endif %}
+</h1>
+{# Форма поиска #}
+<form action="" method="get">
+    <table>
+        <input type="hidden" name="template" value="{{ template }}"/>
+        {{ form.as_table }}
+        <tr>
+            <td style="vertical-align: middle;">
+                <input type="submit" value="Поиск" name="search" id="isok" style="padding: 10px 50px; " />
+            </td>
+            <td style="vertical-align: middle; text-align: right;">
+                <input type="submit" value="Сброс" name="search" id="iscancel" />
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+{# Вывод результатов поиска в виде таблицы #}
+{% if burials %}
+<table width="100%">
+    <caption align="left" style="text-align:left">Результат&nbsp;поиска:&nbsp;{{ burials_count }}&nbsp;записей</caption>
+    <thead>
+    <td>Паспорт</td>
+    <td>Дата паспорта</td>
+    <td>Создано</td>
+    <td>Обнаружено</td>
+    <td>Адрес</td>
+    <td>Тип</td>
+    <td>Военный конфликт</td>
+    <td>Памятник</td>
+    <td>Состояние</td>
+    <td>Госзнак</td>
+    <td>Информация</td>
+    <td align="center">Опции</td>
+    </thead>
+    {% for burial in burials.object_list %}
+    <tr>
+        <td>{{ burial.passportid }}</td>
+        <td>{{ burial.get_unclear_date_passport|default:"нет" }}</td>
+        <td>{{ burial.get_unclear_date_burried|default:"нет" }}</td>
+        <td>{{ burial.get_unclear_date_discovered|default:"нет" }}</td>
+        <td>
+            {% if not burial.location %}нет{% endif %}
+            {% if burial.location.country %}{{ burial.location.country }}<br/>{% endif %}
+            {% if burial.location.region %}{{ burial.location.region }}<br/>{% endif %}
+            {% if burial.location.district %}{{ burial.location.district }}<br/>{% endif %}
+            {% if burial.location.city %}{{ burial.location.city }}<br/>{% endif %}
+        </td>
+        <td>{{ burial.burial_type }}</td>
+        <td>{{ burial.military_conflict|default:"нет" }}</td>
+        <td>{{ burial.get_unclear_date_memorial|default:"нет" }}</td>
+        <td>{{ burial.state|default:"нет" }}</td>
+        <td>{{ burial.get_unclear_date_gosznak|default:"нет" }}</td>
+        <td>{{ burial.info|default:"" }}</td>
+        <td align="center">
+            <a href="{% url burial  burial.uuid %}">[Просмотр]</a>
+            {% if user.is_staff or user.is_superuser %}
+            <br/><a href="{% url admin:common_burial_change burial.uuid %}">[Редактирование]</a>
             {% endif %}
-
-            Страница {{ burials.number }} из {{ burials.paginator.num_pages }}
-
-            {% if burials.has_next %}
-                <a href="?{{ query_vars }}&p={{ burials.next_page_number }}">След >></a>
-            {% endif %}
-        </center>
-    {% else %}
-        {% if is_first_search %}
-            <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ burials_count }}&nbsp;</caption>
-        {% else %}
-            <caption>Результат&nbsp;поиска:&nbsp;0</font>&nbsp;записей</caption>
-        {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<br/>
+<center>
+    {% if burials.has_previous %}
+    <a href="?{{ query_vars }}&p={{ burials.previous_page_number }}"><< Пред</a>
     {% endif %}
+
+    Страница {{ burials.number }} из {{ burials.paginator.num_pages }}
+
+    {% if burials.has_next %}
+    <a href="?{{ query_vars }}&p={{ burials.next_page_number }}">След >></a>
+    {% endif %}
+</center>
+{% else %}
+{% if is_first_search %}
+<caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ burials_count }}&nbsp;</caption>
+{% else %}
+<caption>Результат&nbsp;поиска:&nbsp;0</font>&nbsp;записей</caption>
+{% endif %}
+{% endif %}
 {% endblock %}
