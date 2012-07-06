@@ -176,6 +176,14 @@ class LocationField(MultiValueField):
     def compress(self, data_list):
         if not data_list:
             return None
+        if not data_list[0]:
+            raise forms.ValidationError(u'Введите страну')
+        if not data_list[1] and not self.partial:
+            raise forms.ValidationError(u'Введите область')
+        if not data_list[2] and not self.partial:
+            raise forms.ValidationError(u'Введите район')
+        if not data_list[4] and not data_list[5] and not self.partial:
+            raise forms.ValidationError(u'Введите или выберите НП')
         city = None
         if len(data_list) > 4:
             city = data_list[4] or (data_list[5] and GeoCity.objects.get_or_create(
@@ -309,6 +317,8 @@ class BurialAdminForm(forms.ModelForm):
         raise forms.ValidationError(u"Захоронение с этим номером уже существует")
 
     def clean(self):
+        if not 'location' in self.cleaned_data:
+            raise forms.ValidationError(u"Нужно указать расположение")
         if not isinstance(self.cleaned_data['location'], StrictLocation):
             self.cleaned_data['location'] = StrictLocation.objects.get(pk=self.cleaned_data['location'])
         return self.cleaned_data
