@@ -51,6 +51,8 @@
         });
 
         $('#burial_categories-group td p:contains("(Ничего)")').parents('tr').hide();
+        $('#burial_categories-group tr:visible:last').find('p').css('font-weight', 'bold');
+        $('#burial_categories-group tr:visible:last').find('input').css('border', '2px gray solid');
     })
 </script>
 {% endblock %}
