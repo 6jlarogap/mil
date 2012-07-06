@@ -10,6 +10,7 @@ from django_extensions.db.fields import UUIDField
 from django.contrib.auth.models import User
 
 from smart_selects.db_fields import ChainedForeignKey
+import re
 import cemetery_redis
 
 class GeoCountry(models.Model):
@@ -37,7 +38,8 @@ class GeoRegion(models.Model):
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
-        return self.name
+        name = geo_name(self.name)
+        return name
 
     class Meta:
         unique_together = (("country", "name"),)
@@ -53,7 +55,8 @@ class District(models.Model):
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
-        return self.name
+        name = geo_name(self.name)
+        return name
 
     class Meta:
         verbose_name = u'район'
@@ -68,7 +71,8 @@ class Municipalitet(models.Model):
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
-        return self.name
+        name = geo_name(self.name)
+        return name
 
     class Meta:
         unique_together = (("district", "name"),)
@@ -94,6 +98,26 @@ class CityType(models.Model):
         verbose_name_plural = u'Типы населенных пунктов'
 
 
+def geo_name(name):
+    clean_name = re.sub(u'\.([A-Za-zА-Яа-яёЁ])', '. \\1', name.capitalize())
+
+    def make_first_upper(m):
+        return u'%s%s' % (m.groups()[0], m.groups()[1].capitalize())
+
+    clean_name = re.sub(u'(\s)([A-Za-zА-Яа-яёЁ])', make_first_upper, clean_name)
+
+    VALID_PREFIXES = [u'г', u'п', u'пос', u'ул', u'пр', u'просп', u'пер', u'пл', u'л', u'ур',  u'оз',  ]
+
+    def make_prefix_lower(m):
+        prefix = m.groups()[0]
+        if prefix.lower() in VALID_PREFIXES:
+            prefix = prefix.lower()
+        return u'%s.' % prefix
+
+    clean_name = re.sub(u'^([A-Za-zА-Яа-яёЁ]+)\.', make_prefix_lower, clean_name)
+
+    return clean_name
+
 class GeoCity(models.Model):
     """
     Город.
@@ -107,9 +131,10 @@ class GeoCity(models.Model):
     name = models.CharField("Название", max_length=36, db_index=True)
 
     def __unicode__(self):
+        name = geo_name(self.name)
         if self.type:
-            return u'%s, %s' % (self.name, self.type)
-        return self.name
+            return u'%s, %s' % (name, self.type)
+        return name
 
     class Meta:
         verbose_name = u'населенный пункт'
