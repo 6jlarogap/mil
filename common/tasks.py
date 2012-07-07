@@ -14,7 +14,8 @@ def report_2_deferred(burial_id, email):
     b = Burial.objects.get(pk=burial_id)
     msg = render_to_string('reports/report_2.html', {'burial': b})
 
-    html_path = os.tempnam(os.path.join(settings.MEDIA_ROOT, 'reports')) + '.html'
+    html_path = os.tempnam()
+    html_path = html_path.replace('/tmp/', os.path.join(settings.MEDIA_ROOT, 'reports')) + '.html'
 
     if not os.path.exists(os.path.dirname(html_path)):
         os.makedirs(os.path.dirname(html_path))
@@ -28,12 +29,12 @@ def report_2_deferred(burial_id, email):
     zip.write(html_path, 'report_2.html')
     zip.close()
 
-    html_url = html_path.replace(settings.MEDIA_ROOT, settings.MEDIA_URL)
-    body = u'http://%s%s' % (Site.objects.get_current().domain, html_url)
+    zip_url = zip_path.replace(settings.MEDIA_ROOT, settings.MEDIA_URL)
+    body = u'http://%s%s' % (Site.objects.get_current().domain, zip_url)
     email = EmailMessage(subject=u'Форма 2', body=body, to=[email], from_email=settings.DEFAULT_FROM_EMAIL)
     email.send()
 
     os.unlink(html_path)
     # os.unlink(zip_path)
 
-    return 'ok, %s, %s' % (html_path, html_url)
+    return 'ok, %s, %s' % (html_path, zip_url)
