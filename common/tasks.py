@@ -28,11 +28,12 @@ def report_2_deferred(burial_id, email):
     zip.write(html_path, 'report_2.html')
     zip.close()
 
-    body = u'http://%s%s' % (Site.objects.get_current().domain, html_path.replace(settings.MEDIA_ROOT, settings.MEDIA_URL))
+    html_url = html_path.replace(settings.MEDIA_ROOT, settings.MEDIA_URL)
+    body = u'http://%s%s' % (Site.objects.get_current().domain, html_url)
     email = EmailMessage(subject=u'Форма 2', body=body, to=[email], from_email=settings.DEFAULT_FROM_EMAIL)
     email.send()
 
     os.unlink(html_path)
     # os.unlink(zip_path)
 
-    return 'ok'
+    return 'ok, %s, %s' % (html_path, html_url)
