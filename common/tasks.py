@@ -30,7 +30,6 @@ def report_2_deferred(burial_id, email):
 
     body = u'http://%s%s' % (Site.objects.get_current().domain, html_path.replace(settings.MEDIA_ROOT, settings.MEDIA_URL))
     email = EmailMessage(subject=u'Форма 2', body=body, to=[email], from_email=settings.DEFAULT_FROM_EMAIL)
-    email.attach_file(zip_path)
     email.send()
 
     os.unlink(html_path)
