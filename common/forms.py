@@ -286,7 +286,7 @@ class BurialAdminForm(forms.ModelForm):
     date_burried = UnclearDateField(label=u"Дата создания захоронения", required=False)
     date_discovered = UnclearDateField(label=u"Дата обнаружения захоронения", required=False)
     date_memorial = UnclearDateField(label=u"Дата установки памятника", required=False)
-    location = LocationField(label=u"Место захоронения", required=False)
+    location = LocationField(label=u"Место захоронения", required=False, partial=True)
 
     count_known = forms.IntegerField(label=u"Известных")
     count_unknown = forms.IntegerField(label=u"Неизвестных")
