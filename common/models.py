@@ -282,7 +282,7 @@ class Burial(models.Model):
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
     names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
 
-    location = models.ForeignKey(SimpleLocation, null=True, blank=True, related_name='new_loc')
+    location = models.ForeignKey(SimpleLocation, null=True, blank=True)
 
     date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True, db_index=True)
     date_passport_no_month = models.BooleanField(default=False, editable=False)

@@ -19,6 +19,7 @@ django-picklefield==0.2.1
 django-registration==0.7
 django-sentry==1.12.1
 django-simple-captcha==0.3.0
+django-smart-selects==1.0.4
 django-tagging==0.3.1
 django-templatetag-sugar==0.1
 easy-thumbnails==1.0-alpha-17

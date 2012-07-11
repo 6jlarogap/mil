@@ -54,11 +54,11 @@ def persons(request):
                     if not isinstance(cd['burial_location'], SimpleLocation):
                         cd['burial_location'] = SimpleLocation.objects.get(pk=cd['burial_location'])
                     if cd['burial_location'].country:
-                        params = dict(burial__location__country = cd['burial_location'].country)
                         if cd['country_exclude']:
-                            persons = persons.exclude(**params)
+                            persons = persons.exclude(burial__location__country__pk = cd['burial_location'].country.pk)
                         else:
-                            persons = persons.filter(**params)
+                            persons = persons.filter(burial__location__country__pk = cd['burial_location'].country.pk)
+                        print 'burial', persons
 
                         if cd['burial_location'].region:
                             persons = persons.filter(burial__location__region = cd['burial_location'].region)
@@ -77,6 +77,7 @@ def persons(request):
                         cd['birth_location'] = SimpleLocation.objects.get(pk=cd['birth_location'])
                     if cd['birth_location'].country:
                         persons = persons.filter(birth_location__country = cd['birth_location'].country)
+                        print 'birth', persons
 
                     if cd['birth_location'].region:
                         persons = persons.filter(birth_location__region = cd['birth_location'].region)
