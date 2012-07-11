@@ -319,8 +319,8 @@ class BurialAdminForm(forms.ModelForm):
     def clean(self):
         if not 'location' in self.cleaned_data:
             raise forms.ValidationError(u"Нужно указать расположение")
-        if not isinstance(self.cleaned_data['location'], StrictLocation):
-            self.cleaned_data['location'] = StrictLocation.objects.get(pk=self.cleaned_data['location'])
+        if not isinstance(self.cleaned_data['location'], SimpleLocation):
+            self.cleaned_data['location'] = SimpleLocation.objects.get(pk=self.cleaned_data['location'])
         return self.cleaned_data
 
     def save(self, *args, **kwargs):
