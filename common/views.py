@@ -50,24 +50,27 @@ def persons(request):
                 persons = Person.objects.all().select_related()
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
-                if cd['burial_location'] and cd['burial_location'].country:
-                    params = dict(burial__location__country = cd['burial_location'].country)
-                    if cd['country_exclude']:
-                        persons = persons.exclude(**params)
-                    else:
-                        persons = persons.filter(**params)
+                if cd['burial_location']:
+                    if not isinstance(cd['burial_location'], SimpleLocation):
+                        cd['burial_location'] = SimpleLocation.objects.get(pk=cd['burial_location'])
+                    if cd['burial_location'].country:
+                        params = dict(burial__location__country = cd['burial_location'].country)
+                        if cd['country_exclude']:
+                            persons = persons.exclude(**params)
+                        else:
+                            persons = persons.filter(**params)
 
-                    if cd['burial_location'].region:
-                        persons = persons.filter(burial__location__region = cd['burial_location'].region)
+                        if cd['burial_location'].region:
+                            persons = persons.filter(burial__location__region = cd['burial_location'].region)
 
-                    if cd['burial_location'].district:
-                        persons = persons.filter(burial__location__district = cd['burial_location'].district)
+                        if cd['burial_location'].district:
+                            persons = persons.filter(burial__location__district = cd['burial_location'].district)
 
-                    if cd['burial_location'].municipalitet:
-                        persons = persons.filter(burial__location__municipalitet = cd['burial_location'].municipalitet)
+                        if cd['burial_location'].municipalitet:
+                            persons = persons.filter(burial__location__municipalitet = cd['burial_location'].municipalitet)
 
-                    if cd['burial_location'].city:
-                        persons = persons.filter(burial__location__city = cd['burial_location'].city)
+                        if cd['burial_location'].city:
+                            persons = persons.filter(burial__location__city = cd['burial_location'].city)
 
                 if cd['birth_location']:
                     if cd['birth_location'].country:
