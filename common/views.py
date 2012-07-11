@@ -410,7 +410,7 @@ def burials(request):
                                 'prey': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Жертва войны")),
                                 'prisoners': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Другие")),
                                 'mia': Person.objects.filter(burial__isnull=True, mia=True).count(),
-                                'outside_rb': Person.objects.filter(burial__isnull=True, outside_rb=True).count(),
+                                'outside_rb': Person.objects.filter(outside_rb=True).count(),
                             },
                         })
 
