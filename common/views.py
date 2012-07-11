@@ -73,6 +73,8 @@ def persons(request):
                             persons = persons.filter(burial__location__city = cd['burial_location'].city)
 
                 if cd['birth_location']:
+                    if not isinstance(cd['birth_location'], SimpleLocation):
+                        cd['birth_location'] = SimpleLocation.objects.get(pk=cd['birth_location'])
                     if cd['birth_location'].country:
                         persons = persons.filter(birth_location__country = cd['birth_location'].country)
 
