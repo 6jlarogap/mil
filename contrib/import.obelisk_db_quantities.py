@@ -66,14 +66,16 @@ else:
                     unk[i] = 0
                 elif z > all[i]:
                     unk[i] = all[i]
+                    all[i] = 0
                 else:
                     unk[i] = z
+                    all[i] -= z
                 z -= unk[i]
                 if z <= 0: break
-            for i,a in enumerate(all):
-                d += tuple(unk)
+            d = d[:4] + tuple(all) + tuple(unk)
         else:
             d += (0, 0, 0, 0)
+
 
         for j,c in enumerate(cats):
             try:
