@@ -42,7 +42,7 @@ else:
     ]
 
     cursor.execute(sql)
-    for i,d in enumerate(cursor.fetchall()):
+    for cnt1,d in enumerate(cursor.fetchall()):
         b = Burial.objects.get(obid=d[0])
 
         # Надо пройтись по существующим данным и внести "порядок"
@@ -94,5 +94,5 @@ else:
         r.db.set('cemetery:burial:%s:known' % b.pk, d[2])
         r.db.set('cemetery:burial:%s:unknown' % b.pk, d[3])
 
-        if i % 500 == 0:
-            print 'Processsed', i, 'of', cnt
+        if cnt1 % 500 == 0:
+            print 'Processsed', cnt1, 'of', cnt
