@@ -48,11 +48,44 @@ else:
         r.db.set('cemetery:burial:%s:known' % b.pk, d[2])
         r.db.set('cemetery:burial:%s:unknown' % b.pk, d[3])
 
+        # Надо пройтись по существующим данным и внести "порядок"
+        # с неизвестными
+        z = int(d[3])
+
+        if z:
+            all = map(int, d[4:])
+
+            unk = [0,0,0,0]
+            sum = 0
+            for i, a in enumerate(all):
+                unk[i] = 0
+                sum += all[i]
+
+            # fool-proof
+            if sum < z: z = sum
+
+            for i,a in enumerate(all):
+                if not all[i]:
+                    unk[i] = 0
+                elif z > all[i]:
+                    unk[i] = all[i]
+                else:
+                    unk[i] = z
+                z -= unk[i]
+                if z <= 0: break
+            for i,a in enumerate(all):
+                d += tuple(unk)
+        else:
+            d += (0, 0, 0, 0)
+
         for j,c in enumerate(cats):
             try:
                 BurialCategory.objects.get(burial=b, category=c)
             except BurialCategory.DoesNotExist:
-                BurialCategory.objects.create(burial=b, category=c, custom_known=d[4 + j] or 0)
+                BurialCategory.objects.create(burial=b, category=c, custom_known=d[4 + j] or 0, unknown=d[8 + j] or 0)
+
+            r.db.set('cemetery:burial:%s:category:%s' % (b.pk, c.pk), (d[4 + j] or 0) + (d[8 + j] or 0))
+            r.db.set('cemetery:burial:%s:category:%s:unknown' % (b.pk, c.pk), d[8 + j] or 0)
 
         if i % 500 == 0:
             print 'Processsed', i, 'of', cnt
