@@ -82,9 +82,9 @@ else:
             try:
                 BurialCategory.objects.get(burial=b, category=c)
             except BurialCategory.DoesNotExist:
-                BurialCategory.objects.create(burial=b, category=c, custom_known=d[4 + j] or 0, unknown=d[8 + j] or 0)
+                BurialCategory.objects.create(burial=b, category=c, custom_known=(d[4 + j] or 0) - (d[8 + j] or 0), unknown=d[8 + j] or 0)
 
-            r.db.set('cemetery:burial:%s:category:%s' % (b.pk, c.pk), (d[4 + j] or 0) + (d[8 + j] or 0))
+            r.db.set('cemetery:burial:%s:category:%s' % (b.pk, c.pk), (d[4 + j] or 0))
             r.db.set('cemetery:burial:%s:category:%s:unknown' % (b.pk, c.pk), d[8 + j] or 0)
 
         if i % 500 == 0:
