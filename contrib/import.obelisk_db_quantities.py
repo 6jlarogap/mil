@@ -81,9 +81,9 @@ else:
             try:
                 bc = BurialCategory.objects.get(burial=b, category=c)
             except BurialCategory.DoesNotExist:
-                BurialCategory.objects.create(burial=b, category=c, custom_known=(d[4 + j] or 0) - (d[8 + j] or 0), unknown=d[8 + j] or 0)
+                BurialCategory.objects.create(burial=b, category=c, custom_known=(d[4 + j] or 0), unknown=d[8 + j] or 0)
             else:
-                bc.custom_known = (d[4 + j] or 0) - (d[8 + j] or 0)
+                bc.custom_known = (d[4 + j] or 0)
                 bc.unknown = (d[8 + j] or 0)
                 bc.save()
 
