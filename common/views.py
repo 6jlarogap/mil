@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+from django.core.urlresolvers import reverse
 from django.views.generic.simple import direct_to_template
 import simplejson
 
