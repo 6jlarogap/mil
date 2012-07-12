@@ -830,7 +830,9 @@ class PersonCall(models.Model):
         verbose_name = (u'Место призыва')
         verbose_name_plural = (u'Место призыва')
 
-    def get_unclear_date(self, field_name):
+    def get_unclear_date(self, field_name=None):
+        if not field_name:
+            field_name = 'date'
         if not getattr(self, field_name, None):
             return None
         cur_date = getattr(self, field_name)
@@ -848,10 +850,6 @@ class PersonCall(models.Model):
         if ud:
             setattr(self, field_name+'_no_day', ud.no_day)
             setattr(self, field_name+'_no_month', ud.no_month)
-
-    @property
-    def get_unclear_date(self):
-        return self.get_unclear_date('date')
 
 class Post(models.Model):
     """
