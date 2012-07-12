@@ -275,8 +275,11 @@ def burials(request):
                             'burial': b,
                         })
                         if b.person_set.all().count() > 100:
-                            report_2_deferred.delay(b.pk, request.user.email)
-                            return direct_to_template(request, 'reports/report_2_deferred.html', context)
+                            if request.user.is_authenticated():
+                                report_2_deferred.delay(b.pk, request.user.email)
+                                return direct_to_template(request, 'reports/report_2_deferred.html', context)
+                            else:
+                                return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.path))
 
                     if template == 'reports/report_2a.html':
                         context.update({

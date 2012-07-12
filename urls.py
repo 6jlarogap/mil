@@ -17,10 +17,11 @@ urlpatterns = patterns('common.views',
 )
 
 urlpatterns += patterns('',
+    url(r'^login/', 'django.contrib.auth.views.login', name='login'),
     url(r'^admin/sentry/', include('sentry.web.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^chaining/', include('smart_selects.urls')),
-    url(r'media/(?P<path>.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^media/(?P<path>.*)', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )
 
 if 'sentry' in settings.INSTALLED_APPS:
