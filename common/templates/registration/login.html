@@ -4,6 +4,7 @@
 
 {% block content %}
 <form action="?next={{ request.GET.next }}" method="POST">
+    {% csrf_token %}
     {{ form.as_p }}
     <input type="hidden" name="next" value="{{ request.GET.next }}">
     <p><input type="submit" value="войти"></p>
