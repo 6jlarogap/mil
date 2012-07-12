@@ -280,7 +280,7 @@ def burials(request):
                                 report_2_deferred.delay(b.pk, request.user.email)
                                 return direct_to_template(request, 'reports/report_2_deferred.html', context)
                             else:
-                                return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.path))
+                                return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.path + '?' + request.META['QUERY_STRING']))
 
                     if template == 'reports/report_2a.html':
                         context.update({
