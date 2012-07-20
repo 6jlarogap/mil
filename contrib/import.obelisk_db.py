@@ -140,10 +140,10 @@ def importLocations(cursor):
                 bs = Burial.objects.filter(oblocationid = city.obid)
                 for b in bs:
                     try:
-                        b.location = StrictLocation.objects.get(city=city)
-                        StrictLocation.objects.filter(pk=b.location.pk).update(**params)
-                    except StrictLocation.DoesNotExist:
-                        b.location = StrictLocation.objects.create(**params)
+                        b.location = SimpleLocation.objects.get(city=city)
+                        SimpleLocation.objects.filter(pk=b.location.pk).update(**params)
+                    except SimpleLocation.DoesNotExist:
+                        b.location = SimpleLocation.objects.create(**params)
                     b.save()
 
 def importPerson(cursor):
