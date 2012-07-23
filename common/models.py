@@ -778,12 +778,10 @@ class Person(models.Model):
     @property
     def get_unclear_birth_date(self):
         return self.get_unclear_date('birth_date')
-    get_unclear_birth_date.short_description = u'Дата рождения'
 
     @property
     def get_unclear_death_date(self):
         return self.get_unclear_date('death_date')
-    get_unclear_death_date.short_description = u'Дата смерти'
 
 class MilitaryUnit(models.Model):
     """
