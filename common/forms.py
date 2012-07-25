@@ -335,6 +335,7 @@ class BurialAdminForm(forms.ModelForm):
 
         r = cemetery_redis.Redis()
         r.db.set('cemetery:burial:%s:known' % obj.pk, self.cleaned_data['count_known'])
+        r.db.set('cemetery:burial:%s:unknown' % obj.pk, self.cleaned_data['count_unknown'])
         r.db.set('cemetery:burial:%s:all' % obj.pk, self.cleaned_data['count_known'] + self.cleaned_data['count_unknown'])
 
         return obj
