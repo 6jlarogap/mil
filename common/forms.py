@@ -244,12 +244,16 @@ class PersonsForm(forms.Form):
                 self.fields[k].widget.attrs = {'class': 'DateField form-field'}
 
         for i,w in enumerate(self.fields['burial_location'].widget.widgets):
-            if i > 0:
+            if i > 0 and i < 3:
                 w.chain_field = 'burial_location_%s' % (i-1)
+            if i >= 3:
+                w.chain_field = 'burial_location_%s' % (2)
 
         for i,w in enumerate(self.fields['birth_location'].widget.widgets):
-            if i > 0:
+            if i > 0 and i < 3:
                 w.chain_field = 'birth_location_%s' % (i-1)
+            if i >= 3:
+                w.chain_field = 'birth_location_%s' % (2)
 
 class BurialsForm(forms.ModelForm):
     """Форма поиска захоронений.
