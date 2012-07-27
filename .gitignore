@@ -10,8 +10,9 @@ media/photo/
 pip.log
 cemetery
 tmp
+ENV
 media/documents/
-media/cause_docs/
+media/cause_doc	s/
 media/
 docs/
 manage_local.py

@@ -108,7 +108,7 @@
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="20" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">воинское звание - {{ person.personduty.rank }}</FONT></TD>
+		<TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">воинское звание - {{ person.personduty.rank }}</FONT></TD>
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 	</TR>
@@ -198,7 +198,13 @@
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 	</TR>
 	<TR>
-		<TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">основание для внесения изменений - {% if person.last_edit %}{{ person.last_edit.name }} {{ person.last_edit.number }} {{ person.last_edit.date|date:"d.m.Y" }}{% endif %}</FONT></TD>
+		<TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">
+            основание для внесения изменений -
+            {% if person.last_edit_obj %}
+                {{ person.last_edit_obj.name }} {{ person.last_edit_obj.number }}
+                {{ person.last_edit_obj.date|date:"d.m.Y" }}
+            {% endif %}
+        </FONT></TD>
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 	</TR>

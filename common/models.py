@@ -745,6 +745,7 @@ class Person(models.Model):
     is_trash = models.BooleanField(u"Удалена", default=False, db_index=True, editable=False)
 
     edit_causes = property(lambda self: self.personeditcause_set.all().order_by('-date_edit'))
+    last_edit_obj = property(lambda self: self.edit_causes and self.edit_causes[0] or None)
     last_edit = property(lambda self: (self.edit_causes and self.edit_causes[0].date_edit or self.date_of_creation).strftime(u'%d.%m.%Y %H:%M'))
 
     class Meta:
@@ -754,6 +755,12 @@ class Person(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.last_name
+
+    def save(self, *args, **kwargs):
+        self.first_name = self.first_name.upper()
+        self.last_name = self.last_name.upper()
+        self.patronymic = self.patronymic.upper()
+        super(Person, self).save(*args, **kwargs)
 
     def get_info(self):
         return self.info.replace('.', '. ')
