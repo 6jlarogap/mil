@@ -162,16 +162,16 @@ class Location(models.Model):
         if self.city:
             ret = u'НП: %s' % self.city
         if self.municipalitet:
-            ret = u'Сельсовет: %s %s' % (self.municipalitet, ret)
+            ret = u'Сельсовет: %s, %s' % (self.municipalitet, ret)
         if self.district:
-            ret = u'Район: %s %s' % (self.district, ret)
+            ret = u'Район: %s, %s' % (self.district, ret)
         if self.region:
-            ret = u'Область: %s %s' % (self.region, ret)
+            ret = u'Область: %s, %s' % (self.region, ret)
         if self.country:
-            ret = u'%s %s' % (self.country, ret)
+            ret = u'Страна: %s, %s' % (self.country, ret)
         if self.info:
-            ret = u'%s %s' % (ret, self.info)
-        return ret.strip()
+            ret = u'%s, %s' % (ret, self.info)
+        return ret.strip(' ,')
 
     class Meta:
         abstract = True
