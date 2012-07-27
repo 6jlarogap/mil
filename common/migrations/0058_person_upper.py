@@ -22,7 +22,7 @@ class Migration(DataMigration):
             if i % 1000 == 0:
                 connection.queries = []
                 transaction.commit()
-                print '%s/%s (%.2f%%)' % (i, cnt, i/cnt*100)
+                print '%s/%s (%.2f%%)' % (i, cnt, float(i)/cnt*100)
 
 
         transaction.commit()
