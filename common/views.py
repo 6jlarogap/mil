@@ -48,7 +48,7 @@ def persons(request):
         if request.GET['search'] == u'Поиск':
             if form.is_valid():
                 cd = form.cleaned_data
-                persons = Person.objects.all().select_related()
+                persons = Person.objects.all().select_related().order_by('last_name', 'first_name', 'patronymic', 'death_date')
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
                 if cd['burial_location']:
