@@ -6,6 +6,7 @@ from django.contrib import admin
 
 from common.models import *
 from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget, PersonCallForm
+from common.adminfilters import *
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
@@ -77,6 +78,7 @@ class BurialAdmin(admin.ModelAdmin):
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', 'creator', 'today', ]
     raw_id_fields = ['location', ]
+    list_filter = ['passportid', ]
 
     def today(self, obj):
         return pytils.dt.ru_strftime(date=datetime.date.today(), format=u'%d %B %Y', inflected=True)

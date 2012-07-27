@@ -318,10 +318,7 @@ class Burial(models.Model):
     is_trash = models.BooleanField(u"В корзине", default=False, db_index=True)
 
     def __unicode__(self):
-        if self.passportid:
-            return self.passportid
-        else:
-            return u'без паспорта'
+        return u'%s, %s' % (self.passportid or u'без паспорта', self.location)
 
     def get_full_persons(self):
         return self.person_set.all().select_related()
