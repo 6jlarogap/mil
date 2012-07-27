@@ -160,14 +160,18 @@ class Location(models.Model):
     def __unicode__(self):
         ret = u"незаполненный адрес"
         if self.city:
-            ret = u'%s' % self.city
-            if self.city.region:
-                ret = u'%s %s' % (self.city.region, ret)
-                if self.city.region.country:
-                    ret = u'%s %s' % (self.city.region.country, ret)
+            ret = u'НП: %s' % self.city
+        if self.municipalitet:
+            ret = u'Сельсовет: %s %s' % (self.municipalitet, ret)
+        if self.district:
+            ret = u'Район: %s %s' % (self.district, ret)
+        if self.region:
+            ret = u'Область: %s %s' % (self.region, ret)
+        if self.country:
+            ret = u'%s %s' % (self.country, ret)
         if self.info:
             ret = u'%s %s' % (ret, self.info)
-        return ret
+        return ret.strip()
 
     class Meta:
         abstract = True
