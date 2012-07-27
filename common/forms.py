@@ -176,7 +176,9 @@ class LocationField(MultiValueField):
     def compress(self, data_list):
         if not data_list:
             return None
-        if not data_list[0]:
+        if not any(data_list):
+            return None
+        if not data_list[0] and not self.partial:
             raise forms.ValidationError(u'Введите страну')
         if not data_list[1] and not self.partial:
             raise forms.ValidationError(u'Введите область')
