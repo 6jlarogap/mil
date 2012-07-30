@@ -238,8 +238,6 @@ def burials(request):
                     burials = burials.filter(state__name = cd['burial_type'])
                 if cd['only_closed']:
                     burials = burials.filter(Q(date_closed__isnull=False) | Q(is_trash=True))
-                if cd['only_not_registered']:
-                    burials = burials.filter(is_registered=False)
 
                 burials_count = burials.count()
 

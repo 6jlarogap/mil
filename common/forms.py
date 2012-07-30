@@ -262,7 +262,7 @@ class BurialsForm(forms.ModelForm):
     """
 
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
-    bemptypassport = forms.BooleanField(required=False, label="Показать без паспорта")
+    bemptypassport = forms.BooleanField(required=False, label="Только неучтенные")
 
     burried_date_from = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения c')
     burried_date_to = forms.DateField(required=False, widget=CalendarWidget, label='Дата захоронения по')
@@ -273,7 +273,6 @@ class BurialsForm(forms.ModelForm):
     in_trash = forms.BooleanField(required=False, label="В корзине")
     only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
     other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
-    only_not_registered = forms.BooleanField(required=False, label=u"Только неучтенные")
 
     def __init__(self, *args, **kwargs):
         super(BurialsForm, self).__init__(*args, **kwargs)
