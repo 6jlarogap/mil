@@ -157,7 +157,7 @@ class Location(models.Model):
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)                            # GPS Y-ось.
     gps_z = models.FloatField(u"Координата Z", blank=True, null=True)                            # GPS Z-ось.
 
-    def __unicode__(self):
+    def __unicode__(self, full=True):
         ret = u"незаполненный адрес"
         if self.city:
             ret = u'НП: %s' % self.city
@@ -169,9 +169,12 @@ class Location(models.Model):
             ret = u'Область: %s, %s' % (self.region, ret)
         if self.country:
             ret = u'Страна: %s, %s' % (self.country, ret)
-        if self.info:
+        if self.info and full:
             ret = u'%s, %s' % (ret, self.info)
         return ret.strip(' ,')
+
+    def short_title(self):
+        return self.__unicode__(full=True)
 
     class Meta:
         abstract = True
