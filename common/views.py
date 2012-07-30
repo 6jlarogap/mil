@@ -447,7 +447,7 @@ def burials(request):
                                     'all': burials_count,
                                     'WW': sum([c.count for c in conflicts if c.type and c.type.name == u"1МВ"], 0),
                                     'WWII': sum([c.count for c in conflicts if c.type and c.type.name == u"2МВ"], 0),
-                                    'local': sum([c.count for c in conflicts if c.type and c.type.name == u"ДЛВК"], 0),
+                                    'local': sum([c.count for c in conflicts if c.type and c.type.name == u"ЛВК"], 0),
                                     'other': sum([c.count for c in conflicts if c.type and c.type.name == u"ГР и др."], 0),
                                     'war': sum([b.count for b in burial_types if b.type.name == u'ВК'], 0),
                                     'group': sum([b.count for b in burial_types if b.type.name == u"БМ"], 0),
