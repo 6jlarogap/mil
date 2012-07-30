@@ -432,8 +432,8 @@ def burials(request):
 
                             b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
                             bc_data = b_cats.aggregate(unknown=models.Sum('unknown'), known=models.Sum('custom_known'))
-                            unknown = bc_data['unknown'] or r.unknown_for_burial_list(burials_sel)
-                            known = bc_data['known'] or r.known_for_burial_list(burials_sel)
+                            unknown = r.unknown_for_burial_list(burials_sel) or bc_data['unknown']
+                            known = r.known_for_burial_list(burials_sel) or bc_data['known']
 
                             burials_count = len(burials_sel)
 
@@ -458,7 +458,7 @@ def burials(request):
 
                                 conflicts = MilitaryConflict.objects.all().select_related()
                                 for c in conflicts:
-                                    c.count = r.known_for_burial_list([b.pk for b in burials_sel if b.military_conflict_id == c.pk])
+                                    c.count = r.all_for_burial_list([b.pk for b in burials_sel if b.military_conflict_id == c.pk])
                                 deadman_cats = DeadmanCategory.objects.all()
                                 for dc in deadman_cats:
                                     dc.count = r.known_for_burial_list_and_cat(burials_pks, dc)
