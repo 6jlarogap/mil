@@ -489,7 +489,7 @@ def burials(request):
                             if form.cleaned_data.get('district'):
                                 districts = districts.filter(pk=form.cleaned_data.get('district').pk)
                             for district in districts:
-                                data_key = 'form4a_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                                data_key = 'form4a_data1_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
@@ -505,7 +505,7 @@ def burials(request):
                         else:
                             districts = form.cleaned_data['region'].district_set.all().order_by('name')
                             for district in districts:
-                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                                data_key = 'form4_data1_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
