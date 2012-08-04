@@ -621,17 +621,8 @@ class BurialCategory(models.Model):
         else:
             k = self.known
 
-        if self.pk:
-            old = BurialCategory.objects.get(pk=self.pk)
-
-            pipe.incr('cemetery:burial:%s:known' % burial_id, k - old.custom_known)
-            pipe.incr('cemetery:burial:%s:all' % burial_id, k + self.unknown - (old.custom_known or old.known) - old.unknown)
-            pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
-            pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
-        else:
-            pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
-            pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
-
+        pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
+        pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
         pipe.execute()
         super(BurialCategory, self).save(*args, **kwargs)
 
