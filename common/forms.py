@@ -261,6 +261,8 @@ class BurialsForm(forms.ModelForm):
     """Форма поиска захоронений.
     """
 
+    city_name = forms.CharField(required=False, label=u"")
+
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
     bemptypassport = forms.BooleanField(required=False, label="Только неучтенные")
 

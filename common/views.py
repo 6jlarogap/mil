@@ -213,6 +213,8 @@ def burials(request):
                     burials = burials.exclude(passportid = u'')
                 if cd['city']:
                     burials = burials.filter(location__city = cd['city'])
+                if cd['city_name']:
+                    burials = burials.filter(location__city__name__istartswith = cd['city_name'])
                 elif cd['district']:
                     burials = burials.filter(location__district = cd['district'])
                 elif cd['municipalitet']:
