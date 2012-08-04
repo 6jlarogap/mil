@@ -247,6 +247,8 @@ def burials(request):
                         'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                         }))
                 else:
+                    burials = burials.order_by('passportid')
+
                     template = request.REQUEST.get('template', 'burials.html')
 
                     paginator = Paginator(burials, 20)
