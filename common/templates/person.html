@@ -16,7 +16,7 @@
     Источник информации: {{ person.information_source }}<br>
     Категория погибшего: {{ person.deadman_category|default:"не известна" }}<br>
     Место призыва: {{person.personcall.unit}}<br>
-    Дата призыва: {{ person.personcall.date }}<br>
+    Дата призыва: {{ person.personcall.get_unclear_date }}<br>
     Место службы: {{ person.personduty.unit|default:"не известно" }}<br>
     Звание: {{ person.personduty.rank }}<br>
     Должность: {{ person.personduty.post }}<br>
@@ -32,7 +32,7 @@
             </thead>
             <tr>
                 <td><a href="{% url burial person.burial.uuid %}">{{ person.burial.passportid }}</a></td>
-                <td>{{ person.burial.date_burried }}</td>
+                <td>{{ person.burial.get_unclear_date_burried }}</td>
                 <td>{{ person.burial.location }}</td>
             </tr>
             {% for old in  person.closed_burials.all %}
@@ -41,7 +41,7 @@
                     Перенесено из:
                     <a href="{% url burial old.uuid %}">{{ old.passportid }}</a>
                 </td>
-                <td>{{ old.date_burried }}</td>
+                <td>{{ old.get_unclear_date_burried }}</td>
                 <td>{{ old.location }}</td>
             </tr>
             {% endfor %}
