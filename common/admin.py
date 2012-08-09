@@ -121,7 +121,7 @@ class PersonAdmin(admin.ModelAdmin):
     search_fields = ['burial__passportid', 'last_name']
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
     raw_id_fields = ['birth_location', 'burial' ]
-    list_display = ['last_name', 'first_name', 'patronymic', 'get_unclear_birth_date_admin', 'get_unclear_death_date_admin',]
+    list_display = ['last_name', 'first_name', 'patronymic', 'get_passport_number', 'get_unclear_birth_date_admin', 'get_unclear_death_date_admin',]
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)
@@ -140,6 +140,10 @@ class PersonAdmin(admin.ModelAdmin):
         if not obj.creator:
             obj.creator = request.user
         obj.save()
+
+    def get_passport_number(self, obj):
+        return obj.burial.passportid or ''
+    get_passport_number.short_description = u'Номер паспорта ВЗ'
 
     def get_unclear_birth_date_admin(self, obj):
         return obj.get_unclear_birth_date
