@@ -33,4 +33,3 @@ class Command(BaseCommand):
                 print "Step: %s (%.2f%%)" % (i, float(i)/float(cnt)*100)
 
         print 'Finished'
-        print 'To resume call script with --offset=%s' % max_person
