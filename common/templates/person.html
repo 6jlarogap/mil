@@ -10,18 +10,18 @@
     Фамилия: {{ person.last_name }}<br>
     Имя: {{ person.first_name }}<br>
     Отчество: {{ person.patronymic }}<br>
-    Дата роджения: {{ person.get_unclear_birth_date }}<br>
-    Место рождения: {{ person.birth_location }}<br>
-    Место нахождения документов: {{ person.documents_place|default:"нет" }}<br>
-    Источник информации: {{ person.information_source }}<br>
-    Категория погибшего: {{ person.deadman_category|default:"не известна" }}<br>
-    Место призыва: {{person.personcall.unit}}<br>
-    Дата призыва: {{ person.personcall.get_unclear_date }}<br>
-    Место службы: {{ person.personduty.unit|default:"не известно" }}<br>
-    Звание: {{ person.personduty.rank }}<br>
-    Должность: {{ person.personduty.post }}<br>
-    Дата гибели: {{ person.get_unclear_death_date }}<br>
-    Причина гибели: {{ person.death_cause|default:"не известна" }}<br>
+    Дата роджения: {{ person.get_unclear_birth_date|default:"" }}<br>
+    Место рождения: {{ person.birth_location|default:"" }}<br>
+    Место нахождения документов: {{ person.documents_place|default:"" }}<br>
+    Источник информации: {{ person.information_source|default:"" }}<br>
+    Категория погибшего: {{ person.deadman_category|default:"" }}<br>
+    Место призыва: {{ person.personcall.unit|default:"" }}<br>
+    Дата призыва: {{ person.personcall.get_unclear_date|default:"" }}<br>
+    Место службы: {{ person.personduty.unit|default:"" }}<br>
+    Звание: {{ person.personduty.rank|default:"" }}<br>
+    Должность: {{ person.personduty.post|default:"" }}<br>
+    Дата гибели: {{ person.get_unclear_death_date|default:"" }}<br>
+    Причина гибели: {{ person.death_cause|default:"" }}<br>
     <br>
     {% if person.burial %}
         <table border="1" rules="rows" width="100%">
@@ -32,17 +32,17 @@
             </thead>
             <tr>
                 <td><a href="{% url burial person.burial.uuid %}">{{ person.burial.passportid }}</a></td>
-                <td>{{ person.burial.get_unclear_date_burried }}</td>
-                <td>{{ person.burial.location }}</td>
+                <td>{{ person.burial.get_unclear_date_burried|default:"" }}</td>
+                <td>{{ person.burial.location|default:"" }}</td>
             </tr>
             {% for old in  person.closed_burials.all %}
             <tr>
                 <td>
                     Перенесено из:
-                    <a href="{% url burial old.uuid %}">{{ old.passportid }}</a>
+                    <a href="{% url burial old.uuid %}">{{ old.passportid|default:"без номера" }}</a>
                 </td>
-                <td>{{ old.get_unclear_date_burried }}</td>
-                <td>{{ old.location }}</td>
+                <td>{{ old.get_unclear_date_burried|default:"" }}</td>
+                <td>{{ old.location|default:"" }}</td>
             </tr>
             {% endfor %}
         </table>
