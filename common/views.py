@@ -197,8 +197,17 @@ def burials(request):
     Поиск захоронений.
     Результат возвращается в виде таблицы. Для запроса используется метод GET.
     """
+    template = request.REQUEST.get('template', 'burials.html')
     if 'search' in request.GET and request.GET['search']:
         form = BurialsForm(request.GET)
+
+        if template == 'reports/report_4.html':
+            form.fields['country'].required = True
+
+        if template == 'reports/report_4a.html':
+            form.fields['country'].required = True
+            form.fields['region'].required = True
+
         # Если пользователь нажал кнопку 'Поиск'
         if request.GET['search'] == u'Поиск':
             if form.is_valid():
@@ -250,8 +259,6 @@ def burials(request):
                         }))
                 else:
                     burials = burials.order_by('passportid')
-
-                    template = request.REQUEST.get('template', 'burials.html')
 
                     paginator = Paginator(burials, 20)
                     p = request.GET.get('p', 1)
@@ -431,7 +438,7 @@ def burials(request):
                             else:
                                 burials_sel = burials_all
 
-                            burials_sel = list(burials_sel.order_by())
+                            burials_sel = list(burials_sel.order_by('passportid'))
                             burials_pks = [b.pk for b in burials_sel]
 
                             b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
@@ -453,11 +460,11 @@ def burials(request):
                                     'WWII': sum([c.count for c in conflicts if c.type and c.type.name == u"2МВ"], 0),
                                     'local': sum([c.count for c in conflicts if c.type and c.type.name == u"ЛВК"], 0),
                                     'other': sum([c.count for c in conflicts if c.type and c.type.name == u"ГР и др."], 0),
-                                    'war': sum([b.count for b in burial_types if b.type.name == u'ВК'], 0),
-                                    'group': sum([b.count for b in burial_types if b.type.name == u"БМ"], 0),
-                                    'personal': sum([b.count for b in burial_types if b.type.name == u"ИМ"], 0),
-                                    'mass': sum([b.count for b in burial_types if b.type.name == u"ММУ"], 0),
-                                    'foreign': sum([b.count for b in burial_types if b.type.name == u"ИН"], 0),
+                                    'war': sum([b.count for b in burial_types if b.type and b.type.name == u'ВК'], 0),
+                                    'group': sum([b.count for b in burial_types if b.type and b.type.name == u"БМ"], 0),
+                                    'personal': sum([b.count for b in burial_types if b.type and b.type.name == u"ИМ"], 0),
+                                    'mass': sum([b.count for b in burial_types if b.type and b.type.name == u"ММУ"], 0),
+                                    'foreign': sum([b.count for b in burial_types if b.type and b.type.name == u"ИН"], 0),
                                 }
 
                                 conflicts = MilitaryConflict.objects.all().select_related()
@@ -493,7 +500,7 @@ def burials(request):
                             if form.cleaned_data.get('district'):
                                 districts = districts.filter(pk=form.cleaned_data.get('district').pk)
                             for district in districts:
-                                data_key = 'form4a_data2_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                                data_key = 'form4a_data3_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
@@ -507,23 +514,25 @@ def burials(request):
                                     'data': data
                                 })
                         else:
-                            districts = form.cleaned_data['region'].district_set.all().order_by('name')
-                            for district in districts:
-                                data_key = 'form4_data2_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                            regions = form.cleaned_data['country'].georegion_set.all().order_by('name')
+                            if form.cleaned_data.get('region'):
+                                regions = regions.filter(pk=form.cleaned_data.get('region').pk)
+                            for region in regions:
+                                data_key = 'form4_data3_%s_%s' % (form.cleaned_data.get('country'), region.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
-                                        burials, selected_persons, form.cleaned_data['region'], district
+                                        burials, selected_persons, region, None
                                     )
                                     cache.set(data_key, data, 86400)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
-                                    'district': district,
+                                    'region': region,
                                     'data': data
                                 })
                             context['data'] = filter_data(
-                                burials, selected_persons, form.cleaned_data['region'], None
+                                burials, selected_persons, None, None
                             )
 
                         context['rows'] = rows

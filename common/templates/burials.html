@@ -13,6 +13,9 @@
             dateFormat: 'dd.mm.yy',
             yearRange: '1600:{% now "Y" %}'
         });
+
+        {% if template == 'reports/report_4.html' %}$('#id_district, #id_municipalitet, #id_city, #id_city_name').parent().parent().hide();{% endif %}
+        {% if template == 'reports/report_4a.html' %}$('#id_municipalitet, #id_city, #id_city_name').parent().parent().hide();{% endif %}
     })
 </script>
 {% endblock %}
