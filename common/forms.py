@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.core.urlresolvers import reverse
 from django.forms.fields import MultiValueField
 from django.forms.widgets import MultiWidget, Select
 
@@ -141,6 +142,21 @@ class LocationWidget(MultiWidget):
                 value.city and value.city.name,
             ]
         return [None, None, None, None, None]
+
+class AdminLocationWidget(LocationWidget):
+    def format_output(self, rendered_widgets):
+        output = []
+        i = 0
+        for w, k in zip(rendered_widgets, ['geocountry', 'georegion', 'district', 'municipalitet', ]):
+            related_url = reverse('admin:%s_%s_add' % ('common', k))
+            output.append(w)
+            output.append(u'<a href="%s" class="add-another" id="add_id_%s" onclick="return showAddAnotherPopup(this);"> ' % (related_url, 'location_%s' % i))
+            output.append(u'<img src="%simg/admin/icon_addlink.gif" width="10" height="10" alt="%s"/></a>&nbsp;' % (settings.ADMIN_MEDIA_PREFIX, u"новый"))
+            i += 1
+        for w in rendered_widgets[4:]:
+            output.append(w)
+        return u''.join(output)
+
 
 class MockLocation(object):
     def __init__(self, *args, **kwargs):
@@ -292,7 +308,7 @@ class BurialAdminForm(forms.ModelForm):
     date_burried = UnclearDateField(label=u"Дата создания захоронения", required=False)
     date_discovered = UnclearDateField(label=u"Дата обнаружения захоронения", required=False)
     date_memorial = UnclearDateField(label=u"Дата установки памятника", required=False)
-    location = LocationField(label=u"Место захоронения", required=False, partial=True)
+    location = LocationField(label=u"Место захоронения", required=False, partial=True, widget=AdminLocationWidget)
 
     count_known = forms.IntegerField(label=u"Известных")
     count_unknown = forms.IntegerField(label=u"Неизвестных")
@@ -351,7 +367,7 @@ class PersonAdminForm(forms.ModelForm):
     birth_date = UnclearDateField(label=u"Дата рождения", required=False)
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
     duplicate_ok = forms.BooleanField(label=u"Да, создайте дублирующую запись", required=False, widget=forms.HiddenInput)
-    birth_location = LocationField(label=u"Место рождения", required=False, partial=True)
+    birth_location = LocationField(label=u"Место рождения", required=False, partial=True, widget=AdminLocationWidget)
     birth_location_info = forms.CharField(label=u"Доп.информация о месте рождения", required=False, widget=forms.Textarea)
 
     class Meta:
