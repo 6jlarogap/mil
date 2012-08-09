@@ -790,7 +790,7 @@ class MilitaryUnit(models.Model):
     Воинское подразделение
     """
     name = models.CharField(u"Воинское подразделение", max_length=100, db_index=True)
-    location = models.OneToOneField(SimpleLocation, null=True, blank=True)
+    location = models.OneToOneField(SimpleLocation, null=True, blank=True, editable=False)
 
     def __unicode__(self):
         return self.name
