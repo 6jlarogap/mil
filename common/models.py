@@ -889,7 +889,9 @@ class PersonDuty(models.Model):
     post = models.ForeignKey(Post, verbose_name=u"Должность", blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s %s %s' % (self.rank, self.post, self.unit)
+        s = u'%s %s %s' % (self.rank or u'', self.post or u'', self.unit or u'')
+        return s.strip()
+
     class Meta:
         verbose_name = (u'Место службы')
         verbose_name_plural = (u'Место службы')
