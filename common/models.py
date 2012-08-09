@@ -34,7 +34,7 @@ class GeoRegion(models.Model):
     Регион.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    country = models.ForeignKey(GeoCountry, null=True)
+    country = models.ForeignKey(GeoCountry, null=True, verbose_name=u"Страна")
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
@@ -51,7 +51,7 @@ class District(models.Model):
     Район.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    region = models.ForeignKey(GeoRegion, null=True)
+    region = models.ForeignKey(GeoRegion, null=True, verbose_name=u"Область")
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
@@ -67,7 +67,7 @@ class Municipalitet(models.Model):
     Сельсовет.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    district = models.ForeignKey(District)
+    district = models.ForeignKey(District, verbose_name=u"Район")
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
