@@ -513,6 +513,9 @@ def burials(request):
                                     'district': district,
                                     'data': data
                                 })
+                            context['data'] = filter_data(
+                                burials, selected_persons, form.cleaned_data['region'], None
+                            )
                         else:
                             regions = form.cleaned_data['country'].georegion_set.all().order_by('name')
                             if form.cleaned_data.get('region'):
