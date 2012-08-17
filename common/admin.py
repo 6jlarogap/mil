@@ -118,7 +118,7 @@ class PersonAdmin(admin.ModelAdmin):
         PersonEditCauseInline,
     ]
     form = PersonAdminForm
-    search_fields = ['burial__passportid', 'last_name__exact']
+    search_fields = ['burial__passportid', '=last_name']
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
     raw_id_fields = ['birth_location', 'burial' ]
     list_display = ['last_name', 'first_name', 'patronymic', 'get_passport_number', 'get_unclear_birth_date_admin', 'get_unclear_death_date_admin',]
