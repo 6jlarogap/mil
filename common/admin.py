@@ -118,7 +118,7 @@ class PersonAdmin(admin.ModelAdmin):
         PersonEditCauseInline,
     ]
     form = PersonAdminForm
-    search_fields = ['burial__passportid', 'last_name']
+    search_fields = ['burial__passportid', 'last_name__iexact']
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
     raw_id_fields = ['birth_location', 'burial' ]
     list_display = ['last_name', 'first_name', 'patronymic', 'get_passport_number', 'get_unclear_birth_date_admin', 'get_unclear_death_date_admin',]
@@ -142,7 +142,7 @@ class PersonAdmin(admin.ModelAdmin):
         obj.save()
 
     def get_passport_number(self, obj):
-        return obj.burial.passportid or ''
+        return obj.burial and obj.burial.passportid or ''
     get_passport_number.short_description = u'Номер паспорта ВЗ'
 
     def get_unclear_birth_date_admin(self, obj):
