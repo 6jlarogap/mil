@@ -19,6 +19,44 @@ class UnclearSelectDateWidget(SelectDateWidget):
     month_unclear = False
     year_unclear = False
 
+    def render(self, name, value, attrs=None):
+        try:
+            year_val, month_val, day_val = value.year, value.month, value.day
+        except AttributeError:
+            year_val = month_val = day_val = None
+            if isinstance(value, basestring):
+                if settings.USE_L10N:
+                    try:
+                        input_format = get_format('DATE_INPUT_FORMATS')[0]
+                        # Python 2.4 compatibility:
+                        #     v = datetime.datetime.strptime(value, input_format)
+                        # would be clearer, but datetime.strptime was added in
+                        # Python 2.5
+                        v = datetime.datetime(*(time.strptime(value, input_format)[0:6]))
+                        year_val, month_val, day_val = v.year, v.month, v.day
+                    except ValueError:
+                        pass
+                else:
+                    match = RE_DATE.match(value)
+                    if match:
+                        year_val, month_val, day_val = [int(v) for v in match.groups()]
+        choices = [(i, i) for i in self.years]
+        year_html = self.create_select(name, self.year_field, value, year_val, choices)
+        choices = zip(MONTHS.keys(), MONTHS.keys())
+        month_html = self.create_select(name, self.month_field, value, month_val, choices)
+        choices = [(i, i) for i in range(1, 32)]
+        day_html = self.create_select(name, self.day_field, value, day_val,  choices)
+
+        output = []
+        for field in _parse_date_fmt():
+            if field == 'year':
+                output.append(year_html)
+            elif field == 'month':
+                output.append(month_html)
+            elif field == 'day':
+                output.append(day_html)
+        return mark_safe(u'\n'.join(output))
+
     def value_from_datadict(self, data, files, name):
         from django.forms.extras.widgets import get_format, datetime_safe
 
