@@ -2,11 +2,13 @@
 from django.core.urlresolvers import reverse
 from django.forms.fields import MultiValueField
 from django.forms.widgets import MultiWidget, Select
+from django.utils.dates import MONTHS
+from django.utils.formats import get_format
 
 import settings
 import datetime
 from django import forms
-from django.forms.extras.widgets import SelectDateWidget
+from django.forms.extras.widgets import SelectDateWidget, RE_DATE, _parse_date_fmt
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.conf import settings
