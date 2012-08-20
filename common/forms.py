@@ -4,6 +4,7 @@ from django.forms.fields import MultiValueField
 from django.forms.widgets import MultiWidget, Select
 from django.utils.dates import MONTHS
 from django.utils.formats import get_format
+from django.utils.safestring import mark_safe
 
 import settings
 import datetime
