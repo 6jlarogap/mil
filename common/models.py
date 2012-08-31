@@ -282,7 +282,7 @@ class Burial(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
-    passportid = models.CharField(u"Номер паспорта воинского захоронения",  blank=True, null=True, max_length=128, db_index=True, unique=True)
+    passportid = models.PositiveIntegerField(u"Номер паспорта воинского захоронения",  blank=True, null=True, db_index=True, unique=True)
     date_closed = models.DateField(u"Дата закрытия", blank=True, null=True, editable=False, db_index=True)
     burial_type = models.ForeignKey(BurialType, verbose_name=u"Тип воинского захоронения", blank=True, null=True)
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
