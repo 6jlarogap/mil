@@ -219,7 +219,7 @@ def burials(request):
                 if cd['bemptypassport']:
                     burials = burials.filter(passportid__isnull=True)
                 else:
-                    burials = burials.exclude(passportid__isnull=False)
+                    burials = burials.exclude(passportid__isnull=True)
                 if cd['city']:
                     burials = burials.filter(location__city = cd['city'])
                 if cd['city_name']:
