@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import urllib
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.views.generic.simple import direct_to_template
 import simplejson
@@ -11,13 +12,13 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import *
 from django.core.paginator import Paginator, EmptyPage
 from django.core.cache import cache
+from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
 
 from common.models import *
 from common.forms import *
 from common.tasks import report_2_deferred
 import cemetery_redis
-
-from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
+import xlrd
 
 def lookup_cast(self, lookup_type):
     if lookup_type == 'iregex':
@@ -571,70 +572,145 @@ def burial(request, obj):
         'burial': burial
         }))
 
-'''
-def get_deadman(request):
-    """
-    Получение уникального списка ФИО захороненных.
-    """
-    persons = []
-    q = request.GET.get('q', None)
-    if q is not None:
-        rezult = Person.objects.filter(buried__isnull=False, last_name__istartswith=q).values("last_name",
-                          "first_name", "patronymic").order_by("last_name", "first_name", "patronymic").distinct()[:16]
-        persons = ["%s %s %s" % (item["last_name"], item["first_name"], item["patronymic"]) for item in rezult]
-    return direct_to_template(request, 'ajax.html', {'objects': persons,})
+def import_xls(request):
+    form = XLSImportForm(data=request.POST or None, files=request.FILES or None)
+    if request.POST and form.is_valid():
+        tmp_workbook = os.tmpnam()
+        destination = open(tmp_workbook, 'wb+')
+        for chunk in form.cleaned_data['xls'].chunks():
+            destination.write(chunk)
+        destination.close()
+        burial_obj = form.cleaned_data['burial']
+
+        errors = []
+        xl = xlrd.open_workbook(filename=tmp_workbook)
+        worksheet = xl.sheets()[0]
+        row = 1
+        all_data = []
+
+        while row < worksheet.nrows:
+            has_errors = False
+            data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
+            duty, last_name, first_name, middle_name, birth, death, info = data
+            data_row = {}
+            if duty:
+                try:
+                    data_row['duty'] = Rank.objects.get(name=duty.strip().capitalize())
+                except Post.DoesNotExist:
+                    data_row['duty'] = {
+                        'value': duty,
+                        'error': u'Звание не найдено в БД'
+                    }
+                    has_errors = True
+            if not last_name:
+                data_row['person'] = {
+                    'value': u'%s %s %s' % (last_name, first_name, middle_name),
+                    'error': u'Фамилия обязательна'
+                }
+                has_errors = True
+            else:
+                if Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj).exists():
+                    data_row['person'] = {
+                        'value': u'%s %s %s' % (last_name, first_name, middle_name),
+                        'error': u'Такие ФИО уже существуют в указанном захоронении'
+                    }
+                    has_errors = True
+                else:
+                    data_row['person_value'] = ' '.join([last_name, first_name, middle_name])
+                    data_row['person'] = [last_name, first_name, middle_name]
+
+            if birth:
+                if isinstance(birth, float):
+                    birth = int(birth)
+                try:
+                    bits = map(int, str(birth).split('.'))
+                    bits.reverse()
+                    y,m,d = list(bits + [None, None])[:3]
+                    data_row['birth'] = UnclearDate(y,m,d)
+                except ValueError, e:
+                    data_row['birth'] = {
+                        'value': birth,
+                        'error': u'Не понимаю дату: %s' % e.message
+                    }
+                    has_errors = True
+            if death:
+                if isinstance(death, float):
+                    birth = int(death)
+                try:
+                    bits = map(int, str(death).split('.'))
+                    bits.reverse()
+                    y,m,d = list(bits + [None, None])[:3]
+                    data_row['death'] = UnclearDate(y,m,d)
+                except ValueError, e:
+                    data_row['death'] = {
+                        'value': death,
+                        'error': u'Не понимаю дату: %s' % e.message
+                    }
+                    has_errors = True
+
+            data_row['info'] = info
+
+            all_data.append({'errors': has_errors, 'data': data_row})
+            row += 1
+
+        os.unlink(tmp_workbook)
+        return direct_to_template(request, 'import2.html', extra_context={
+            'all_data': all_data,
+            'burial_obj': burial_obj,
+        })
+
+    return direct_to_template(request, 'import.html', extra_context={
+        'form': form,
+    })
+
+def import_xls_2(request):
+    row = 0
+    cnt = 0
+    while row < int(request.POST['lines']):
+        if request.POST.get('check_%s' % row):
+            last_name = request.POST.get('last_name_%s' % row)
+            first_name = request.POST.get('first_name_%s' % row, '')
+            middle_name = request.POST.get('middle_name_%s' % row, '')
+            birth = request.POST.get('birth_%s' % row, '')
+            death = request.POST.get('death_%s' % row, '')
+            info = request.POST.get('info_%s' % row, '')
 
 
-def get_street(request):
-    """
-    Получение улицы с городом, регионом и страной.
-    """
-    streets = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name",
-                                                                     "city__region__country__name")[:24]
-        for s in rezult:
-            streets.append(u"%s/%s/%s/%s" % (s.name, s.city.name, s.city.region.name, s.city.region.country.name))
-    return HttpResponse(JSONEncoder().encode(streets))
+            burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
 
+            params = dict(
+                burial = burial_obj,
+                last_name = last_name,
+                first_name = first_name,
+                patronymic = middle_name,
+                info = info,
+            )
+            if birth:
+                bits = map(int, str(birth).split('.'))
+                bits.reverse()
+                y,m,d = list(bits + [None, None])[:3]
+                birth_date = UnclearDate(y,m,d)
+                params.update(
+                    birth_date = birth_date.d,
+                    birth_date_no_month = birth_date.no_month,
+                    birth_date_no_day = birth_date.no_day,
+                )
+            if death:
+                bits = map(int, str(death).split('.'))
+                bits.reverse()
+                y,m,d = list(bits + [None, None])[:3]
+                death_date = UnclearDate(y,m,d)
+                params.update(
+                    death_date = death_date.d,
+                    death_date_no_month = death_date.no_month,
+                    death_date_no_day = death_date.no_day,
+                )
 
-def get_countries(request):
-    """
-    Получение списка стран с пом. AJAX-запроса.
-    """
-    countries = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoCountry.objects.filter(name__istartswith=q).order_by("name")[:8]
-        for s in rezult:
-            countries.append(s.name)
-    return HttpResponse(JSONEncoder().encode(countries))
+            Person.objects.get_or_create(**params)
+            cnt += 1
 
+        row += 1
 
-def get_cities(request):
-    """
-    Получение списка нас. пунктов с пом. AJAX-запроса.
-    """
-    cities = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name",
-                                                                      "region__country__name")[:24]
-        for s in rezult:
-            cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
-    return HttpResponse(JSONEncoder().encode(cities))
+    messages.success(request, u"Импорт завершен, импортировано %s записей" % cnt)
 
-
-def get_regions(request):
-    """
-    Получение списка регионов с пом. AJAX-запроса.
-    """
-    regions = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoRegion.objects.filter(name__istartswith=q).order_by("name", "country__name")[:24]
-        for s in rezult:
-            regions.append(u"%s/%s" % (s.name, s.country.name))
-    return HttpResponse(JSONEncoder().encode(regions))
-'''
+    return HttpResponseRedirect('/import/')

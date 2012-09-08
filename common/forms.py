@@ -483,3 +483,13 @@ class PersonCallForm(forms.ModelForm):
                 setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
         obj.save()
         return obj
+
+class XLSImportForm(forms.Form):
+    xls = forms.FileField(label=u'Файл XLS')
+    burial = forms.IntegerField(label=u"Номер захоронения")
+
+    def clean_burial(self):
+        try:
+            return Burial.objects.get(passportid=self.cleaned_data['burial'])
+        except Exception:
+            raise forms.ValidationError(u"Неверный номер")

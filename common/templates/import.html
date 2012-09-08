@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}MIL.ORG - Карточка Захоронения{% endblock %}
+
+{% block content %}
+    <h1>Импорт</h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="Загрузить" /></p>
+    </form>
+{% endblock %}
