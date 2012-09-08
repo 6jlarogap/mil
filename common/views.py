@@ -591,7 +591,9 @@ def import_xls(request):
         while row < worksheet.nrows:
             has_errors = False
             data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
+            data = [d.strip() if isinstance(d, basestring) else d for d in data]
             duty, last_name, first_name, middle_name, birth, death, info = data
+            last_name, first_name, middle_name = map(lambda s: s.upper(), [last_name, first_name, middle_name])
             data_row = {}
             if duty:
                 try:
@@ -705,6 +707,7 @@ def import_xls_2(request):
                     death_date_no_month = death_date.no_month,
                     death_date_no_day = death_date.no_day,
                 )
+
 
             Person.objects.get_or_create(**params)
             cnt += 1

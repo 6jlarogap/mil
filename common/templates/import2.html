@@ -32,10 +32,10 @@
             {% for d in all_data %}
             <tr class="{% if d.errors %}errors{% endif %}">
                 <td>
+                    {{ forloop.counter|add:1 }}
                     {% if not d.data.person.error %}
                         <input type="checkbox" value="on" name="check_{{ forloop.counter0 }}" {% if not d.errors %}checked="checked"{% endif %} />
                     {% endif %}
-                    {{ forloop.counter|add:1 }}
                 </td>
                 {% if d.data.duty.error %}
                     <td class="error" title="{{ d.data.duty.error }}">{{ d.data.duty.value }}</td>
