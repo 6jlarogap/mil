@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.views.generic.simple import direct_to_template
 import simplejson
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import *
@@ -583,7 +583,11 @@ def import_xls(request):
         burial_obj = form.cleaned_data['burial']
 
         errors = []
-        xl = xlrd.open_workbook(filename=tmp_workbook)
+        try:
+            xl = xlrd.open_workbook(filename=tmp_workbook)
+        except xlrd.XLRDError:
+            messages.error(request, u'Неверный формат файла')
+            return redirect('import')
         worksheet = xl.sheets()[0]
         row = 1
         all_data = []
@@ -623,7 +627,11 @@ def import_xls(request):
 
             if birth:
                 if isinstance(birth, float):
-                    birth = int(birth)
+                    try:
+                        birth = datetime.datetime(*xlrd.xldate_as_tuple(birth, xl.datemode)).strftime('%d.%m.%Y')
+                    except ValueError:
+                        birth = int(birth)
+
                 try:
                     bits = map(int, str(birth).split('.'))
                     bits.reverse()
@@ -637,7 +645,11 @@ def import_xls(request):
                     has_errors = True
             if death:
                 if isinstance(death, float):
-                    birth = int(death)
+                    try:
+                        death = datetime.datetime(*xlrd.xldate_as_tuple(death, xl.datemode)).strftime('%d.%m.%Y')
+                    except ValueError:
+                        death = int(death)
+
                 try:
                     bits = map(int, str(death).split('.'))
                     bits.reverse()

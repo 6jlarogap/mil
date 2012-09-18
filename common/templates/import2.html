@@ -14,7 +14,7 @@
 {% block title %}MIL.ORG - Карточка Захоронения{% endblock %}
 
 {% block content %}
-    <h1>Импорт</h1>
+    <h1>Импорт в захоронение № {{ burial_obj.passportid }}</h1>
     <form action="{% url import2 %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="lines" value="{{ all_data|length }}" />
@@ -33,7 +33,7 @@
             <tr class="{% if d.errors %}errors{% endif %}">
                 <td>
                     {{ forloop.counter|add:1 }}
-                    {% if not d.data.person.error %}
+                    {% if not d.errors %}
                         <input type="checkbox" value="on" name="check_{{ forloop.counter0 }}" {% if not d.errors %}checked="checked"{% endif %} />
                     {% endif %}
                 </td>
