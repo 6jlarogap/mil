@@ -16,7 +16,8 @@
         $('#id_count_known, #id_count_unknown').parents('.form-row').hide();
         $('#id_count_known, #id_count_unknown').css('width', '5em');
 
-        ef.find('td:eq(1)').html('<p>всего: ' + ((sum2 || sum1) + sum3) + '</p>');
+        var sum_all = ((sum2 || sum1) + sum3);
+        ef.find('td:eq(1)').html('<p>всего: <input type="text" id="id_sum_all" value="'+sum_all+'"/></p>');
         ef.find('td:eq(2)').find('input').replaceWith($('#id_count_known'));
         ef.find('td:eq(3)').find('input').replaceWith($('#id_count_unknown'));
         ef.find('td:eq(4)').html('<p>'+sum1+'</p>');
@@ -45,6 +46,11 @@
             }
             if (sum3 != final3) {
                 alert('Сумма счетчиков неизвестных ('+sum3+') не совпадает с указанным значением итого ('+final3+')');
+                return false;
+            }
+            var sum_all = parseInt($('#id_sum_all').val());
+            if (sum_all != final3 + final2) {
+                alert('Сумма счетчиков известных и неизвестных ('+final3 + final2+') не совпадает со значением "Всего" ('+sum_all+')');
                 return false;
             }
             return true;
