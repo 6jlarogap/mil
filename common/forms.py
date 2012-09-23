@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 from django.core.urlresolvers import reverse
 from django.forms.fields import MultiValueField
 from django.forms.widgets import MultiWidget, Select
@@ -31,10 +32,6 @@ class UnclearSelectDateWidget(SelectDateWidget):
                 if settings.USE_L10N:
                     try:
                         input_format = get_format('DATE_INPUT_FORMATS')[0]
-                        # Python 2.4 compatibility:
-                        #     v = datetime.datetime.strptime(value, input_format)
-                        # would be clearer, but datetime.strptime was added in
-                        # Python 2.5
                         v = datetime.datetime(*(time.strptime(value, input_format)[0:6]))
                         year_val, month_val, day_val = v.year, v.month, v.day
                     except ValueError:
