@@ -591,6 +591,7 @@ def import_xls(request):
         worksheet = xl.sheets()[0]
         row = 1
         all_data = []
+        any_errors = False
 
         while row < worksheet.nrows:
             has_errors = False
@@ -665,12 +666,15 @@ def import_xls(request):
             data_row['info'] = info
 
             all_data.append({'errors': has_errors, 'data': data_row})
+            if has_errors:
+                any_errors = True
             row += 1
 
         os.unlink(tmp_workbook)
         return direct_to_template(request, 'import2.html', extra_context={
             'all_data': all_data,
             'burial_obj': burial_obj,
+            'any_errors': any_errors,
         })
 
     return direct_to_template(request, 'import.html', extra_context={
