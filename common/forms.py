@@ -97,7 +97,7 @@ class UnclearSelectDateWidget(SelectDateWidget):
         return select_html
 
 class UnclearDateField(forms.DateField):
-    widget = UnclearSelectDateWidget(years=range(datetime.date.today().year, 1850, -1))
+    widget = UnclearSelectDateWidget(years=range(datetime.date.today().year, 1700, -1))
     empty_strings_allowed = True
 
     def __init__(self, *args, **kwargs):
