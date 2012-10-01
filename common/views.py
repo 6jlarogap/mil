@@ -139,7 +139,7 @@ def persons(request):
                 if persons.exists():
                     persons_count = persons.count()
 
-                    per_page = int(request.REQUEST.get('per_page')) or 20
+                    per_page = int(request.REQUEST.get('per_page') or 20)
                     paginator = Paginator(persons, per_page)
                     p = request.GET.get('p', '1')
                     try:
@@ -263,7 +263,7 @@ def burials(request):
                 else:
                     burials = burials.order_by('passportid')
 
-                    paginator = Paginator(burials, request.REQUEST.get('per_page') or 20)
+                    paginator = Paginator(burials, int(request.REQUEST.get('per_page') or 20))
                     p = request.GET.get('p', 1)
                     try:
                         burials_page = paginator.page(p)
@@ -570,7 +570,7 @@ def burial(request, obj):
             'error': 'Выбранный воин не обранужен.'
         }))
 
-    per_page = request.REQUEST.get('per_page') or 20
+    per_page = int(request.REQUEST.get('per_page') or 20)
 
     return object_list(request,
         template_name='burial.html',
