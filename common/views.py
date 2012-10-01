@@ -3,6 +3,7 @@
 import urllib
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.views.generic.list_detail import object_list
 from django.views.generic.simple import direct_to_template
 import simplejson
 
@@ -138,7 +139,8 @@ def persons(request):
                 if persons.exists():
                     persons_count = persons.count()
 
-                    paginator = Paginator(persons, 20)
+                    per_page = int(request.REQUEST.get('per_page')) or 20
+                    paginator = Paginator(persons, per_page)
                     p = request.GET.get('p', '1')
                     try:
                         persons_page = paginator.page(p)
@@ -156,7 +158,7 @@ def persons(request):
                         'persons_count': persons_count,
                         'query_vars': query_vars,
                         'form': form,
-                        'search_offset': 20 * (int(p) - 1),
+                        'search_offset': per_page * (int(p) - 1),
                     }
 
                     return render_to_response(template, context_instance = RequestContext(request, context))
@@ -261,7 +263,7 @@ def burials(request):
                 else:
                     burials = burials.order_by('passportid')
 
-                    paginator = Paginator(burials, 20)
+                    paginator = Paginator(burials, request.REQUEST.get('per_page') or 20)
                     p = request.GET.get('p', 1)
                     try:
                         burials_page = paginator.page(p)
@@ -566,11 +568,18 @@ def burial(request, obj):
     except:
         return render_to_response('error.html', context_instance=RequestContext(request, {
             'error': 'Выбранный воин не обранужен.'
-            }))
-
-    return render_to_response('burial.html', context_instance=RequestContext(request, {
-        'burial': burial
         }))
+
+    per_page = request.REQUEST.get('per_page') or 20
+
+    return object_list(request,
+        template_name='burial.html',
+        queryset=burial.person_set.all(),
+        paginate_by=per_page,
+        extra_context={
+            'burial': burial,
+        }
+    )
 
 def import_xls(request):
     form = XLSImportForm(data=request.POST or None, files=request.FILES or None)
