@@ -15,7 +15,12 @@
 
 {% block content %}
     <h1>Импорт в захоронение № {{ burial_obj.passportid }}</h1>
-    {% if any_errors %}<form action="{% url import2 %}" method="POST">{% endif %}
+    {% if not any_errors %}
+        <p>Все ок, можно загружать</p>
+    {% else %}
+        <p>Обнаружены {% if bad_errrors %}ошибки{% else %}дубли{% endif %}, см. в таблице</p>
+    {% endif %}
+    <form action="{% url import2 %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="lines" value="{{ all_data|length }}" />
         <input type="hidden" name="burial" value="{{ burial_obj.pk }}" />
@@ -30,63 +35,61 @@
                 <th>Доп. инфо</th>
             </tr>
             {% for d in all_data %}
-                {% if d.errors %}
-                    <tr class="errors">
+                <tr {% if d.errors %}class="errors"{% endif %}>
+                    <td>
+                        {{ forloop.counter|add:1 }}
+                        {% if not d.errors %}
+                            <input type="checkbox" value="on" name="check_{{ forloop.counter0 }}" {% if not d.errors %}checked="checked"{% endif %} />
+                        {% endif %}
+                    </td>
+                    {% if d.data.duty.error %}
+                        <td class="error" title="{{ d.data.duty.error }}">{{ d.data.duty.value }}</td>
+                    {% else %}
                         <td>
-                            {{ forloop.counter|add:1 }}
-                            {% if not d.errors %}
-                                <input type="checkbox" value="on" name="check_{{ forloop.counter0 }}" {% if not d.errors %}checked="checked"{% endif %} />
+                            {{ d.data.duty }}
+                            <input type="hidden" value="{{ d.data.duty.pk }}" name="post_{{ forloop.counter0 }}" />
+                        </td>
+                    {% endif %}
+                    {% if d.data.person.error %}
+                        <td class="error" title="{{ d.data.person.error }}">{{ d.data.person.value }}</td>
+                    {% else %}
+                        <td>
+                            {{ d.data.person_value }}
+                            <input type="hidden" value="{{ d.data.person.0 }}" name="last_name_{{ forloop.counter0 }}" />
+                            <input type="hidden" value="{{ d.data.person.1 }}" name="first_name_{{ forloop.counter0 }}" />
+                            <input type="hidden" value="{{ d.data.person.2 }}" name="middle_name_{{ forloop.counter0 }}" />
+                        </td>
+                    {% endif %}
+                    {% if d.data.birth.error %}
+                        <td class="error" title="{{ d.data.birth.error }}">{{ d.data.birth.value }}</td>
+                    {% else %}
+                        <td>
+                            {% if d.data.death %}
+                                {{ d.data.birth }}
+                                <input type="hidden" value="{{ d.data.birth }}" name="birth_{{ forloop.counter0 }}" />
                             {% endif %}
                         </td>
-                        {% if d.data.duty.error %}
-                            <td class="error" title="{{ d.data.duty.error }}">{{ d.data.duty.value }}</td>
-                        {% else %}
-                            <td>
-                                {{ d.data.duty }}
-                                <input type="hidden" value="{{ d.data.duty.pk }}" name="post_{{ forloop.counter0 }}" />
-                            </td>
-                        {% endif %}
-                        {% if d.data.person.error %}
-                            <td class="error" title="{{ d.data.person.error }}">{{ d.data.person.value }}</td>
-                        {% else %}
-                            <td>
-                                {{ d.data.person_value }}
-                                <input type="hidden" value="{{ d.data.person.0 }}" name="last_name_{{ forloop.counter0 }}" />
-                                <input type="hidden" value="{{ d.data.person.1 }}" name="first_name_{{ forloop.counter0 }}" />
-                                <input type="hidden" value="{{ d.data.person.2 }}" name="middle_name_{{ forloop.counter0 }}" />
-                            </td>
-                        {% endif %}
-                        {% if d.data.birth.error %}
-                            <td class="error" title="{{ d.data.birth.error }}">{{ d.data.birth.value }}</td>
-                        {% else %}
-                            <td>
-                                {% if d.data.death %}
-                                    {{ d.data.birth }}
-                                    <input type="hidden" value="{{ d.data.birth }}" name="birth_{{ forloop.counter0 }}" />
-                                {% endif %}
-                            </td>
-                        {% endif %}
-                        {% if d.data.death.error %}
-                            <td class="error" title="{{ d.data.death.error }}">{{ d.data.death.value }}</td>
-                        {% else %}
-                            <td>
-                                {% if d.data.death %}
-                                    {{ d.data.death }}
-                                    <input type="hidden" value="{{ d.data.death }}" name="death_{{ forloop.counter0 }}" />
-                                {% endif %}
-                            </td>
-                        {% endif %}
+                    {% endif %}
+                    {% if d.data.death.error %}
+                        <td class="error" title="{{ d.data.death.error }}">{{ d.data.death.value }}</td>
+                    {% else %}
                         <td>
-                            {{ d.data.info }}
-                            <input type="hidden" value="{{ d.data.info|default:"" }}" name="info_{{ forloop.counter0 }}" />
+                            {% if d.data.death %}
+                                {{ d.data.death }}
+                                <input type="hidden" value="{{ d.data.death }}" name="death_{{ forloop.counter0 }}" />
+                            {% endif %}
                         </td>
-                    </tr>
-                {% endif %}
+                    {% endif %}
+                    <td>
+                        {{ d.data.info }}
+                        <input type="hidden" value="{{ d.data.info|default:"" }}" name="info_{{ forloop.counter0 }}" />
+                    </td>
+                </tr>
             {% endfor %}
         </table>
 
-        {% if not d.errors %}
+        {% if not bad_errors %}
             <p><input type="submit" value="Загрузить" /></p>
         {% endif %}
-    {% if any_errors %}</form>{% endif %}
+    </form>
 {% endblock %}

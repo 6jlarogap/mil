@@ -592,6 +592,7 @@ def import_xls(request):
         row = 1
         all_data = []
         any_errors = False
+        bad_errrors = False
 
         while row < worksheet.nrows:
             has_errors = False
@@ -609,12 +610,14 @@ def import_xls(request):
                         'error': u'Звание не найдено в БД'
                     }
                     has_errors = True
+                    bad_errrors = True
             if not last_name:
                 data_row['person'] = {
                     'value': u'%s %s %s' % (last_name, first_name, middle_name),
                     'error': u'Фамилия обязательна'
                 }
                 has_errors = True
+                bad_errrors = True
             else:
                 if Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj).exists():
                     data_row['person'] = {
@@ -644,6 +647,7 @@ def import_xls(request):
                         'error': u'Не понимаю дату: %s' % e.message
                     }
                     has_errors = True
+                    bad_errrors = True
             if death:
                 if isinstance(death, float):
                     try:
@@ -662,6 +666,7 @@ def import_xls(request):
                         'error': u'Не понимаю дату: %s' % e.message
                     }
                     has_errors = True
+                    bad_errrors = True
 
             data_row['info'] = info
 
@@ -675,6 +680,7 @@ def import_xls(request):
             'all_data': all_data,
             'burial_obj': burial_obj,
             'any_errors': any_errors,
+            'bad_errrors': bad_errrors,
         })
 
     return direct_to_template(request, 'import.html', extra_context={
