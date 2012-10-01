@@ -48,7 +48,7 @@
             <td>Причина гибели</td>
             <td>Дата захоронения</td>
         </thead>
-    {% for p in burial.person_set.all %}
+    {% for p in object_list %}
         <tr>
             <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
             <td>{{ p.get_unclear_birth_date|default:"" }}</td>
@@ -58,6 +58,18 @@
         </tr>
     {% endfor %}
     </table>
+    <br/>
+    <center>
+        {% if page_obj.has_previous %}
+            <a href="?{{ query_vars }}&p={{ page_obj.previous_page_number }}"><< Пред</a>
+        {% endif %}
+
+        Страница {{ page_obj.number }} из {{ paginator.num_pages }}
+
+        {% if page_obj.has_next %}
+            <a href="?{{ query_vars }}&p={{ page_obj.next_page_number }}">След >></a>
+        {% endif %}
+    </center>
 
     <br>
     <br>
