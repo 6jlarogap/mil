@@ -299,7 +299,7 @@ class PersonsForm(forms.Form):
     info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о воине")
     in_trash = forms.BooleanField(required=False, label="В корзине")
 
-    per_page = models.PositiveSmallIntegerField(verbose_name=u"Записей на страницу", choices=PER_PAGE_CHOICES)
+    per_page = forms.ChoiceField(label=u"Записей на страницу", choices=PER_PAGE_CHOICES)
 
     def __init__(self, *args, **kwargs):
         super(PersonsForm, self).__init__(*args, **kwargs)
@@ -338,7 +338,7 @@ class BurialsForm(forms.ModelForm):
     only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
     other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
 
-    per_page = models.PositiveSmallIntegerField(verbose_name=u"Записей на страницу", choices=PER_PAGE_CHOICES)
+    per_page = forms.ChoiceField(label=u"Записей на страницу", choices=PER_PAGE_CHOICES)
 
     def __init__(self, *args, **kwargs):
         super(BurialsForm, self).__init__(*args, **kwargs)
