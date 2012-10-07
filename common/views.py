@@ -608,7 +608,7 @@ def import_xls(request):
             data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
             data = [d.strip() if isinstance(d, basestring) else d for d in data]
             duty, last_name, first_name, middle_name, birth, death, info = data
-            last_name, first_name, middle_name = map(lambda s: s.upper(), [last_name, first_name, middle_name])
+            last_name, first_name, middle_name = map(lambda s: s.upper().strip('.').strip(' '), [last_name, first_name, middle_name])
             data_row = {}
             if duty:
                 try:
