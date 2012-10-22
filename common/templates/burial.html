@@ -52,7 +52,7 @@
         </thead>
     {% for p in object_list %}
         <tr>
-            <td>{{ forloop.counter|add:page_obj.start_index }}</td>
+            <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
             <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
             <td>{{ p.get_unclear_birth_date|default:"" }}</td>
             <td>{{ p.get_unclear_death_date|default:"" }}</td>
