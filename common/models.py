@@ -351,6 +351,7 @@ class Burial(models.Model):
                     DeadmanCategory.objects.get(name=u"Военнослужащий"),
                     DeadmanCategory.objects.get(name=u"Участник сопротивления"),
                     DeadmanCategory.objects.get(name=u"Жертва войны"),
+                    DeadmanCategory.objects.get(name=u"Военнопленный"),
                     DeadmanCategory.objects.get(name=u"Другие"),
                 ]
 
@@ -362,6 +363,7 @@ class Burial(models.Model):
                 'resistance': r.known_for_burial_list_and_cat([self], dead_cats[1]),
                 'prey': r.known_for_burial_list_and_cat([self], dead_cats[2]),
                 'prisoners': r.known_for_burial_list_and_cat([self], dead_cats[3]),
+                'other': r.known_for_burial_list_and_cat([self], dead_cats[4]),
             }
 
             cache.set('stats_burial_%s' % self.pk, stats, 3600)
