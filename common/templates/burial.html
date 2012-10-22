@@ -34,15 +34,16 @@
     <form action="" method="GET">
         Записей на странице:
         <select name="per_page">
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
+            <option value="20" {% if request.GET.per_page == '20' %} selected="true"{% endif %}>20</option>
+            <option value="50" {% if request.GET.per_page == '50' %} selected="true"{% endif %}>50</option>
+            <option value="100" {% if request.GET.per_page == '100' %} selected="true"{% endif %}>100</option>
         </select>
         <input type="submit" value="обновить" />
     </form>
     
     <table border="1" rules="rows" width="100%">
         <thead>
+            <td></td>
             <td>ФИО</td>
             <td>Дата рождения</td>
             <td>Дата смерти</td>
@@ -51,6 +52,7 @@
         </thead>
     {% for p in object_list %}
         <tr>
+            <td>{{ forloop.counter|add:page_obj.start_index }}</td>
             <td><a href="{% url person p.uuid %}">{{ p.last_name }}&nbsp;{{ p.first_name }}&nbsp;{{ p.patonymic }}</a></td>
             <td>{{ p.get_unclear_birth_date|default:"" }}</td>
             <td>{{ p.get_unclear_death_date|default:"" }}</td>
