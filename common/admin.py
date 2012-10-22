@@ -6,7 +6,6 @@ from django.contrib import admin
 
 from common.models import *
 from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget, PersonCallForm
-from common.adminfilters import *
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
