@@ -123,6 +123,7 @@ class PersonAdmin(admin.ModelAdmin):
     raw_id_fields = ['birth_location', 'burial' ]
     list_filter = ['deadman_category', ]
     list_display = ['last_name', 'first_name', 'patronymic', 'get_passport_number', 'get_unclear_birth_date_admin', 'get_unclear_death_date_admin',]
+    ordering = ['last_name', 'first_name', 'patronymic', ]
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)
