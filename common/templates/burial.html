@@ -27,7 +27,9 @@
     Дата установки госзнака: {{ burial.get_unclear_date_gosznak }}<br>
     Дополнительная информация о месте захоронения: {{ burial.info }}<br>
     <br>
-    Количество захороненнных: {{ burial.get_count }}<br>
+    Количество захороненнных: {{ burial.get_count|add:burial.get_qunknown }}<br>
+    <br>
+    Количество известных: {{ burial.get_count }}<br>
     <br>
     Количество неизвестных: {{ burial.get_qunknown }}<br>
     <br>
