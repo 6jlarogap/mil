@@ -64,13 +64,13 @@
     <br/>
     <center>
         {% if page_obj.has_previous %}
-            <a href="?{{ query_vars }}&p={{ page_obj.previous_page_number }}&per_page={{ request.GET.per_page }}"><< Пред</a>
+            <a href="?{{ query_vars }}&page={{ page_obj.previous_page_number }}&per_page={{ request.GET.per_page }}"><< Пред</a>
         {% endif %}
 
         Страница {{ page_obj.number }} из {{ paginator.num_pages }}
 
         {% if page_obj.has_next %}
-            <a href="?{{ query_vars }}&p={{ page_obj.next_page_number }}&per_page={{ request.GET.per_page }}">След >></a>
+            <a href="?{{ query_vars }}&page={{ page_obj.next_page_number }}&per_page={{ request.GET.per_page }}">След >></a>
         {% endif %}
     </center>
 
