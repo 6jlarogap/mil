@@ -35,7 +35,7 @@ class ClosedBurialFromInLine(admin.TabularInline):
 class BurialCategoryInLine(admin.TabularInline):
     model = BurialCategory
     extra = 0
-    readonly_fields = ['category', 'known_link', ]
+    readonly_fields = ['category', 'known', ]
     can_delete = False
     template = 'tabular_burialcat.html'
     fieldsets = [(None, {'fields': ['category', 'custom_known', 'unknown', 'known', ]})]
