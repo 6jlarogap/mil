@@ -311,6 +311,7 @@ def burials(request):
                             DeadmanCategory.objects.get(name=u"Военнослужащий"),
                             DeadmanCategory.objects.get(name=u"Участник сопротивления"),
                             DeadmanCategory.objects.get(name=u"Жертва войны"),
+                            DeadmanCategory.objects.get(name=u"Военнопленный"),
                             DeadmanCategory.objects.get(name=u"Другие"),
                         ]
                         burial_list = list(burials.select_related().order_by('passportid'))
