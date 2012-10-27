@@ -67,22 +67,21 @@
     </thead>
     {% for burial in burials.object_list %}
     <tr>
-        <td>{{ burial.passportid }}</td>
-        <td>{{ burial.get_unclear_date_passport|default:"нет" }}</td>
-        <td>{{ burial.get_unclear_date_burried|default:"нет" }}</td>
-        <td>{{ burial.get_unclear_date_discovered|default:"нет" }}</td>
+        <td>{{ burial.passportid|default:"" }}</td>
+        <td>{{ burial.get_unclear_date_passport|default:"" }}</td>
+        <td>{{ burial.get_unclear_date_burried|default:"" }}</td>
+        <td>{{ burial.get_unclear_date_discovered|default:"" }}</td>
         <td>
-            {% if not burial.location %}нет{% endif %}
             {% if burial.location.country %}{{ burial.location.country }}<br/>{% endif %}
             {% if burial.location.region %}{{ burial.location.region }}<br/>{% endif %}
             {% if burial.location.district %}{{ burial.location.district }}<br/>{% endif %}
             {% if burial.location.city %}{{ burial.location.city }}<br/>{% endif %}
         </td>
         <td>{{ burial.burial_type }}</td>
-        <td>{{ burial.military_conflict|default:"нет" }}</td>
-        <td>{{ burial.get_unclear_date_memorial|default:"нет" }}</td>
-        <td>{{ burial.state|default:"нет" }}</td>
-        <td>{{ burial.get_unclear_date_gosznak|default:"нет" }}</td>
+        <td>{{ burial.military_conflict|default:"" }}</td>
+        <td>{{ burial.get_unclear_date_memorial|default:"" }}</td>
+        <td>{{ burial.state|default:"" }}</td>
+        <td>{{ burial.get_unclear_date_gosznak|default:"" }}</td>
         <td>{{ burial.info|default:"" }}</td>
         <td align="center">
             <a href="{% url burial  burial.uuid %}">[Просмотр]</a>

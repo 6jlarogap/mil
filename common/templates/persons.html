@@ -76,12 +76,12 @@
             {% for person in persons.object_list %}
                 <tr>
                     <td>{{ forloop.counter|add:search_offset }}</td>
-                    <td><a href="{% url person person.uuid %}">{{ person.last_name.upper }}</a></td>
-                    <td>{{ person.first_name.upper }}</td>
-                    <td>{{ person.patronymic.upper }}</td>
-                    <td>{{ person.personduty.rank }}</td>
-                    <td>{{ person.get_unclear_birth_date }}</td>
-                    <td>{{ person.get_unclear_death_date }}</td>
+                    <td><a href="{% url person person.uuid %}">{{ person.last_name.upper|default:"" }}</a></td>
+                    <td>{{ person.first_name.upper|default:"" }}</td>
+                    <td>{{ person.patronymic.upper|default:"" }}</td>
+                    <td>{{ person.personduty.rank|default:"" }}</td>
+                    <td>{{ person.get_unclear_birth_date|default:"" }}</td>
+                    <td>{{ person.get_unclear_death_date|default:"" }}</td>
                     {% if person.burial %}
                         <td>
                             <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>
