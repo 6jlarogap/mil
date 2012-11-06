@@ -100,6 +100,7 @@ class UnclearSelectDateWidget(SelectDateWidget):
         local_attrs = self.build_attrs(id=field % id_)
         choices = map(lambda c: len(unicode(c[1])) == 1 and ('0%s'%c[0], '0%s'%c[1]) or c, choices)
         s = Select(choices=choices)
+        val = len(unicode(val)) == 1 and '0%s' % val or val
         select_html = s.render(field % name, val, local_attrs)
         return select_html
 
