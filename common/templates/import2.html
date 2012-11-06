@@ -43,7 +43,10 @@
                         {% endif %}
                     </td>
                     {% if d.data.duty.error %}
-                        <td class="error" title="{{ d.data.duty.error }}">{{ d.data.duty.value }}</td>
+                        <td class="error" title="{{ d.data.duty.error }}">
+                            {{ d.data.duty.value }}
+                            <input type="hidden" value="{{ d.data.dut.value }}" name="post_{{ forloop.counter0 }}" />
+                        </td>
                     {% else %}
                         <td>
                             {{ d.data.duty }}
@@ -51,7 +54,12 @@
                         </td>
                     {% endif %}
                     {% if d.data.person.error %}
-                        <td class="error" title="{{ d.data.person.error }}">{{ d.data.person.value }}</td>
+                        <td class="error" title="{{ d.data.person.error }}">
+                            {{ d.data.person.value }}
+                            <input type="hidden" value="{{ d.data.person.data.0 }}" name="last_name_{{ forloop.counter0 }}" />
+                            <input type="hidden" value="{{ d.data.person.data.1 }}" name="first_name_{{ forloop.counter0 }}" />
+                            <input type="hidden" value="{{ d.data.person.data.2 }}" name="middle_name_{{ forloop.counter0 }}" />
+                        </td>
                     {% else %}
                         <td>
                             {{ d.data.person_value }}
@@ -61,17 +69,23 @@
                         </td>
                     {% endif %}
                     {% if d.data.birth.error %}
-                        <td class="error" title="{{ d.data.birth.error }}">{{ d.data.birth.value }}</td>
+                        <td class="error" title="{{ d.data.birth.error }}">
+                            {{ d.data.birth.value }}
+                            <input type="hidden" value="{{ d.data.birth.value }}" name="birth_{{ forloop.counter0 }}" />
+                        </td>
                     {% else %}
                         <td>
-                            {% if d.data.death %}
+                            {% if d.data.birth %}
                                 {{ d.data.birth }}
                                 <input type="hidden" value="{{ d.data.birth }}" name="birth_{{ forloop.counter0 }}" />
                             {% endif %}
                         </td>
                     {% endif %}
                     {% if d.data.death.error %}
-                        <td class="error" title="{{ d.data.death.error }}">{{ d.data.death.value }}</td>
+                        <td class="error" title="{{ d.data.death.error }}">
+                            {{ d.data.death.value }}
+                            <input type="hidden" value="{{ d.data.death.value }}" name="death_{{ forloop.counter0 }}" />
+                        </td>
                     {% else %}
                         <td>
                             {% if d.data.death %}
@@ -83,6 +97,7 @@
                     <td>
                         {{ d.data.info }}
                         <input type="hidden" value="{{ d.data.info|default:"" }}" name="info_{{ forloop.counter0 }}" />
+                        <input type="hidden" value="{{ d.data.duty.error }} {{ d.data.person.error }} {{ d.data.birth.error }} {{ d.data.death.error }}" name="error_{{ forloop.counter0 }}" />
                     </td>
                 </tr>
             {% endfor %}

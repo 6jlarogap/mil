@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from StringIO import StringIO
 
 import urllib
 from django.contrib import messages
@@ -20,6 +21,7 @@ from common.forms import *
 from common.tasks import report_2_deferred
 import cemetery_redis
 import xlrd
+import xlwt
 
 def lookup_cast(self, lookup_type):
     if lookup_type == 'iregex':
@@ -631,6 +633,7 @@ def import_xls(request):
             else:
                 if Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj).exists():
                     data_row['person'] = {
+                        'data': (last_name, first_name, middle_name),
                         'value': u'%s %s %s' % (last_name, first_name, middle_name),
                         'error': u'Такие ФИО уже существуют в указанном захоронении'
                     }
@@ -700,18 +703,22 @@ def import_xls(request):
 def import_xls_2(request):
     row = 0
     cnt = 0
+
+    burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    book = xlwt.Workbook(encoding='cp1251')
+    sheet = book.add_sheet(u'Ошибки'.encode('cp1251'))
+    xli = 0
+
     while row < int(request.POST['lines']):
+        last_name = request.POST.get('last_name_%s' % row) or ''
+        first_name = request.POST.get('first_name_%s' % row, '') or ''
+        middle_name = request.POST.get('middle_name_%s' % row, '') or ''
+        birth = request.POST.get('birth_%s' % row, '') or ''
+        death = request.POST.get('death_%s' % row, '') or ''
+        info = request.POST.get('info_%s' % row, '') or ''
+        error = request.POST.get('error_%s' % row, '') or ''
+
         if request.POST.get('check_%s' % row):
-            last_name = request.POST.get('last_name_%s' % row)
-            first_name = request.POST.get('first_name_%s' % row, '')
-            middle_name = request.POST.get('middle_name_%s' % row, '')
-            birth = request.POST.get('birth_%s' % row, '')
-            death = request.POST.get('death_%s' % row, '')
-            info = request.POST.get('info_%s' % row, '')
-
-
-            burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
-
             params = dict(
                 burial = burial_obj,
                 last_name = last_name,
@@ -743,9 +750,25 @@ def import_xls_2(request):
 
             Person.objects.get_or_create(**params)
             cnt += 1
+        else:
+            sheet.write(xli, 0, last_name.encode('cp1251'))
+            sheet.write(xli, 1, first_name.encode('cp1251'))
+            sheet.write(xli, 2, middle_name.encode('cp1251'))
+            sheet.write(xli, 3, birth.encode('cp1251'))
+            sheet.write(xli, 4, death.encode('cp1251'))
+            sheet.write(xli, 5, info.encode('cp1251'))
+            sheet.write(xli, 6, error.strip().encode('cp1251'))
+            xli += 1
 
         row += 1
 
     messages.success(request, u"Импорт завершен, импортировано %s записей" % cnt)
+
+    if xli > 0:
+        content = StringIO()
+        book.save(content)
+        response = HttpResponse(content.getvalue(), mimetype='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="import_%s_errors.xls"' % burial_obj.passportid
+        return response
 
     return HttpResponseRedirect('/import/')
