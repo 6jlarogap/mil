@@ -798,6 +798,7 @@ class MilitaryUnit(models.Model):
         return self.name
 
     class Meta:
+        orderindg = ['name']
         verbose_name = (u'Воинское подразделение')
         verbose_name_plural = (u'Воинские подразделения')
 
@@ -813,6 +814,7 @@ class Comissariat(models.Model):
         return u'%s' % name
 
     class Meta:
+        orderindg = ['name']
         verbose_name = (u'Военкомат')
         verbose_name_plural = (u'Военкоматы')
 
