@@ -715,6 +715,7 @@ def import_xls_2(request):
     xli = 0
 
     while row < int(request.POST['lines']):
+        post = request.POST.get('post_%s' % row) or ''
         last_name = request.POST.get('last_name_%s' % row) or ''
         first_name = request.POST.get('first_name_%s' % row, '') or ''
         middle_name = request.POST.get('middle_name_%s' % row, '') or ''
@@ -722,6 +723,14 @@ def import_xls_2(request):
         death = request.POST.get('death_%s' % row, '') or ''
         info = request.POST.get('info_%s' % row, '') or ''
         error = request.POST.get('error_%s' % row, '') or ''
+
+        rank = None
+
+        if post:
+            try:
+                rank = Rank.objects.get(pk=post)
+            except Rank.DoesNotExist:
+                rank = Rank.objects.create(name=post)
 
         if request.POST.get('check_%s' % row):
             params = dict(
@@ -753,16 +762,26 @@ def import_xls_2(request):
                 )
 
 
-            Person.objects.get_or_create(**params)
+            p, _ = Person.objects.get_or_create(**params)
+
+            if rank:
+                PersonDuty.objects.get_or_create(person=p, rank=rank)
+
             cnt += 1
         else:
-            sheet.write(xli, 0, last_name.encode('cp1251'))
-            sheet.write(xli, 1, first_name.encode('cp1251'))
-            sheet.write(xli, 2, middle_name.encode('cp1251'))
-            sheet.write(xli, 3, birth.encode('cp1251'))
-            sheet.write(xli, 4, death.encode('cp1251'))
-            sheet.write(xli, 5, info.encode('cp1251'))
-            sheet.write(xli, 6, error.strip().encode('cp1251'))
+            try:
+                post_name = Rank.objects.get(pk=post).name
+            except Rank.DoesNotExist:
+                post_name = post
+
+            sheet.write(xli, 0, post_name.encode('cp1251'))
+            sheet.write(xli, 1, last_name.encode('cp1251'))
+            sheet.write(xli, 2, first_name.encode('cp1251'))
+            sheet.write(xli, 3, middle_name.encode('cp1251'))
+            sheet.write(xli, 4, birth.encode('cp1251'))
+            sheet.write(xli, 5, death.encode('cp1251'))
+            sheet.write(xli, 6, info.encode('cp1251'))
+            sheet.write(xli, 7, error.strip().encode('cp1251'))
             xli += 1
 
         row += 1

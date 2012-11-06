@@ -45,7 +45,7 @@
                     {% if d.data.duty.error %}
                         <td class="error" title="{{ d.data.duty.error }}">
                             {{ d.data.duty.value }}
-                            <input type="hidden" value="{{ d.data.dut.value }}" name="post_{{ forloop.counter0 }}" />
+                            <input type="hidden" value="{{ d.data.duty.value }}" name="post_{{ forloop.counter0 }}" />
                         </td>
                     {% else %}
                         <td>
