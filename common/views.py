@@ -616,31 +616,13 @@ def import_xls(request):
             if duty:
                 try:
                     data_row['duty'] = Rank.objects.get(name=duty.strip().capitalize())
-                except Post.DoesNotExist:
+                except Rank.DoesNotExist:
                     data_row['duty'] = {
                         'value': duty,
                         'error': u'Звание не найдено в БД'
                     }
                     has_errors = True
                     bad_errrors = True
-            if not last_name:
-                data_row['person'] = {
-                    'value': u'%s %s %s' % (last_name, first_name, middle_name),
-                    'error': u'Фамилия обязательна'
-                }
-                has_errors = True
-                bad_errrors = True
-            else:
-                if Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj).exists():
-                    data_row['person'] = {
-                        'data': (last_name, first_name, middle_name),
-                        'value': u'%s %s %s' % (last_name, first_name, middle_name),
-                        'error': u'Такие ФИО уже существуют в указанном захоронении'
-                    }
-                    has_errors = True
-                else:
-                    data_row['person_value'] = ' '.join([last_name, first_name, middle_name])
-                    data_row['person'] = [last_name, first_name, middle_name]
 
             if birth:
                 if isinstance(birth, float):
@@ -681,9 +663,32 @@ def import_xls(request):
                     has_errors = True
                     bad_errrors = True
 
+            if not last_name:
+                data_row['person'] = {
+                    'value': u'%s %s %s' % (last_name, first_name, middle_name),
+                    'error': u'Фамилия обязательна'
+                }
+                has_errors = True
+                bad_errrors = True
+            else:
+                persons = Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj)
+                d = data_row.get('death')
+                if d and isinstance(d, UnclearDate):
+                    persons = persons.filter(death_date=d.d)
+                if persons.exists():
+                    data_row['person'] = {
+                        'data': (last_name, first_name, middle_name),
+                        'value': u'%s %s %s' % (last_name, first_name, middle_name),
+                        'error': u'Такие ФИО уже существуют в указанном захоронении'
+                    }
+                    has_errors = True
+                else:
+                    data_row['person_value'] = ' '.join([last_name, first_name, middle_name])
+                    data_row['person'] = [last_name, first_name, middle_name]
+
             data_row['info'] = info
 
-            all_data.append({'errors': has_errors, 'data': data_row})
+            all_data.append({'errors': has_errors, 'bad_errrors': bad_errrors, 'data': data_row})
             if has_errors:
                 any_errors = True
             row += 1
