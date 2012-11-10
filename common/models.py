@@ -104,7 +104,7 @@ def geo_name(name):
     def make_first_upper(m):
         return u'%s%s' % (m.groups()[0], m.groups()[1].capitalize())
 
-    clean_name = re.sub(u'(\s)([A-Za-zА-Яа-яёЁ])', make_first_upper, clean_name)
+    clean_name = re.sub(u'([\s-])([A-Za-zА-Яа-яёЁ])', make_first_upper, clean_name)
 
     VALID_PREFIXES = [u'г', u'п', u'пос', u'ул', u'пр', u'просп', u'пер', u'пл', u'л', u'ур',  u'оз',  ]
 
