@@ -367,8 +367,8 @@ def burials(request):
                                 'soldiers': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Военнослужащий")),
                                 'resistance': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
                                 'prey': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Жертва войны")),
-                                'prisoners': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Другие")),
-                                'nowhere': 0,
+                                'prisoners': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Военнопленный")),
+                                'nowhere': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Другие")),
                             },
                         })
 
