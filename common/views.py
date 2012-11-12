@@ -771,7 +771,7 @@ def import_xls_2(request):
         else:
             try:
                 post_name = Rank.objects.get(pk=post).name
-            except Rank.DoesNotExist:
+            except (ValueError, Rank.DoesNotExist):
                 post_name = post
 
             sheet.write(xli, 0, post_name.encode('cp1251'))
