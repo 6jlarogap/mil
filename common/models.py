@@ -112,9 +112,12 @@ def geo_name(name):
         prefix = m.groups()[0]
         if prefix.lower() in VALID_PREFIXES:
             prefix = prefix.lower()
+
         return u'%s.' % prefix
 
     clean_name = re.sub(u'^([A-Za-zА-Яа-яёЁ]+)\.', make_prefix_lower, clean_name)
+
+    clean_name = re.sub(u'(\s|^)[Аа][Оо](\s|$)', u'\\1АО\\2', clean_name)
 
     return clean_name
 
