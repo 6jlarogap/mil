@@ -894,12 +894,13 @@ class PersonDuty(models.Model):
     Место службы
     """
     person = models.OneToOneField(Person, primary_key=True) 
-    unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", blank=True, null=True)
+    unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", editable=False, null=True)
+    unit_name = models.CharField(u"Воинское подразделение", max_length=255, db_index=True)
     rank = models.ForeignKey(Rank, verbose_name=u"Звание", blank=True, null=True)
     post = models.ForeignKey(Post, verbose_name=u"Должность", blank=True, null=True)
 
     def __unicode__(self):
-        s = u'%s %s %s' % (self.rank or u'', self.post or u'', self.unit or u'')
+        s = u'%s %s %s' % (self.rank or u'', self.post or u'', self.unit_name or u'')
         return s.strip()
 
     class Meta:

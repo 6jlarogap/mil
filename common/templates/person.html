@@ -17,7 +17,7 @@
     Категория погибшего: {{ person.deadman_category|default:"" }}<br>
     Место призыва: {{ person.personcall.unit|default:"" }}<br>
     Дата призыва: {{ person.personcall.get_unclear_date|default:"" }}<br>
-    Место службы: {{ person.personduty.unit|default:"" }}<br>
+    Место службы: {{ person.personduty.unit_name|default:"" }}<br>
     Звание: {{ person.personduty.rank|default:"" }}<br>
     Должность: {{ person.personduty.post|default:"" }}<br>
     Дата гибели: {{ person.get_unclear_death_date|default:"" }}<br>
