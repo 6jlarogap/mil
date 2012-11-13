@@ -11,9 +11,6 @@ class Migration(SchemaMigration):
         # Adding field 'PersonDuty.unit_name'
         db.add_column('common_personduty', 'unit_name', self.gf('django.db.models.fields.CharField')(default='', max_length=255, db_index=True), keep_default=False)
 
-        # Deleting field 'Burial.passportid1'
-        db.delete_column('common_burial', 'passportid1')
-
         # Changing field 'Burial.passportid'
         db.alter_column('common_burial', 'passportid', self.gf('django.db.models.fields.PositiveIntegerField')(unique=True, null=True))
 
@@ -22,9 +19,6 @@ class Migration(SchemaMigration):
         
         # Deleting field 'PersonDuty.unit_name'
         db.delete_column('common_personduty', 'unit_name')
-
-        # Adding field 'Burial.passportid1'
-        db.add_column('common_burial', 'passportid1', self.gf('django.db.models.fields.PositiveIntegerField')(blank=True, unique=True, null=True, db_index=True), keep_default=False)
 
         # Changing field 'Burial.passportid'
         db.alter_column('common_burial', 'passportid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=128, null=True))
