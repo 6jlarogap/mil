@@ -481,7 +481,7 @@ class PersonCallForm(forms.ModelForm):
         })
         super(PersonCallForm, self).__init__(*args, **kwargs)
 
-    def save(self, *args, **kwargs):
+    def save(self, commit=True, *args, **kwargs):
         kwargs['commit'] = False
         obj = super(PersonCallForm, self).save(*args, **kwargs)
         for f in self.fields:
@@ -490,7 +490,9 @@ class PersonCallForm(forms.ModelForm):
                 self.fields[f].widget.value_from_datadict(data=self.data, files=None, name=f)
                 setattr(obj, f+'_no_month', getattr(obj, f) and self.fields[f].widget.no_month or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
-        obj.save()
+
+        if commit:
+            obj.save()
         return obj
 
 class XLSImportForm(forms.Form):

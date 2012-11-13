@@ -829,7 +829,10 @@ class PersonCall(models.Model):
     date_no_day = models.BooleanField(default=False, editable=False)
 
     def __unicode__(self):
-        return u'%s' % self.unit.name
+        if self.unit:
+            return u'%s' % self.unit.name
+        else:
+            return u'Не указано'
 
     class Meta:
         verbose_name = (u'Место призыва')
