@@ -873,6 +873,7 @@ class Post(models.Model):
     class Meta:
         verbose_name = (u'Должность')
         verbose_name_plural = (u'Должности')
+        ordering = ['name', ]
 
 class Rank(models.Model):
     """
