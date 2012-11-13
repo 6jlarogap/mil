@@ -895,7 +895,7 @@ class PersonDuty(models.Model):
     """
     person = models.OneToOneField(Person, primary_key=True) 
     unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", editable=False, null=True)
-    unit_name = models.CharField(u"Воинское подразделение", max_length=255, db_index=True)
+    unit_name = models.CharField(u"Воинское подразделение", max_length=255, db_index=True, blank=True, null=True)
     rank = models.ForeignKey(Rank, verbose_name=u"Звание", blank=True, null=True)
     post = models.ForeignKey(Post, verbose_name=u"Должность", blank=True, null=True)
 
