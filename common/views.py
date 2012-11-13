@@ -427,7 +427,8 @@ def burials(request):
                                 'soldiers': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Военнослужащий")),
                                 'resistance': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
                                 'prey': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Жертва войны")),
-                                'prisoners': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Другие")),
+                                'prisoners': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Военнопленный")),
+                                'nowhere': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Другие")),
                                 'mia': Person.objects.filter(burial__isnull=True, mia=True).count(),
                                 'outside_rb': Person.objects.filter(outside_rb=True).count(),
                             },
@@ -491,7 +492,8 @@ def burials(request):
                                     'soldiers': sum([d.count for d in deadman_cats if d.name in [u"Военнослужащий",]], 0),
                                     'resistance': sum([d.count for d in deadman_cats if d.name in [u"Участник сопротивления",]], 0),
                                     'prey': sum([d.count for d in deadman_cats if d.name in [u"Жертва войны",]], 0),
-                                    'prisoners': sum([d.count for d in deadman_cats if d.name in [u"Другие",]], 0),
+                                    'prisoners': sum([d.count for d in deadman_cats if d.name in [u"Военнопленный",]], 0),
+                                    'other': sum([d.count for d in deadman_cats if d.name in [u"Другие",]], 0),
                                 }
 
                                 return {
