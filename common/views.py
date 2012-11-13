@@ -493,7 +493,6 @@ def burials(request):
                                     'resistance': sum([d.count for d in deadman_cats if d.name in [u"Участник сопротивления",]], 0),
                                     'prey': sum([d.count for d in deadman_cats if d.name in [u"Жертва войны",]], 0),
                                     'prisoners': sum([d.count for d in deadman_cats if d.name in [u"Военнопленный",]], 0),
-                                    'other': sum([d.count for d in deadman_cats if d.name in [u"Другие",]], 0),
                                 }
 
                                 return {
@@ -508,7 +507,7 @@ def burials(request):
                             if form.cleaned_data.get('district'):
                                 districts = districts.filter(pk=form.cleaned_data.get('district').pk)
                             for district in districts:
-                                data_key = 'form4a_data3_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                                data_key = 'form4a_data4_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
@@ -529,7 +528,7 @@ def burials(request):
                             if form.cleaned_data.get('region'):
                                 regions = regions.filter(pk=form.cleaned_data.get('region').pk)
                             for region in regions:
-                                data_key = 'form4_data3_%s_%s' % (form.cleaned_data.get('country'), region.pk)
+                                data_key = 'form4_data4_%s_%s' % (form.cleaned_data.get('country'), region.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
@@ -552,7 +551,7 @@ def burials(request):
             return render_to_response('burials.html', context_instance=RequestContext(request, {
                 'form': form,
                 'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
-                }))
+            }))
         # Если пользователь нажал кнопку 'Сброс'
         if request.GET['search'] == u'Сброс':
             return HttpResponseRedirect('/burials')
