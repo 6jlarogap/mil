@@ -513,7 +513,7 @@ def burials(request):
                                     data = filter_data(
                                         burials, selected_persons, form.cleaned_data['region'], district
                                     )
-                                    cache.set(data_key, data, 86400)
+                                    cache.set(data_key, data, 3600)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
@@ -534,7 +534,7 @@ def burials(request):
                                     data = filter_data(
                                         burials, selected_persons, region, None
                                     )
-                                    cache.set(data_key, data, 86400)
+                                    cache.set(data_key, data, 3600)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
