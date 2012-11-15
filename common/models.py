@@ -186,7 +186,7 @@ class SimpleLocation(Location):
     """
     С точностью до страны
     """
-    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
+    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", blank=True, null=True)       # Страна
     region = ChainedForeignKey(GeoRegion, verbose_name=u"Область", chained_field="country", chained_model_field="country", blank=True, null=True)
     district = ChainedForeignKey(District, verbose_name=u"Район", chained_field="region", chained_model_field="region", blank=True, null=True)
     municipalitet = ChainedForeignKey(Municipalitet, verbose_name=u"Сельсовет", chained_field="district", chained_model_field="district", blank=True, null=True)
