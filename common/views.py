@@ -607,6 +607,8 @@ def import_xls(request):
         any_errors = False
         bad_errrors = False
 
+        head = worksheet.row_slice(row, 0, 7)
+
         while row < worksheet.nrows:
             has_errors = False
             data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
@@ -700,6 +702,7 @@ def import_xls(request):
             'burial_obj': burial_obj,
             'any_errors': any_errors,
             'bad_errrors': bad_errrors,
+            'head': head,
         })
 
     return direct_to_template(request, 'import.html', extra_context={
@@ -713,7 +716,16 @@ def import_xls_2(request):
     burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
     book = xlwt.Workbook(encoding='cp1251')
     sheet = book.add_sheet(u'Ошибки'.encode('cp1251'))
-    xli = 0
+
+    sheet.write(0, 0, request.POST.get('head_1') or '')
+    sheet.write(0, 1, request.POST.get('head_2') or '')
+    sheet.write(0, 2, request.POST.get('head_3') or '')
+    sheet.write(0, 3, request.POST.get('head_4') or '')
+    sheet.write(0, 4, request.POST.get('head_5') or '')
+    sheet.write(0, 5, request.POST.get('head_6') or '')
+    sheet.write(0, 6, request.POST.get('head_7') or '')
+
+    xli = 1
 
     while row < int(request.POST['lines']):
         post = request.POST.get('post_%s' % row) or ''
