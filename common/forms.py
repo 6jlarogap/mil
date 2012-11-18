@@ -436,10 +436,12 @@ class PersonAdminForm(forms.ModelForm):
             persons = persons.exclude(pk=self.instance.pk)
         try:
             filters = {}
-            for f in ['last_name', 'first_name', 'patronymic', 'birth_date', 'death_date']:
+            for f in ['last_name', 'first_name', 'patronymic', 'death_date']:
                 if self.cleaned_data.get(f):
-                    filters[f] = self.cleaned_data.get(f)
+                    filters[f+'__iexact'] = self.cleaned_data.get(f)
 
+            if self.cleaned_data.get('burial'):
+                filters['burial'] = self.cleaned_data.get('burial')
             person = persons.filter(**filters)[0]
         except IndexError:
             pass
@@ -463,7 +465,9 @@ class PersonAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
         obj.save()
 
-        if self.cleaned_data.get('birth_location_info') and obj.birth_location:
+        if self.cleaned_data.get('birth_location_info'):
+            if not obj.birth_location:
+                obj.birth_location = SimpleLocation()
             obj.birth_location.info = self.cleaned_data['birth_location_info']
             obj.birth_location.save()
 
