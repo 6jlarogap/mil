@@ -436,12 +436,13 @@ class PersonAdminForm(forms.ModelForm):
             persons = persons.exclude(pk=self.instance.pk)
         try:
             filters = {}
-            for f in ['last_name', 'first_name', 'patronymic', 'death_date']:
+            for f in ['last_name', 'first_name', 'patronymic']:
                 if self.cleaned_data.get(f):
                     filters[f+'__iexact'] = self.cleaned_data.get(f)
+            for f in ['burial', 'death_date']:
+                if self.cleaned_data.get(f):
+                    filters[f] = self.cleaned_data.get(f)
 
-            if self.cleaned_data.get('burial'):
-                filters['burial'] = self.cleaned_data.get('burial')
             person = persons.filter(**filters)[0]
         except IndexError:
             pass
