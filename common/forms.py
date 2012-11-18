@@ -158,10 +158,10 @@ class LocationWidget(MultiWidget):
         countries = GeoCountry.objects.all()
         widgets = (
             forms.Select(choices=[('', u'Страна')] + [(c.pk, c) for c in countries]),
-            ChainedSelect('common', 'GeoRegion', ", [id$=location_0]", "country", False, True),
-            ChainedSelect('common', 'District', ", [id$=location_1]", "region", False, True),
-            ChainedSelect('common', 'Municipalitet', ", [id$=location_2]", "district", False, True),
-            ChainedSelect('common', 'GeoCity', ", [id$=location_2]", "district", False, True),
+            ChainedSelect('common', 'GeoRegion', ", [id$=location_0]", "country", False, False),
+            ChainedSelect('common', 'District', ", [id$=location_1]", "region", False, False),
+            ChainedSelect('common', 'Municipalitet', ", [id$=location_2]", "district", False, False),
+            ChainedSelect('common', 'GeoCity', ", [id$=location_2]", "district", False, False),
             forms.TextInput(),
         )
         for w,l in zip(widgets, [u'Страна', u'Область', u'Район', u'Сельсовет', u'Нас. пункт', ]):

@@ -45,6 +45,7 @@ class GeoRegion(models.Model):
         unique_together = (("country", "name"),)
         verbose_name = u'область'
         verbose_name_plural = u'области'
+        ordering = ['name']
 
 class District(models.Model):
     """
@@ -61,6 +62,7 @@ class District(models.Model):
     class Meta:
         verbose_name = u'район'
         verbose_name_plural = u'районы'
+        ordering = ['name']
 
 class Municipalitet(models.Model):
     """
@@ -78,6 +80,7 @@ class Municipalitet(models.Model):
         unique_together = (("district", "name"),)
         verbose_name = u'сельсовет'
         verbose_name_plural = u'сельсоветы'
+        ordering = ['name']
 
 def capitalize_name(instance, **kwargs):
     if instance.name[0] != instance.name.capitalize()[0]:
