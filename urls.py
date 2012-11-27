@@ -15,6 +15,7 @@ urlpatterns = patterns('common.views',
     url(r'^burials/$', 'burials'),
     url(r'^import/$', 'import_xls', name='import'),
     url(r'^import2/$', 'import_xls_2', name='import2'),
+    url(r'^import3/$', 'import_xls_3', name='import3'),
     url(r'^burial/(?P<obj>.{36})/$', 'burial', name='burial'),                    # Карточка захоронение
 )
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from StringIO import StringIO
+import pickle
 
 import urllib
 from django.contrib import messages
@@ -714,17 +715,8 @@ def import_xls_2(request):
     cnt = 0
 
     burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
-    book = xlwt.Workbook(encoding='cp1251')
-    sheet = book.add_sheet(u'Ошибки'.encode('cp1251'))
 
-    sheet.write(0, 0, request.POST.get('head_1') or '')
-    sheet.write(0, 1, request.POST.get('head_2') or '')
-    sheet.write(0, 2, request.POST.get('head_3') or '')
-    sheet.write(0, 3, request.POST.get('head_4') or '')
-    sheet.write(0, 4, request.POST.get('head_5') or '')
-    sheet.write(0, 5, request.POST.get('head_6') or '')
-    sheet.write(0, 6, request.POST.get('head_7') or '')
-
+    errors = []
     xli = 1
 
     while row < int(request.POST['lines']):
@@ -742,7 +734,7 @@ def import_xls_2(request):
         if post:
             try:
                 rank = Rank.objects.get(pk=post)
-            except Rank.DoesNotExist:
+            except (ValueError, Rank.DoesNotExist):
                 rank = Rank.objects.create(name=post)
 
         if request.POST.get('check_%s' % row):
@@ -787,25 +779,58 @@ def import_xls_2(request):
             except (ValueError, Rank.DoesNotExist):
                 post_name = post
 
-            sheet.write(xli, 0, post_name.encode('cp1251'))
-            sheet.write(xli, 1, last_name.encode('cp1251'))
-            sheet.write(xli, 2, first_name.encode('cp1251'))
-            sheet.write(xli, 3, middle_name.encode('cp1251'))
-            sheet.write(xli, 4, birth.encode('cp1251'))
-            sheet.write(xli, 5, death.encode('cp1251'))
-            sheet.write(xli, 6, info.encode('cp1251'))
-            sheet.write(xli, 7, error.strip().encode('cp1251'))
-            xli += 1
+            errors.append([
+                post_name,
+                last_name,
+                first_name,
+                middle_name,
+                birth,
+                death,
+                info,
+                error.strip()
+            ])
 
+            xli += 1
         row += 1
+
+    if xli > 0:
+        return direct_to_template(request, 'import_errors.html', extra_context={
+            'errors': errors,
+            'errors_pickled': simplejson.dumps(errors),
+            'cnt': cnt,
+        })
 
     messages.success(request, u"Импорт завершен, импортировано %s записей" % cnt)
 
-    if xli > 0:
-        content = StringIO()
-        book.save(content)
-        response = HttpResponse(content.getvalue(), mimetype='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="import_%s_errors.xls"' % burial_obj.passportid
-        return response
-
     return HttpResponseRedirect('/import/')
+
+def import_xls_3(request):
+    row = 0
+    cnt = 0
+
+    errors = simplejson.loads(request.POST.get('errors_pickled'))
+
+    burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    book = xlwt.Workbook(encoding='cp1251')
+    sheet = book.add_sheet(u'Ошибки'.encode('cp1251'))
+
+    sheet.write(0, 0, request.POST.get('head_1') or '')
+    sheet.write(0, 1, request.POST.get('head_2') or '')
+    sheet.write(0, 2, request.POST.get('head_3') or '')
+    sheet.write(0, 3, request.POST.get('head_4') or '')
+    sheet.write(0, 4, request.POST.get('head_5') or '')
+    sheet.write(0, 5, request.POST.get('head_6') or '')
+    sheet.write(0, 6, request.POST.get('head_7') or '')
+
+    xli = 1
+
+    for e in errors:
+        for i in range(len(e)):
+            sheet.write(xli, i, e[i].strip().encode('cp1251'))
+        xli += 1
+
+    content = StringIO()
+    book.save(content)
+    response = HttpResponse(content.getvalue(), mimetype='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="import_%s_errors.xls"' % burial_obj.passportid
+    return response
