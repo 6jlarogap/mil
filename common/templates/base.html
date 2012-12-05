@@ -3,6 +3,7 @@
 
 {% load i18n %}
 {% load adminmedia %}
+{% load cemetery_tags %}
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -42,7 +43,9 @@
                 <a href="/burials/?template=reports/report_4.html">[Ф4]</a>&nbsp;
                 <a href="/burials/?template=reports/report_4a.html">[Ф4а]</a>&nbsp;
                 <a href="/burials/?template=reports/report_5.html">[Ф5]</a>
-                <a href="/import/">[Импорт]</a>
+                {% if user|has_perm:"common.add_burial" %}
+                    <a href="/import/">[Импорт]</a>
+                {% endif %}
             </td>
             <td align="right" colspan="3">
                 {% if user.is_authenticated %}
