@@ -612,6 +612,7 @@ def import_xls(request):
 
         while row < worksheet.nrows:
             has_errors = False
+            row_bad_errrors = False
             data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
             data = [d.strip() if isinstance(d, basestring) else d for d in data]
             duty, last_name, first_name, middle_name, birth, death, info = data
@@ -627,6 +628,7 @@ def import_xls(request):
                     }
                     has_errors = True
                     bad_errrors = True
+                    row_bad_errrors = True
 
             if birth:
                 if isinstance(birth, float):
@@ -647,6 +649,7 @@ def import_xls(request):
                     }
                     has_errors = True
                     bad_errrors = True
+                    row_bad_errrors = True
             if death:
                 if isinstance(death, float):
                     try:
@@ -666,6 +669,7 @@ def import_xls(request):
                     }
                     has_errors = True
                     bad_errrors = True
+                    row_bad_errrors = True
 
             if not last_name:
                 data_row['person'] = {
@@ -674,6 +678,7 @@ def import_xls(request):
                 }
                 has_errors = True
                 bad_errrors = True
+                row_bad_errrors = True
             else:
                 persons = Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj)
                 d = data_row.get('death')
@@ -692,7 +697,7 @@ def import_xls(request):
 
             data_row['info'] = info
 
-            all_data.append({'errors': has_errors, 'bad_errrors': bad_errrors, 'data': data_row})
+            all_data.append({'errors': has_errors, 'bad_errrors': row_bad_errrors, 'data': data_row})
             if has_errors:
                 any_errors = True
             row += 1
