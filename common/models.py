@@ -708,7 +708,7 @@ class UnclearDate:
 
     @property
     def day(self):
-        return not self.no_month and self.d.day or None
+        return not self.no_day and self.d.day or None
 
 
 
