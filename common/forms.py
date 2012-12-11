@@ -63,7 +63,7 @@ class UnclearSelectDateWidget(SelectDateWidget):
                 output.append(day_html)
         return mark_safe(u'\n'.join(output))
 
-    def value_from_datadict(self, data, files, name):
+    def value_from_datadict(self, data, files, name, return_flags=False):
         from django.forms.extras.widgets import get_format, datetime_safe
 
         y = data.get(self.year_field % name)
@@ -85,6 +85,8 @@ class UnclearSelectDateWidget(SelectDateWidget):
                     self.no_month = ud.no_month
                     self.no_day = ud.no_day
                     date_value = datetime_safe.new_date(ud.d)
+                if return_flags:
+                    return (date_value.strftime(input_format), ud.no_month, ud.no_day)
                 return date_value.strftime(input_format)
             else:
                 return '%s-%s-%s' % (y, m, d)
@@ -491,10 +493,15 @@ class PersonCallForm(forms.ModelForm):
         obj = super(PersonCallForm, self).save(*args, **kwargs)
         for f in self.fields:
             if isinstance(self.fields[f], UnclearDateField):
+                try:
+                    v, nm, nd = self.fields[f].widget.value_from_datadict(self.data, None, 'personcall-0-date', return_flags=True)
+                except (TypeError, ValueError):
+                    v, nm, nd = None, False, False
+
                 setattr(obj, f, self.cleaned_data[f])
                 self.fields[f].widget.value_from_datadict(data=self.data, files=None, name=f)
-                setattr(obj, f+'_no_month', getattr(obj, f) and self.fields[f].widget.no_month or False)
-                setattr(obj, f+'_no_day', getattr(obj, f) and self.fields[f].widget.no_day or False)
+                setattr(obj, f+'_no_month', getattr(obj, f) and nm or False)
+                setattr(obj, f+'_no_day', getattr(obj, f) and nd or False)
 
         if commit:
             obj.save()
