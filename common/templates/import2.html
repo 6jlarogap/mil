@@ -105,6 +105,8 @@
                     <td>
                         {{ d.data.info }}
                         <input type="hidden" value="{{ d.data.info|default:"" }}" name="info_{{ forloop.counter0 }}" />
+                        <input type="hidden" value="{{ d.data.info_unit|default:"" }}" name="info_unit_{{ forloop.counter0 }}" />
+                        <input type="hidden" value="{{ d.data.info_birth|default:"" }}" name="info_birth_{{ forloop.counter0 }}" />
                         <input type="hidden" value="{% if d.errors %}{{ d.data.duty.error }} {{ d.data.person.error }} {{ d.data.birth.error }} {{ d.data.death.error }}{% else %}Отказ{% endif %}" name="error_{{ forloop.counter0 }}" />
                     </td>
                 </tr>

@@ -616,6 +616,8 @@ def import_xls(request):
             data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
             data = [d.strip() if isinstance(d, basestring) else d for d in data]
             duty, last_name, first_name, middle_name, birth, death, info = data
+            info_unit = len(data) > 7 and data[7] or ""
+            info_birth = len(data) > 7 and data[7] or ""
             last_name, first_name, middle_name = map(lambda s: s.upper().strip('.').strip(' '), [last_name, first_name, middle_name])
             data_row = {}
             if duty:
@@ -696,6 +698,8 @@ def import_xls(request):
                     data_row['person'] = [last_name, first_name, middle_name]
 
             data_row['info'] = info
+            data_row['info_unit'] = info_unit
+            data_row['info_birth'] = info_birth
 
             all_data.append({'errors': has_errors, 'bad_errrors': row_bad_errrors, 'data': data_row})
             if has_errors:
@@ -732,6 +736,8 @@ def import_xls_2(request):
         birth = request.POST.get('birth_%s' % row, '') or ''
         death = request.POST.get('death_%s' % row, '') or ''
         info = request.POST.get('info_%s' % row, '') or ''
+        info_unit = request.POST.get('info_unit_%s' % row, '') or ''
+        info_birth = request.POST.get('info_birth_%s' % row, '') or ''
         error = request.POST.get('error_%s' % row, '') or ''
 
         rank = None
@@ -777,6 +783,13 @@ def import_xls_2(request):
             if rank:
                 PersonDuty.objects.get_or_create(person=p, rank=rank)
 
+            if info_unit:
+                PersonDuty.objects.get_or_create(person=p, unit_name=info_unit)
+
+            if info_birth:
+                p.birth_location = SimpleLocation.objects.get_or_create(info=info_birth)
+                p.save()
+
             cnt += 1
         else:
             try:
@@ -792,6 +805,8 @@ def import_xls_2(request):
                 birth,
                 death,
                 info,
+                info_unit,
+                info_birth,
                 error.strip()
             ])
 
