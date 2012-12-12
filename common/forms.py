@@ -469,12 +469,11 @@ class PersonAdminForm(forms.ModelForm):
                 except (TypeError, ValueError):
                     v, nm, nd = None, False, False
 
-                print f,v,nm,nd
-
                 setattr(obj, f, self.cleaned_data[f])
                 self.fields[f].widget.value_from_datadict(data=self.data, files=None, name=f)
                 setattr(obj, f+'_no_month', getattr(obj, f) and nm or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and nd or False)
+
         obj.save()
 
         if self.cleaned_data.get('birth_location_info'):
