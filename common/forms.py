@@ -480,6 +480,10 @@ class PersonAdminForm(forms.ModelForm):
                 obj.birth_location = SimpleLocation()
             obj.birth_location.info = self.cleaned_data['birth_location_info']
             obj.birth_location.save()
+            obj.save()
+        elif obj.birth_location and obj.birth_location.info:
+            obj.birth_location.info = ''
+            obj.birth_location.save()
 
         return obj
 
