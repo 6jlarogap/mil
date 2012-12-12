@@ -426,9 +426,11 @@ class PersonAdminForm(forms.ModelForm):
         model = Person
 
     def __init__(self, *args, **kwargs):
+        obj = kwargs.get('instance', Person())
         kwargs.setdefault('initial', {}).update({
-            'birth_date': kwargs.get('instance', Person()).get_unclear_date('birth_date'),
-            'death_date': kwargs.get('instance', Person()).get_unclear_date('death_date'),
+            'birth_date': obj.get_unclear_date('birth_date'),
+            'death_date': obj.get_unclear_date('death_date'),
+            'birth_location_info': obj.birth_location and obj.birth_location.info,
         })
         super(PersonAdminForm, self).__init__(*args, **kwargs)
 
