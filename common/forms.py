@@ -427,7 +427,6 @@ class PersonAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         obj = kwargs.get('instance', Person())
-        print obj, obj.pk, obj.birth_location and obj.birth_location.pk, obj.birth_location and obj.birth_location.info
         kwargs.setdefault('initial', {}).update({
             'birth_date': obj.get_unclear_date('birth_date'),
             'death_date': obj.get_unclear_date('death_date'),
