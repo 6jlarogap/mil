@@ -777,18 +777,16 @@ def import_xls_2(request):
                     death_date_no_day = death_date.no_day,
                 )
 
+            if info_birth:
+                params['birth_location'] = SimpleLocation.objects.create(info=info_birth)
 
-            p, _ = Person.objects.get_or_create(**params)
+            p = Person.objects.create(**params)
 
             if rank:
-                PersonDuty.objects.get_or_create(person=p, rank=rank)
+                PersonDuty.objects.create(person=p, rank=rank)
 
             if info_unit:
-                PersonDuty.objects.get_or_create(person=p, unit_name=info_unit)
-
-            if info_birth:
-                p.birth_location = SimpleLocation.objects.get_or_create(info=info_birth)
-                p.save()
+                PersonDuty.objects.create(person=p, unit_name=info_unit)
 
             cnt += 1
         else:
