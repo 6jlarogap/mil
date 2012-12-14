@@ -613,17 +613,15 @@ def import_xls(request):
         while row < worksheet.nrows:
             has_errors = False
             row_bad_errrors = False
-            data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 7))
+            data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 9))
             data = [d.strip() if isinstance(d, basestring) else d for d in data]
-            duty, last_name, first_name, middle_name, birth, death, info = data
-            info_unit = len(data) > 7 and data[7] or ""
-            info_birth = len(data) > 7 and data[7] or ""
+            duty, last_name, first_name, middle_name, birth, death, info, info_unit, info_birth = data
             last_name, first_name, middle_name = map(lambda s: s.upper().strip('.').strip(' '), [last_name, first_name, middle_name])
             data_row = {}
             if duty:
                 try:
-                    data_row['duty'] = Rank.objects.get(name=duty.strip().capitalize())
-                except Rank.DoesNotExist:
+                    data_row['duty'] = Rank.objects.filter(name__iexact=duty.strip().capitalize())[0]
+                except IndexError:
                     data_row['duty'] = {
                         'value': duty,
                         'error': u'Звание не найдено в БД'
@@ -777,16 +775,15 @@ def import_xls_2(request):
                     death_date_no_day = death_date.no_day,
                 )
 
+            print 'info_birth', info_birth, 'and', info_unit
+
             if info_birth:
                 params['birth_location'] = SimpleLocation.objects.create(info=info_birth)
 
             p = Person.objects.create(**params)
 
-            if rank:
-                PersonDuty.objects.create(person=p, rank=rank)
-
-            if info_unit:
-                PersonDuty.objects.create(person=p, unit_name=info_unit)
+            if rank or info_unit:
+                PersonDuty.objects.create(person=p, rank=rank, unit_name=info_unit)
 
             cnt += 1
         else:
