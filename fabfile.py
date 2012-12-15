@@ -10,7 +10,7 @@ def deploy():
         run('./manage.py migrate')
         run('sudo /etc/init.d/apache2 reload')
 
-@hosts(['soul@172.16.0.16'])
+@hosts(['soul@sev-test.bsuir.by'])
 def deploy_sev():
     local('git push')
     with cd('/opt/mil/contrib/'):
