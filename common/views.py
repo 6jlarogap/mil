@@ -775,8 +775,6 @@ def import_xls_2(request):
                     death_date_no_day = death_date.no_day,
                 )
 
-            print 'info_birth', info_birth, 'and', info_unit
-
             if info_birth:
                 params['birth_location'] = SimpleLocation.objects.create(info=info_birth)
 
