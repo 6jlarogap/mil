@@ -176,7 +176,7 @@ def persons(request):
     persons_count = cache.get('db_size')
     if not persons_count:
         persons_count = Person.objects.all().count()
-        cache.set('db_size', persons_count, 3600)
+        cache.set('db_size', persons_count, 10)
 
     return render_to_response('persons.html', context_instance = RequestContext(request, {
         'is_first_search': True,
@@ -514,7 +514,7 @@ def burials(request):
                                     data = filter_data(
                                         burials, selected_persons, form.cleaned_data['region'], district
                                     )
-                                    cache.set(data_key, data, 3600)
+                                    cache.set(data_key, data, 10)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
@@ -535,7 +535,7 @@ def burials(request):
                                     data = filter_data(
                                         burials, selected_persons, region, None
                                     )
-                                    cache.set(data_key, data, 3600)
+                                    cache.set(data_key, data, 10)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({

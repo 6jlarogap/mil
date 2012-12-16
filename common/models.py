@@ -372,7 +372,7 @@ class Burial(models.Model):
                 'other': r.known_for_burial_list_and_cat([self], dead_cats[4]),
             }
 
-            cache.set('stats_burial_%s' % self.pk, stats, 3600)
+            cache.set('stats_burial_%s' % self.pk, stats, 10)
         return stats
 
     # get persons count from all previous burials
