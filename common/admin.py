@@ -142,8 +142,6 @@ class PersonAdmin(admin.ModelAdmin):
             obj.creator = request.user
         obj.save()
 
-        print 'birth_location_info 3', form.cleaned_data.get('birth_location_info'), obj.birth_location and obj.birth_location.info
-
     def get_passport_number(self, obj):
         return obj.burial and obj.burial.passportid or ''
     get_passport_number.short_description = u'Номер паспорта ВЗ'
