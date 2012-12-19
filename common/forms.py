@@ -259,22 +259,22 @@ class LocationField(MultiValueField):
                 district=data_list[2],
                 municipalitet=data_list[3],
             )[0]) or None
+        params = dict(
+            country=data_list[0],
+            region=data_list[1],
+            district=data_list[2],
+            municipalitet=data_list[3],
+            city=city,
+        )
         if self.partial:
-            loc = SimpleLocation.objects.create(
-                country=data_list[0],
-                region=data_list[1],
-                district=data_list[2],
-                municipalitet=data_list[3],
-                city=city,
-            )
+            LocationModel = SimpleLocation
+
         else:
-            loc = StrictLocation.objects.create(
-                country=data_list[0],
-                region=data_list[1],
-                district=data_list[2],
-                municipalitet=data_list[3],
-                city=city,
-            )
+            LocationModel = StrictLocation
+        try:
+            loc = LocationModel.objects.filter(**params)[0]
+        except LocationModel.DoesNotExist:
+            loc = LocationModel.objects.create(**params)
         return loc.pk
 
 class PersonsForm(forms.Form):
@@ -481,7 +481,7 @@ class PersonAdminForm(forms.ModelForm):
                 obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
         else:
             if obj.birth_location and obj.birth_location.pk and obj.birth_location.info and obj.birth_location.info.strip():
-                obj.birth_location.info = 'EMPTY'
+                obj.birth_location.info = ''
                 obj.birth_location.save()
 
         if kwargs.get('commit'):
