@@ -479,9 +479,10 @@ class PersonAdminForm(forms.ModelForm):
                 obj.birth_location.save()
             else:
                 obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
-        elif obj.birth_location and obj.birth_location.info:
-            obj.birth_location.info = ''
-            obj.birth_location.save()
+        else:
+            if obj.birth_location and obj.birth_location.info:
+                obj.birth_location.info = ''
+                obj.birth_location.save()
 
         if kwargs.get('commit'):
             obj.save()
