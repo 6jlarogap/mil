@@ -430,7 +430,7 @@ class PersonAdminForm(forms.ModelForm):
         kwargs.setdefault('initial', {}).update({
             'birth_date': obj.get_unclear_date('birth_date'),
             'death_date': obj.get_unclear_date('death_date'),
-            'birth_location_info': obj.birth_location and obj.birth_location.info,
+            'birth_location_info': obj.birth_location and obj.birth_location.info or '',
         })
         super(PersonAdminForm, self).__init__(*args, **kwargs)
 
@@ -474,18 +474,17 @@ class PersonAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_month', getattr(obj, f) and nm or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and nd or False)
 
-        obj.save()
-
         if self.cleaned_data.get('birth_location_info'):
             if not obj.birth_location:
                 obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
             else:
                 obj.birth_location.info = self.cleaned_data['birth_location_info']
                 obj.birth_location.save()
-            obj.save()
         elif obj.birth_location and obj.birth_location.info:
             obj.birth_location.info = ''
             obj.birth_location.save()
+
+        obj.save()
 
         return obj
 
