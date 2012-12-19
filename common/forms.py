@@ -473,15 +473,15 @@ class PersonAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_month', getattr(obj, f) and nm or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and nd or False)
 
-        if self.cleaned_data.get('birth_location_info'):
+        if self.cleaned_data.get('birth_location_info') and self.cleaned_data.get('birth_location_info').strip():
             if obj.birth_location and obj.birth_location.pk:
                 obj.birth_location.info = self.cleaned_data['birth_location_info']
                 obj.birth_location.save()
             else:
                 obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
         else:
-            if obj.birth_location and obj.birth_location.info:
-                obj.birth_location.info = ''
+            if obj.birth_location and obj.birth_location.pk and obj.birth_location.info and obj.birth_location.info.strip():
+                obj.birth_location.info = 'EMPTY'
                 obj.birth_location.save()
 
         if kwargs.get('commit'):
