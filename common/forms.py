@@ -460,7 +460,6 @@ class PersonAdminForm(forms.ModelForm):
         return self.cleaned_data
 
     def save(self, *args, **kwargs):
-        kwargs['commit'] = False
         obj = super(PersonAdminForm, self).save(*args, **kwargs)
         for f in self.fields:
             if isinstance(self.fields[f], UnclearDateField):
@@ -475,16 +474,17 @@ class PersonAdminForm(forms.ModelForm):
                 setattr(obj, f+'_no_day', getattr(obj, f) and nd or False)
 
         if self.cleaned_data.get('birth_location_info'):
-            if not obj.birth_location:
-                obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
-            else:
+            if obj.birth_location and obj.birth_location.pk:
                 obj.birth_location.info = self.cleaned_data['birth_location_info']
                 obj.birth_location.save()
+            else:
+                obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
         elif obj.birth_location and obj.birth_location.info:
             obj.birth_location.info = ''
             obj.birth_location.save()
 
-        obj.save()
+        if kwargs.get('commit'):
+            obj.save()
 
         return obj
 
