@@ -180,10 +180,10 @@ class Location(models.Model):
         return ret.strip(' ,')
 
     def short_title_na(self):
-        return self.__unicode__(full=True)
+        return self.__unicode__(full=True, na=False)
 
     def short_title(self):
-        return self.__unicode__(full=True, na=False)
+        return self.__unicode__(full=True)
 
     class Meta:
         abstract = True
