@@ -632,9 +632,12 @@ def import_xls(request):
 
             if birth:
                 if isinstance(birth, float):
-                    try:
-                        birth = datetime.datetime(*xlrd.xldate_as_tuple(birth, xl.datemode)).strftime('%d.%m.%Y')
-                    except ValueError:
+                    if birth > datetime.date.today().year:
+                        try:
+                            birth = datetime.datetime(*xlrd.xldate_as_tuple(birth, xl.datemode)).strftime('%d.%m.%Y')
+                        except ValueError:
+                            birth = int(birth)
+                    else:
                         birth = int(birth)
 
                 try:
@@ -652,9 +655,12 @@ def import_xls(request):
                     row_bad_errrors = True
             if death:
                 if isinstance(death, float):
-                    try:
-                        death = datetime.datetime(*xlrd.xldate_as_tuple(death, xl.datemode)).strftime('%d.%m.%Y')
-                    except ValueError:
+                    if death > datetime.date.today().year:
+                        try:
+                            death = datetime.datetime(*xlrd.xldate_as_tuple(death, xl.datemode)).strftime('%d.%m.%Y')
+                        except ValueError:
+                            death = int(death)
+                    else:
                         death = int(death)
 
                 try:
