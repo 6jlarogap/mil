@@ -613,7 +613,8 @@ def import_xls(request):
         while row < worksheet.nrows:
             has_errors = False
             row_bad_errrors = False
-            data = map(lambda cell: cell.value, worksheet.row_slice(row, 0, 9))
+            raw_cells = worksheet.row_slice(row, 0, 9)
+            data = map(lambda cell: cell.value, raw_cells)
             data = [d.strip() if isinstance(d, basestring) else d for d in data]
             duty, last_name, first_name, middle_name, birth, death, info, info_unit, info_birth = data
             last_name, first_name, middle_name = map(lambda s: s.upper().strip('.').strip(' '), [last_name, first_name, middle_name])
@@ -632,7 +633,7 @@ def import_xls(request):
 
             if birth:
                 if isinstance(birth, float):
-                    if birth > datetime.date.today().year:
+                    if raw_cells[4].ctype == xlrd.XL_CELL_DATE:
                         try:
                             birth = datetime.datetime(*xlrd.xldate_as_tuple(birth, xl.datemode)).strftime('%d.%m.%Y')
                         except ValueError:
@@ -655,7 +656,7 @@ def import_xls(request):
                     row_bad_errrors = True
             if death:
                 if isinstance(death, float):
-                    if death > datetime.date.today().year:
+                    if raw_cells[5].ctype == xlrd.XL_CELL_DATE:
                         try:
                             death = datetime.datetime(*xlrd.xldate_as_tuple(death, xl.datemode)).strftime('%d.%m.%Y')
                         except ValueError:
