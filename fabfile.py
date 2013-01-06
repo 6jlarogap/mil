@@ -6,12 +6,12 @@ from fabric.contrib.console import confirm
 def deploy():
     local('git push')
     with cd('/home/www-data/django/mil/'):
-        run('sudo -u www-data git pull')
+        sudo('sudo -u www-data git pull')
         run('./manage.py migrate')
-        run('sudo /etc/init.d/apache2 reload')
+        sudo('/etc/init.d/apache2 reload')
 
 @hosts(['soul@172.16.0.16'])
 def deploy_sev():
     local('git push')
     with cd('/opt/mil/contrib/'):
-        run('sudo sh ./update-online.sh')
+        sudo('sh ./update-online.sh')
