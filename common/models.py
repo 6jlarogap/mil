@@ -752,7 +752,7 @@ class Person(models.Model):
     deadman_category = models.ForeignKey(DeadmanCategory, verbose_name=u"Категория погибшего", blank=True, null=True)
     documents_place = models.ForeignKey(DocumentsPlace, verbose_name=u"Место нахождения документов", blank=True, null=True)
     information_source = models.ForeignKey(InformationSource, verbose_name=u"Источник информации", blank=True, null=True)
-    info = models.TextField(u"Дополнительная информация", blank=True, null=True)
+    info = models.TextField(u"Другие информационные источники", blank=True, null=True)
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True, editable=False)
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True, editable=False)
     is_trash = models.BooleanField(u"Удалена", default=False, db_index=True, editable=False)
