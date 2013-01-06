@@ -8,24 +8,24 @@
 
     {% if burial.burial_from %}
     <h1>Внимание! Это захоронение закрыто!</h1>
-    Дата закрытия: {{ burial.burial_from.date }}<br>
-    Причина закрытия: {{ burial.burial_from.cause }}<br>
-    Новое захоронение: <a href="{% url burial burial.burial_from.burial_to.uuid%}">{{ burial.burial_from.burial_to}}</a><br>
+    Дата закрытия: {{ burial.burial_from.date|default:"" }}<br>
+    Причина закрытия: {{ burial.burial_from.cause|default:"" }}<br>
+    Новое захоронение: <a href="{% url burial burial.burial_from.burial_to.uuid%}">{{ burial.burial_from.burial_to|default:"" }}</a><br>
     <br>
     <br>
     {% endif %}
 
 
-    Номер паспорта захоронения: {{ burial.passportid }}<br>
-    Дата паспорта захоронения: {{ burial.get_unclear_date_passport }}<br>
-    Дата захоронения: {{ burial.get_unclear_date_burried }}<br>
-    Дата обнаружения: {{ burial.get_unclear_date_discovered }}<br>
-    Адрес захоронения: {{ burial.location }}<br>
-    Тип воинского захоронения: {{ burial.burial_type.name }}<br>
-    Военный конфликт: {{ burial.military_conflict.name }}<br>
-    Дата установки памятника: {{ burial.get_unclear_date_memorial }}<br>
-    Дата установки госзнака: {{ burial.get_unclear_date_gosznak }}<br>
-    Дополнительная информация о месте захоронения: {{ burial.info }}<br>
+    Номер паспорта захоронения: {{ burial.passportid|default:"" }}<br>
+    Дата паспорта захоронения: {{ burial.get_unclear_date_passport|default:"" }}<br>
+    Дата захоронения: {{ burial.get_unclear_date_burried|default:"" }}<br>
+    Дата обнаружения: {{ burial.get_unclear_date_discovered|default:"" }}<br>
+    Адрес захоронения: {{ burial.location|default:"" }}<br>
+    Тип воинского захоронения: {{ burial.burial_type.name|default:"" }}<br>
+    Военный конфликт: {{ burial.military_conflict.name|default:"" }}<br>
+    Дата установки памятника: {{ burial.get_unclear_date_memorial|default:"" }}<br>
+    Дата установки госзнака: {{ burial.get_unclear_date_gosznak|default:"" }}<br>
+    Дополнительная информация о месте захоронения: {{ burial.info|default:"" }}<br>
     <br>
     Количество захороненнных: {{ burial.get_count|add:burial.get_qunknown }}<br>
     <br>
