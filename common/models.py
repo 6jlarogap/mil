@@ -12,6 +12,12 @@ from django.contrib.auth.models import User
 from smart_selects.db_fields import ChainedForeignKey
 import cemetery_redis
 
+def slugify_filename(prefix):
+    def _slugify(instance, filename):
+        filename, ext = filename.rsplit('.', 1)
+        return os.path.join(prefix, '%s.%s'  % (pytils.translit.slugify(filename), ext))
+    return _slugify
+
 class GeoCountry(models.Model):
     """
     Страна.
@@ -279,8 +285,8 @@ class Burial(models.Model):
     date_memorial_no_month = models.BooleanField(default=False, editable=False)
     date_memorial_no_day = models.BooleanField(default=False, editable=False)
 
-    photo = models.ImageField(u"Фото", upload_to="bpics", blank=True, null=True)
-    scheme = models.ImageField(u"Схема", upload_to="bpics", blank=True, null=True)
+    photo = models.ImageField(u"Фото", upload_to=slugify_filename(prefix="bpics"), blank=True, null=True)
+    scheme = models.ImageField(u"Схема", upload_to=slugify_filename(prefix="bpics"), blank=True, null=True)
     creator = models.ForeignKey(User, blank=True, null=True, editable=False, verbose_name=u"Создатель записи")
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True, db_index=True)
     date_of_update = models.DateTimeField(u"Дата обновления записи", auto_now=True, db_index=True)
@@ -430,7 +436,7 @@ class ClosedBurial(models.Model):
     burial_to = models.ForeignKey(Burial, related_name="burial_to", verbose_name = u'Куда выполнен перенос')  
     date = models.DateField(u"Дата закрытия")
     cause = models.ForeignKey(ClosureCause, verbose_name=u"Причина перезахоронения")
-    document = models.FileField(u"Документ", upload_to='documents/', blank=True, null=True)
+    document = models.FileField(u"Документ", upload_to=slugify_filename(prefix='documents/'), blank=True, null=True)
     def __unicode__(self):
         return u"Закрыто: %s" % self.cause
     class Meta:
@@ -469,7 +475,7 @@ class BurialPictures(models.Model):
     """Фотография захоронения
     """
     burial = models.ForeignKey(u'Burial', related_name='mem_photos')
-    photo = models.ImageField(u"Фото", upload_to="bpics", null=True)
+    photo = models.ImageField(u"Фото", upload_to=slugify_filename(prefix="bpics"), null=True)
     comment = models.TextField(blank=True, null=True)                               # Дополнительная информация
 
     def __unicode__(self):
@@ -483,7 +489,7 @@ class BurialAttachment(models.Model):
     """Приложение захоронения
     """
     burial = models.ForeignKey(u'Burial')
-    file = models.FileField(u"Приложение", upload_to="bfiles", null=True)
+    file = models.FileField(u"Приложение", upload_to=slugify_filename(prefix="bfiles"), null=True)
 
     def __unicode__(self):
         return self.file and os.path.basename(self.file.path) or u'empty pic'
@@ -496,7 +502,7 @@ class PersonAttachment(models.Model):
     """Приложение воина
     """
     burial = models.ForeignKey(u'Person')
-    file = models.FileField(u"Приложение", upload_to="bfiles", null=True)
+    file = models.FileField(u"Приложение", upload_to=slugify_filename(prefix="bfiles"), null=True)
 
     def __unicode__(self):
         return self.file and os.path.basename(self.file.path) or u'empty pic'
@@ -853,7 +859,7 @@ class PersonEditCause(models.Model):
     name = models.CharField(u"Название документа", max_length=100)
     number = models.CharField(u"Номер документа", max_length=100)
     date = models.DateField(u"Дата документа")
-    file = models.FileField(u"Скан документа", null=True, upload_to='cause_docs', blank=True)
+    file = models.FileField(u"Скан документа", null=True, upload_to=slugify_filename(prefix='cause_docs'), blank=True)
     date_edit = models.DateTimeField(auto_now=True)                             # Дата последнего редактирования записи
 
     def __unicode__(self):
