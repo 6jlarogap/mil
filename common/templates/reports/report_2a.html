@@ -23,14 +23,14 @@
         -->
     </STYLE>
 
-    <SCRIPT SRC="http://yandex.st/jquery/1.7.2/jquery.min.js" TYPE="text/javascript"></SCRIPT>
-    <SCRIPT SRC="http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.min.js" TYPE="text/javascript"></SCRIPT>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.fancybox.css"/>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $(".fancybox").fancybox();
         });
     </script>
-    <LINK REL="stylesheet" HREF="http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.css" />
 </HEAD>
 
 {% load thumbnail %}
@@ -152,7 +152,7 @@
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     <TD STYLE="border-top: 3px solid #000000; border-bottom: 3px solid #000000; border-left: 3px solid #000000; border-right: 3px solid #000000" COLSPAN=2 ROWSPAN=7 ALIGN="CENTER" VALIGN=MIDDLE >
         {% if b.photo %}
-            <a href="{{ b.photo.url }}" class="fancybox"><img src="{% thumbnail b.photo 230x130 crop %}" style="width: 230px;" /></a>
+            <a href="{{ b.photo.url }}" class="fancybox"><img src="{% thumbnail b.photo 230x130 %}" style="height: 130px;" /></a>
         {% endif %}
     </TD>
     <TD ALIGN="LEFT" VALIGN=BOTTOM ><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>

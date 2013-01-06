@@ -32,14 +32,15 @@
         -->
     </STYLE>
 
-    <SCRIPT SRC="http://yandex.st/jquery/1.7.2/jquery.min.js" TYPE="text/javascript"></SCRIPT>
-    <SCRIPT SRC="http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.min.js" TYPE="text/javascript"></SCRIPT>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.fancybox.css"/>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.fancybox.pack.js"></script>
     <script type="text/javascript">
+
         $(document).ready(function() {
             $(".fancybox").fancybox();
         });
     </script>
-    <LINK REL="stylesheet" HREF="http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.css" />
 </HEAD>
 
 <BODY TEXT="#000000">
@@ -465,7 +466,7 @@
     <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.birth_date|date:"Y" }}</FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">{{ p.birth_location|default:"" }}</FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE ><FONT FACE="Times New Roman" COLOR="#000000">
-        {% if p.personduty.unit %}{{ p.personduty.unit|default:"" }}, {% endif %}
+        {% if p.personduty.unit_name %}{{ p.personduty.unit_name|default:"" }}, {% endif %}
         {{ p.personduty.post|default:"" }}
     </FONT></TD>
     <TD STYLE="border: 1px solid #000000;" ALIGN="CENTER" VALIGN=MIDDLE SDNUM="1049;1049;DD.MM.YYYY"><FONT COLOR="#000000">{{ p.get_unclear_death_date }}</FONT></TD>

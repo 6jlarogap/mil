@@ -114,7 +114,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 CACHE_BACKEND = 'file:///tmp/django_cache/mil'
@@ -155,22 +155,11 @@ INSTALLED_APPS = (
     'south',
     'easy_thumbnails',
     'smart_selects',
+    'djcelery',
 )
 
-try:
-    import sentry, raven
-    INSTALLED_APPS = INSTALLED_APPS + (
-        'djkombu',
-        'sentry',
-        'raven.contrib.django',
-    )
-    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
-        'sentry.middleware.SentryMiddleware',
-    )
-except ImportError:
-    pass
-
 REDIS_DB = 0
+BROKER_URL = "redis://localhost:6379/1"
 
 SENTRY_TESTING = True
 
@@ -215,4 +204,5 @@ try:
 except ImportError:
     pass
 
-
+import djcelery
+djcelery.setup_loader()

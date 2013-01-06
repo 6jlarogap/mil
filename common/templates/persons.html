@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 {% block scripts %}
-<link rel="stylesheet" href="http://yandex.st/jquery-ui/1.8.11/themes/humanity/jquery.ui.all.min.css"/>
-
-<script type="text/javascript" src="http://yandex.st/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.16/jquery-ui.min.js"></script>
-<script type="text/javascript" src="http://yandex.st/jquery-ui/1.8.16/i18n/jquery.ui.datepicker-ru.min.js"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/humanity/jquery-ui-1.8.24.custom.css"/>
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-ui-1.8.24.custom.min.js"></script>
 <script type="text/javascript">
     $(function() {
         $( ".DateField" ).datepicker({
             changeMonth: true,
             changeYear: true,
             dateFormat: 'dd.mm.yy',
-            yearRange: '1850:{% now "Y" %}'
+            yearRange: '1700:{% now "Y" %}'
         });
         cache = {};
         $('#id_last_name').autocomplete({
@@ -78,12 +76,12 @@
             {% for person in persons.object_list %}
                 <tr>
                     <td>{{ forloop.counter|add:search_offset }}</td>
-                    <td><a href="{% url person person.uuid %}">{{ person.last_name.upper }}</a></td>
-                    <td>{{ person.first_name.upper }}</td>
-                    <td>{{ person.patronymic.upper }}</td>
-                    <td>{{ person.personduty.rank }}</td>
-                    <td>{{ person.get_unclear_birth_date }}</td>
-                    <td>{{ person.get_unclear_death_date }}</td>
+                    <td><a href="{% url person person.uuid %}">{{ person.last_name.upper|default:"" }}</a></td>
+                    <td>{{ person.first_name.upper|default:"" }}</td>
+                    <td>{{ person.patronymic.upper|default:"" }}</td>
+                    <td>{{ person.personduty.rank|default:"" }}</td>
+                    <td>{{ person.get_unclear_birth_date|default:"" }}</td>
+                    <td>{{ person.get_unclear_death_date|default:"" }}</td>
                     {% if person.burial %}
                         <td>
                             <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>

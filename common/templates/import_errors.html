@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <style>
+        tr.errors {
+            background-color: #FFFCCF;
+        }
+        tr.errors td.error {
+            background-color: #ffcccc;
+        }
+    </style>
+{% endblock head %}
+
+{% block title %}MIL.ORG - Импорт{% endblock %}
+
+{% block content %}
+    <h1>Результат импорта</h1>
+    <p>Всего к импорту: {{ errors|length|add:cnt }}</p>
+    <p>Успешно загружено: {{ cnt }}</p>
+    <p>Ошибок: {{ errors|length }}</p>
+    <form action="{% url import3 %}" method="POST">
+        {% csrf_token %}
+        <textarea name="errors_pickled" style="display: none">{{ errors_pickled }}</textarea>
+        <input type="hidden" name="burial" value="{{ request.POST.burial }}" />
+        <p><input type="submit" value="Отчет XLS" /></p>
+    </form>
+{% endblock %}

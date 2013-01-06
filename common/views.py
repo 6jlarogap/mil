@@ -1,20 +1,28 @@
 # -*- coding: utf-8 -*-
+from StringIO import StringIO
+import pickle
 
 import urllib
+from django.contrib import messages
+from django.core.urlresolvers import reverse
+from django.views.generic.list_detail import object_list
+from django.views.generic.simple import direct_to_template
 import simplejson
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.db.models import *
 from django.core.paginator import Paginator, EmptyPage
 from django.core.cache import cache
+from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
 
 from common.models import *
 from common.forms import *
+from common.tasks import report_2_deferred
 import cemetery_redis
-
-from django.db.backends.postgresql_psycopg2.base import DatabaseOperations, DatabaseWrapper
+import xlrd
+import xlwt
 
 def lookup_cast(self, lookup_type):
     if lookup_type == 'iregex':
@@ -45,29 +53,33 @@ def persons(request):
         if request.GET['search'] == u'Поиск':
             if form.is_valid():
                 cd = form.cleaned_data
-                persons = Person.objects.all().select_related()
+                persons = Person.objects.all().select_related().order_by('last_name', 'first_name', 'patronymic', 'death_date')
                 if cd['rank']:
                     persons = persons.filter(personduty__rank__name = cd['rank'])
-                if cd['burial_location'] and cd['burial_location'].country:
-                    params = dict(burial__location__country = cd['burial_location'].country)
-                    if cd['country_exclude']:
-                        persons = persons.exclude(**params)
-                    else:
-                        persons = persons.filter(**params)
+                if cd['burial_location']:
+                    if not isinstance(cd['burial_location'], SimpleLocation):
+                        cd['burial_location'] = SimpleLocation.objects.get(pk=cd['burial_location'])
+                    if cd['burial_location'].country:
+                        if cd['country_exclude']:
+                            persons = persons.exclude(burial__location__country__pk = cd['burial_location'].country.pk)
+                        else:
+                            persons = persons.filter(burial__location__country__pk = cd['burial_location'].country.pk)
 
-                    if cd['burial_location'].region:
-                        persons = persons.filter(burial__location__region = cd['burial_location'].region)
+                        if cd['burial_location'].region:
+                            persons = persons.filter(burial__location__region = cd['burial_location'].region)
 
-                    if cd['burial_location'].district:
-                        persons = persons.filter(burial__location__district = cd['burial_location'].district)
+                        if cd['burial_location'].district:
+                            persons = persons.filter(burial__location__district = cd['burial_location'].district)
 
-                    if cd['burial_location'].municipalitet:
-                        persons = persons.filter(burial__location__municipalitet = cd['burial_location'].municipalitet)
+                        if cd['burial_location'].municipalitet:
+                            persons = persons.filter(burial__location__municipalitet = cd['burial_location'].municipalitet)
 
-                    if cd['burial_location'].city:
-                        persons = persons.filter(burial__location__city = cd['burial_location'].city)
+                        if cd['burial_location'].city:
+                            persons = persons.filter(burial__location__city = cd['burial_location'].city)
 
                 if cd['birth_location']:
+                    if not isinstance(cd['birth_location'], SimpleLocation):
+                        cd['birth_location'] = SimpleLocation.objects.get(pk=cd['birth_location'])
                     if cd['birth_location'].country:
                         persons = persons.filter(birth_location__country = cd['birth_location'].country)
 
@@ -130,7 +142,8 @@ def persons(request):
                 if persons.exists():
                     persons_count = persons.count()
 
-                    paginator = Paginator(persons, 20)
+                    per_page = int(request.REQUEST.get('per_page') or 20)
+                    paginator = Paginator(persons, per_page)
                     p = request.GET.get('p', '1')
                     try:
                         persons_page = paginator.page(p)
@@ -148,7 +161,7 @@ def persons(request):
                         'persons_count': persons_count,
                         'query_vars': query_vars,
                         'form': form,
-                        'search_offset': 20 * (int(p) - 1),
+                        'search_offset': per_page * (int(p) - 1),
                     }
 
                     return render_to_response(template, context_instance = RequestContext(request, context))
@@ -163,7 +176,7 @@ def persons(request):
     persons_count = cache.get('db_size')
     if not persons_count:
         persons_count = Person.objects.all().count()
-        cache.set('db_size', persons_count, 3600)
+        cache.set('db_size', persons_count, 10)
 
     return render_to_response('persons.html', context_instance = RequestContext(request, {
         'is_first_search': True,
@@ -190,8 +203,17 @@ def burials(request):
     Поиск захоронений.
     Результат возвращается в виде таблицы. Для запроса используется метод GET.
     """
+    template = request.REQUEST.get('template', 'burials.html')
     if 'search' in request.GET and request.GET['search']:
         form = BurialsForm(request.GET)
+
+        if template == 'reports/report_4.html':
+            form.fields['country'].required = True
+
+        if template == 'reports/report_4a.html':
+            form.fields['country'].required = True
+            form.fields['region'].required = True
+
         # Если пользователь нажал кнопку 'Поиск'
         if request.GET['search'] == u'Поиск':
             if form.is_valid():
@@ -201,11 +223,13 @@ def burials(request):
                 if cd['burial_passportid']:
                     burials = burials.filter(passportid = cd['burial_passportid'])
                 if cd['bemptypassport']:
-                    burials = burials.filter(passportid = u'')
+                    burials = burials.filter(passportid__isnull=True)
                 else:
-                    burials = burials.exclude(passportid = u'')
+                    burials = burials.exclude(passportid__isnull=True)
                 if cd['city']:
                     burials = burials.filter(location__city = cd['city'])
+                if cd['city_name']:
+                    burials = burials.filter(location__city__name__istartswith = cd['city_name'])
                 elif cd['district']:
                     burials = burials.filter(location__district = cd['district'])
                 elif cd['municipalitet']:
@@ -220,7 +244,7 @@ def burials(request):
                 if cd['burial_type']:
                     burials = burials.filter(burial_type__name = cd['burial_type'])
                 if cd['military_conflict']:
-                    burials = burials.filter(military_conflict__name = cd['military_conflict'])
+                    burials = burials.filter(military_conflict = cd['military_conflict'])
                 if cd['burried_date_from']:
                     burials = burials.filter(date_burried__gte = cd['burried_date_from'])
                 if cd['burried_date_to']:
@@ -231,8 +255,6 @@ def burials(request):
                     burials = burials.filter(state__name = cd['burial_type'])
                 if cd['only_closed']:
                     burials = burials.filter(Q(date_closed__isnull=False) | Q(is_trash=True))
-                if cd['only_not_registered']:
-                    burials = burials.filter(is_registered=False)
 
                 burials_count = burials.count()
 
@@ -242,9 +264,9 @@ def burials(request):
                         'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                         }))
                 else:
-                    template = request.REQUEST.get('template', 'burials.html')
+                    burials = burials.order_by('passportid')
 
-                    paginator = Paginator(burials, 20)
+                    paginator = Paginator(burials, int(request.REQUEST.get('per_page') or 20))
                     p = request.GET.get('p', 1)
                     try:
                         burials_page = paginator.page(p)
@@ -264,9 +286,16 @@ def burials(request):
                     }
 
                     if template == 'reports/report_2.html':
+                        b = burials[0]
                         context.update({
-                            'burial': burials[0],
-                            })
+                            'burial': b,
+                        })
+                        if b.person_set.all().count() > 100:
+                            if request.user.is_authenticated():
+                                report_2_deferred.delay(b.pk, request.user.email)
+                                return direct_to_template(request, 'reports/report_2_deferred.html', context)
+                            else:
+                                return HttpResponseRedirect('%s?next=%s' % (reverse('login'), request.path + '%3F' + request.META['QUERY_STRING'].replace('&', '%26')))
 
                     if template == 'reports/report_2a.html':
                         context.update({
@@ -285,6 +314,7 @@ def burials(request):
                             DeadmanCategory.objects.get(name=u"Военнослужащий"),
                             DeadmanCategory.objects.get(name=u"Участник сопротивления"),
                             DeadmanCategory.objects.get(name=u"Жертва войны"),
+                            DeadmanCategory.objects.get(name=u"Военнопленный"),
                             DeadmanCategory.objects.get(name=u"Другие"),
                         ]
                         burial_list = list(burials.select_related().order_by('passportid'))
@@ -304,31 +334,31 @@ def burials(request):
                             'burials': burial_list,
                             'conflicts': {
                                 'WW': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                    military_conflict__type__name=u"1МВ"
                                 ).count(),
                                 'WWII': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                    military_conflict__type__name=u"2МВ"
                                 ).count(),
-                                'local': burials.filter(military_conflict__name=u"Локальные военные конфликты").count(),
-                                'other': burials.exclude(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                'local': burials.filter(military_conflict__type__name=u"ЛВК").count(),
+                                'other': burials.filter(
+                                    military_conflict__type__name=u"ГР и др."
                                 ).count(),
                             },
                             'types': {
                                 'war': burials.filter(
-                                    burial_type__name__in=[u"Воинское кладбище", u"Смешанное"]
+                                    burial_type__type__name=u'ВК'
                                 ).count(),
                                 'group': burials.filter(
-                                    burial_type__name__in=[u"Братская могила"]
+                                    burial_type__type__name=u"БМ"
                                 ).count(),
                                 'personal': burials.filter(
-                                    burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
+                                    burial_type__type__name=u"ИМ"
                                 ).count(),
                                 'mass': burials.filter(
-                                    burial_type__name__in=[u"Место массов.уничтож."]
+                                    burial_type__type__name=u"ММУ"
                                 ).count(),
                                 'foreign': burials.filter(
-                                    burial_type__name__in=[u"Иностранное"]
+                                    burial_type__type__name=u"ИН"
                                 ).count(),
                             },
                             'persons': {
@@ -338,45 +368,45 @@ def burials(request):
                                 'soldiers': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Военнослужащий")),
                                 'resistance': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
                                 'prey': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Жертва войны")),
-                                'prisoners': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Другие")),
-                                'nowhere': 0,
+                                'prisoners': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Военнопленный")),
+                                'nowhere': r.known_for_burial_list_and_cat(burial_pks, DeadmanCategory.objects.get(name=u"Другие")),
                             },
                         })
 
                     if template == 'reports/report_3.html' or template == 'reports/report_5.html':
                         bcats = BurialCategory.objects.filter(burial__in=burials)
-                        known_count = bcats.aggregate(known=models.Sum('custom_known'))['known'] or r.known_for_burial_list(burials)
-                        unknown_count = bcats.aggregate(unknown=models.Sum('unknown'))['unknown'] or r.unknown_for_burial_list(burials)
+                        known_count = r.known_for_burial_list(burials) or bcats.aggregate(known=models.Sum('custom_known'))['known']
+                        unknown_count = r.unknown_for_burial_list(burials) or bcats.aggregate(unknown=models.Sum('unknown'))['unknown']
                         burials_list = list(burials)
                         context.update({
                             'all': burials.count(),
                             'conflicts': {
                                 'WW': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                    military_conflict__type__name=u"1МВ"
                                 ).count(),
                                 'WWII': burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                    military_conflict__type__name=u"2МВ"
                                 ).count(),
-                                'local': burials.filter(military_conflict__name=u"Локальные военные конфликты").count(),
-                                'other': burials.exclude(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                'local': burials.filter(military_conflict__type__name=u"ЛВК").count(),
+                                'other': burials.filter(
+                                    military_conflict__type__name=u"ГР и др."
                                 ).count(),
                             },
                             'types': {
                                 'war': burials.filter(
-                                    burial_type__name__in=[u"Воинское кладбище", u"Смешанное"]
+                                    burial_type__type__name=u'ВК'
                                 ).count(),
                                 'group': burials.filter(
-                                    burial_type__name__in=[u"Братская могила"]
+                                    burial_type__type__name=u"БМ"
                                 ).count(),
                                 'personal': burials.filter(
-                                    burial_type__name__in=[u"Индивидуальная могила", u"Локальные войны"]
+                                    burial_type__type__name=u"ИМ"
                                 ).count(),
                                 'mass': burials.filter(
-                                    burial_type__name__in=[u"Место массового уничтожения"]
+                                    burial_type__type__name=u"ММУ"
                                 ).count(),
                                 'foreign': burials.filter(
-                                    burial_type__name__in=[u"Иностранное"]
+                                    burial_type__type__name=u"ИН"
                                 ).count(),
                             },
                             'persons': {
@@ -384,23 +414,24 @@ def burials(request):
                                 'known': known_count,
                                 'unknown': unknown_count,
                                 'WW': r.known_for_burial_list(list(burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война"]
+                                    military_conflict__type__name=u"1МВ"
                                 ))),
                                 'WWII': r.known_for_burial_list(list(burials.filter(
-                                    military_conflict__name__in=[u"Иностранные 2мв", u"Вторая мировая война"]
+                                    military_conflict__type__name=u"2МВ"
                                 ))),
                                 'local': r.known_for_burial_list(list(burials.filter(
-                                    military_conflict__name=u"Локальные военные конфликты"
+                                    military_conflict__type__name=u"ЛВК"
                                 ))),
-                                'other': r.known_for_burial_list(list(burials.exclude(
-                                    military_conflict__name__in=[u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]
+                                'other': r.known_for_burial_list(list(burials.filter(
+                                    military_conflict__type__name=u"ГР и др."
                                 ))),
                                 'soldiers': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Военнослужащий")),
                                 'resistance': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Участник сопротивления")),
                                 'prey': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Жертва войны")),
-                                'prisoners': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Другие")),
+                                'prisoners': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Военнопленный")),
+                                'nowhere': r.known_for_burial_list_and_cat(burials_list, DeadmanCategory.objects.get(name=u"Другие")),
                                 'mia': Person.objects.filter(burial__isnull=True, mia=True).count(),
-                                'outside_rb': Person.objects.filter(burial__isnull=True, outside_rb=True).count(),
+                                'outside_rb': Person.objects.filter(outside_rb=True).count(),
                             },
                         })
 
@@ -415,38 +446,38 @@ def burials(request):
                             else:
                                 burials_sel = burials_all
 
-                            burials_sel = list(burials_sel.order_by())
+                            burials_sel = list(burials_sel.order_by('passportid'))
                             burials_pks = [b.pk for b in burials_sel]
 
                             b_cats = BurialCategory.objects.filter(burial__in=burials_sel)
                             bc_data = b_cats.aggregate(unknown=models.Sum('unknown'), known=models.Sum('custom_known'))
-                            unknown = bc_data['unknown'] or r.unknown_for_burial_list(burials_sel)
-                            known = bc_data['known'] or r.known_for_burial_list(burials_sel)
+                            unknown = r.unknown_for_burial_list(burials_sel) or bc_data['unknown']
+                            known = r.known_for_burial_list(burials_sel) or bc_data['known']
 
                             burials_count = len(burials_sel)
 
                             if not burials_count and not known and not unknown:
                                 return {'burials': {'all': 0}, 'persons': {'all': 0}, }
                             else:
-                                conflicts = MilitaryConflict.objects.filter(burial__pk__in=burials_pks).annotate(count=Count('burial'))
-                                burial_types = BurialType.objects.filter(burial__pk__in=burials_pks).annotate(count=Count('burial'))
+                                conflicts = MilitaryConflict.objects.filter(burial__pk__in=burials_pks).annotate(count=Count('burial')).select_related()
+                                burial_types = BurialType.objects.filter(burial__pk__in=burials_pks).annotate(count=Count('burial')).select_related()
 
                                 burials_data = {
                                     'all': burials_count,
-                                    'WW': sum([c.count for c in conflicts if c.name in [u"Иностранные 1мв", u"Первая мировая война"]], 0),
-                                    'WWII': sum([c.count for c in conflicts if c.name in [u"Иностранные 2мв", u"Вторая мировая война"]], 0),
-                                    'local': sum([c.count for c in conflicts if c.name in [u"Локальные военные конфликты"]], 0),
-                                    'other': sum([c.count for c in conflicts if c.name not in [u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]], 0),
-                                    'war': sum([b.count for b in burial_types if b.name in [u"Воинское кладбище", u"Смешанное"]], 0),
-                                    'group': sum([b.count for b in burial_types if b.name in [u"Братская могила"]], 0),
-                                    'personal': sum([b.count for b in burial_types if b.name in [u"Индивидуальная могила", u"Локальные войны"]], 0),
-                                    'mass': sum([b.count for b in burial_types if b.name in [u"Место массов.уничтож."]], 0),
-                                    'foreign': sum([b.count for b in burial_types if b.name in [u"Иностранное"]], 0),
+                                    'WW': sum([c.count for c in conflicts if c.type and c.type.name == u"1МВ"], 0),
+                                    'WWII': sum([c.count for c in conflicts if c.type and c.type.name == u"2МВ"], 0),
+                                    'local': sum([c.count for c in conflicts if c.type and c.type.name == u"ЛВК"], 0),
+                                    'other': sum([c.count for c in conflicts if c.type and c.type.name == u"ГР и др."], 0),
+                                    'war': sum([b.count for b in burial_types if b.type and b.type.name == u'ВК'], 0),
+                                    'group': sum([b.count for b in burial_types if b.type and b.type.name == u"БМ"], 0),
+                                    'personal': sum([b.count for b in burial_types if b.type and b.type.name == u"ИМ"], 0),
+                                    'mass': sum([b.count for b in burial_types if b.type and b.type.name == u"ММУ"], 0),
+                                    'foreign': sum([b.count for b in burial_types if b.type and b.type.name == u"ИН"], 0),
                                 }
 
-                                conflicts = MilitaryConflict.objects.all()
+                                conflicts = MilitaryConflict.objects.all().select_related()
                                 for c in conflicts:
-                                    c.count = r.known_for_burial_list([b.pk for b in burials_sel if b.military_conflict_id == c.pk])
+                                    c.count = r.all_for_burial_list([b.pk for b in burials_sel if b.military_conflict_id == c.pk])
                                 deadman_cats = DeadmanCategory.objects.all()
                                 for dc in deadman_cats:
                                     dc.count = r.known_for_burial_list_and_cat(burials_pks, dc)
@@ -455,14 +486,14 @@ def burials(request):
                                     'all': known + unknown,
                                     'known': known,
                                     'unknown': unknown,
-                                    'WW': sum([c.count for c in conflicts if c.name in [u"Иностранные 1мв", u"Первая мировая война"]], 0),
-                                    'WWII': sum([c.count for c in conflicts if c.name in [u"Иностранные 2мв", u"Вторая мировая война"]], 0),
-                                    'local': sum([c.count for c in conflicts if c.name in [u"Локальные военные конфликты"]], 0),
-                                    'other': sum([c.count for c in conflicts if c.name not in [u"Иностранные 1мв", u"Первая мировая война", u"Иностранные 2мв", u"Вторая мировая война", u"Локальные военные конфликты"]], 0),
+                                    'WW': sum([c.count for c in conflicts if c.type and c.type and c.type.name == u"1МВ"], 0),
+                                    'WWII': sum([c.count for c in conflicts if c.type and c.type and c.type.name == u"2МВ"], 0),
+                                    'local': sum([c.count for c in conflicts if c.type and c.type and c.type.name == u"ЛВК"], 0),
+                                    'other': sum([c.count for c in conflicts if c.type and c.type and c.type.name == u"ГР и др."], 0),
                                     'soldiers': sum([d.count for d in deadman_cats if d.name in [u"Военнослужащий",]], 0),
                                     'resistance': sum([d.count for d in deadman_cats if d.name in [u"Участник сопротивления",]], 0),
                                     'prey': sum([d.count for d in deadman_cats if d.name in [u"Жертва войны",]], 0),
-                                    'prisoners': sum([d.count for d in deadman_cats if d.name in [u"Другие",]], 0),
+                                    'prisoners': sum([d.count for d in deadman_cats if d.name in [u"Военнопленный",]], 0),
                                 }
 
                                 return {
@@ -477,29 +508,13 @@ def burials(request):
                             if form.cleaned_data.get('district'):
                                 districts = districts.filter(pk=form.cleaned_data.get('district').pk)
                             for district in districts:
-                                data_key = 'form4a_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
+                                data_key = 'form4a_data41_%s_%s' % (form.cleaned_data.get('region'), district.pk)
                                 data = cache.get(data_key)
                                 if not data:
                                     data = filter_data(
                                         burials, selected_persons, form.cleaned_data['region'], district
                                     )
-                                    cache.set(data_key, data, 86400)
-                                if not data['persons']['all'] and not data['burials']['all']:
-                                    continue
-                                rows.append({
-                                    'district': district,
-                                    'data': data
-                                })
-                        else:
-                            districts = form.cleaned_data['region'].district_set.all().order_by('name')
-                            for district in districts:
-                                data_key = 'form4_data_%s_%s' % (form.cleaned_data.get('region'), district.pk)
-                                data = cache.get(data_key)
-                                if not data:
-                                    data = filter_data(
-                                        burials, selected_persons, form.cleaned_data['region'], district
-                                    )
-                                    cache.set(data_key, data, 86400)
+                                    cache.set(data_key, data, 10)
                                 if not data['persons']['all'] and not data['burials']['all']:
                                     continue
                                 rows.append({
@@ -509,6 +524,27 @@ def burials(request):
                             context['data'] = filter_data(
                                 burials, selected_persons, form.cleaned_data['region'], None
                             )
+                        else:
+                            regions = form.cleaned_data['country'].georegion_set.all().order_by('name')
+                            if form.cleaned_data.get('region'):
+                                regions = regions.filter(pk=form.cleaned_data.get('region').pk)
+                            for region in regions:
+                                data_key = 'form4_data41_%s_%s' % (form.cleaned_data.get('country'), region.pk)
+                                data = cache.get(data_key)
+                                if not data:
+                                    data = filter_data(
+                                        burials, selected_persons, region, None
+                                    )
+                                    cache.set(data_key, data, 10)
+                                if not data['persons']['all'] and not data['burials']['all']:
+                                    continue
+                                rows.append({
+                                    'region': region,
+                                    'data': data
+                                })
+                            context['data'] = filter_data(
+                                burials, selected_persons, None, None
+                            )
 
                         context['rows'] = rows
 
@@ -516,7 +552,7 @@ def burials(request):
             return render_to_response('burials.html', context_instance=RequestContext(request, {
                 'form': form,
                 'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
-                }))
+            }))
         # Если пользователь нажал кнопку 'Сброс'
         if request.GET['search'] == u'Сброс':
             return HttpResponseRedirect('/burials')
@@ -537,76 +573,284 @@ def burial(request, obj):
     except:
         return render_to_response('error.html', context_instance=RequestContext(request, {
             'error': 'Выбранный воин не обранужен.'
-            }))
-
-    return render_to_response('burial.html', context_instance=RequestContext(request, {
-        'burial': burial
         }))
 
-'''
-def get_deadman(request):
-    """
-    Получение уникального списка ФИО захороненных.
-    """
-    persons = []
-    q = request.GET.get('q', None)
-    if q is not None:
-        rezult = Person.objects.filter(buried__isnull=False, last_name__istartswith=q).values("last_name",
-                          "first_name", "patronymic").order_by("last_name", "first_name", "patronymic").distinct()[:16]
-        persons = ["%s %s %s" % (item["last_name"], item["first_name"], item["patronymic"]) for item in rezult]
-    return direct_to_template(request, 'ajax.html', {'objects': persons,})
+    per_page = int(request.REQUEST.get('per_page') or 20)
 
+    return object_list(request,
+        template_name='burial.html',
+        queryset=burial.person_set.all(),
+        paginate_by=per_page,
+        extra_context={
+            'burial': burial,
+        }
+    )
 
-def get_street(request):
-    """
-    Получение улицы с городом, регионом и страной.
-    """
-    streets = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = Street.objects.filter(name__istartswith=q).order_by("name", "city__name", "city__region__name",
-                                                                     "city__region__country__name")[:24]
-        for s in rezult:
-            streets.append(u"%s/%s/%s/%s" % (s.name, s.city.name, s.city.region.name, s.city.region.country.name))
-    return HttpResponse(JSONEncoder().encode(streets))
+def import_xls(request):
+    form = XLSImportForm(data=request.POST or None, files=request.FILES or None)
+    if request.POST and form.is_valid():
+        tmp_workbook = os.tmpnam()
+        destination = open(tmp_workbook, 'wb+')
+        for chunk in form.cleaned_data['xls'].chunks():
+            destination.write(chunk)
+        destination.close()
+        burial_obj = form.cleaned_data['burial']
 
+        errors = []
+        try:
+            xl = xlrd.open_workbook(filename=tmp_workbook)
+        except xlrd.XLRDError:
+            messages.error(request, u'Неверный формат файла')
+            return redirect('import')
+        worksheet = xl.sheets()[0]
+        row = 1
+        all_data = []
+        any_errors = False
+        bad_errrors = False
 
-def get_countries(request):
-    """
-    Получение списка стран с пом. AJAX-запроса.
-    """
-    countries = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoCountry.objects.filter(name__istartswith=q).order_by("name")[:8]
-        for s in rezult:
-            countries.append(s.name)
-    return HttpResponse(JSONEncoder().encode(countries))
+        head = worksheet.row_slice(row, 0, 7)
 
+        while row < worksheet.nrows:
+            has_errors = False
+            row_bad_errrors = False
+            raw_cells = worksheet.row_slice(row, 0, 9)
+            data = map(lambda cell: cell.value, raw_cells)
+            data = [d.strip() if isinstance(d, basestring) else d for d in data]
+            duty, last_name, first_name, middle_name, birth, death, info, info_unit, info_birth = data
+            last_name, first_name, middle_name = map(lambda s: s.upper().strip('.').strip(' '), [last_name, first_name, middle_name])
+            data_row = {}
+            if duty:
+                try:
+                    data_row['duty'] = Rank.objects.filter(name__iexact=duty.strip().capitalize())[0]
+                except IndexError:
+                    data_row['duty'] = {
+                        'value': duty,
+                        'error': u'Звание не найдено в БД'
+                    }
+                    has_errors = True
+                    bad_errrors = True
+                    row_bad_errrors = True
 
-def get_cities(request):
-    """
-    Получение списка нас. пунктов с пом. AJAX-запроса.
-    """
-    cities = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoCity.objects.filter(name__istartswith=q).order_by("name", "region__name",
-                                                                      "region__country__name")[:24]
-        for s in rezult:
-            cities.append(u"%s/%s/%s" % (s.name, s.region.name, s.region.country.name))
-    return HttpResponse(JSONEncoder().encode(cities))
+            if birth:
+                if isinstance(birth, float):
+                    if raw_cells[4].ctype == xlrd.XL_CELL_DATE:
+                        try:
+                            birth = datetime.datetime(*xlrd.xldate_as_tuple(birth, xl.datemode)).strftime('%d.%m.%Y')
+                        except ValueError:
+                            birth = int(birth)
+                    else:
+                        birth = int(birth)
 
+                try:
+                    bits = map(int, str(birth).split('.'))
+                    bits.reverse()
+                    y,m,d = list(bits + [None, None])[:3]
+                    data_row['birth'] = UnclearDate(y,m,d)
+                except ValueError, e:
+                    data_row['birth'] = {
+                        'value': birth,
+                        'error': u'Не понимаю дату: %s' % e.message
+                    }
+                    has_errors = True
+                    bad_errrors = True
+                    row_bad_errrors = True
+            if death:
+                if isinstance(death, float):
+                    if raw_cells[5].ctype == xlrd.XL_CELL_DATE:
+                        try:
+                            death = datetime.datetime(*xlrd.xldate_as_tuple(death, xl.datemode)).strftime('%d.%m.%Y')
+                        except ValueError:
+                            death = int(death)
+                    else:
+                        death = int(death)
 
-def get_regions(request):
-    """
-    Получение списка регионов с пом. AJAX-запроса.
-    """
-    regions = []
-    q = request.GET.get('term', None)
-    if q is not None:
-        rezult = GeoRegion.objects.filter(name__istartswith=q).order_by("name", "country__name")[:24]
-        for s in rezult:
-            regions.append(u"%s/%s" % (s.name, s.country.name))
-    return HttpResponse(JSONEncoder().encode(regions))
-'''
+                try:
+                    bits = map(int, str(death).split('.'))
+                    bits.reverse()
+                    y,m,d = list(bits + [None, None])[:3]
+                    data_row['death'] = UnclearDate(y,m,d)
+                except ValueError, e:
+                    data_row['death'] = {
+                        'value': death,
+                        'error': u'Не понимаю дату: %s' % e.message
+                    }
+                    has_errors = True
+                    bad_errrors = True
+                    row_bad_errrors = True
+
+            if not last_name:
+                data_row['person'] = {
+                    'value': u'%s %s %s' % (last_name, first_name, middle_name),
+                    'error': u'Фамилия обязательна'
+                }
+                has_errors = True
+                bad_errrors = True
+                row_bad_errrors = True
+            else:
+                persons = Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj)
+                d = data_row.get('death')
+                if d and isinstance(d, UnclearDate):
+                    persons = persons.filter(death_date=d.d)
+                if persons.exists():
+                    data_row['person'] = {
+                        'data': (last_name, first_name, middle_name),
+                        'value': u'%s %s %s' % (last_name, first_name, middle_name),
+                        'error': u'Такие ФИО уже существуют в указанном захоронении'
+                    }
+                    has_errors = True
+                else:
+                    data_row['person_value'] = ' '.join([last_name, first_name, middle_name])
+                    data_row['person'] = [last_name, first_name, middle_name]
+
+            data_row['info'] = info
+            data_row['info_unit'] = info_unit
+            data_row['info_birth'] = info_birth
+
+            all_data.append({'errors': has_errors, 'bad_errrors': row_bad_errrors, 'data': data_row})
+            if has_errors:
+                any_errors = True
+            row += 1
+
+        os.unlink(tmp_workbook)
+        return direct_to_template(request, 'import2.html', extra_context={
+            'all_data': all_data,
+            'burial_obj': burial_obj,
+            'any_errors': any_errors,
+            'bad_errrors': bad_errrors,
+            'head': head,
+        })
+
+    return direct_to_template(request, 'import.html', extra_context={
+        'form': form,
+    })
+
+def import_xls_2(request):
+    row = 0
+    cnt = 0
+
+    burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+
+    errors = []
+    xli = 1
+
+    while row < int(request.POST['lines']):
+        post = request.POST.get('post_%s' % row) or ''
+        last_name = request.POST.get('last_name_%s' % row) or ''
+        first_name = request.POST.get('first_name_%s' % row, '') or ''
+        middle_name = request.POST.get('middle_name_%s' % row, '') or ''
+        birth = request.POST.get('birth_%s' % row, '') or ''
+        death = request.POST.get('death_%s' % row, '') or ''
+        info = request.POST.get('info_%s' % row, '') or ''
+        info_unit = request.POST.get('info_unit_%s' % row, '') or ''
+        info_birth = request.POST.get('info_birth_%s' % row, '') or ''
+        error = request.POST.get('error_%s' % row, '') or ''
+
+        rank = None
+
+        if post:
+            try:
+                rank = Rank.objects.get(pk=post)
+            except (ValueError, Rank.DoesNotExist):
+                rank = Rank.objects.create(name=post)
+
+        if request.POST.get('check_%s' % row):
+            params = dict(
+                burial = burial_obj,
+                last_name = last_name,
+                first_name = first_name,
+                patronymic = middle_name,
+                info = info,
+            )
+            if birth:
+                bits = map(int, str(birth).split('.'))
+                bits.reverse()
+                y,m,d = list(bits + [None, None])[:3]
+                birth_date = UnclearDate(y,m,d)
+                params.update(
+                    birth_date = birth_date.d,
+                    birth_date_no_month = birth_date.no_month,
+                    birth_date_no_day = birth_date.no_day,
+                )
+            if death:
+                bits = map(int, str(death).split('.'))
+                bits.reverse()
+                y,m,d = list(bits + [None, None])[:3]
+                death_date = UnclearDate(y,m,d)
+                params.update(
+                    death_date = death_date.d,
+                    death_date_no_month = death_date.no_month,
+                    death_date_no_day = death_date.no_day,
+                )
+
+            if info_birth:
+                params['birth_location'] = SimpleLocation.objects.create(info=info_birth)
+
+            p = Person.objects.create(**params)
+
+            if rank or info_unit:
+                PersonDuty.objects.create(person=p, rank=rank, unit_name=info_unit)
+
+            cnt += 1
+        else:
+            try:
+                post_name = Rank.objects.get(pk=post).name
+            except (ValueError, Rank.DoesNotExist):
+                post_name = post
+
+            errors.append([
+                post_name,
+                last_name,
+                first_name,
+                middle_name,
+                birth,
+                death,
+                info,
+                info_unit,
+                info_birth,
+                error.strip()
+            ])
+
+            xli += 1
+        row += 1
+
+    if xli > 0:
+        return direct_to_template(request, 'import_errors.html', extra_context={
+            'errors': errors,
+            'errors_pickled': simplejson.dumps(errors),
+            'cnt': cnt,
+        })
+
+    messages.success(request, u"Импорт завершен, импортировано %s записей" % cnt)
+
+    return HttpResponseRedirect('/import/')
+
+def import_xls_3(request):
+    row = 0
+    cnt = 0
+
+    errors = simplejson.loads(request.POST.get('errors_pickled'))
+
+    burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    book = xlwt.Workbook(encoding='cp1251')
+    sheet = book.add_sheet(u'Ошибки'.encode('cp1251'))
+
+    sheet.write(0, 0, request.POST.get('head_1') or '')
+    sheet.write(0, 1, request.POST.get('head_2') or '')
+    sheet.write(0, 2, request.POST.get('head_3') or '')
+    sheet.write(0, 3, request.POST.get('head_4') or '')
+    sheet.write(0, 4, request.POST.get('head_5') or '')
+    sheet.write(0, 5, request.POST.get('head_6') or '')
+    sheet.write(0, 6, request.POST.get('head_7') or '')
+
+    xli = 1
+
+    for e in errors:
+        for i in range(len(e)):
+            sheet.write(xli, i, e[i].strip().encode('cp1251'))
+        xli += 1
+
+    content = StringIO()
+    book.save(content)
+    response = HttpResponse(content.getvalue(), mimetype='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="import_%s_errors.xls"' % burial_obj.passportid
+    return response

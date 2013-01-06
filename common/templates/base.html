@@ -1,8 +1,9 @@
-{% load i18n %}
-{% load adminmedia %}
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="ru">
+
+{% load i18n %}
+{% load adminmedia %}
+{% load cemetery_tags %}
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18,9 +19,16 @@
     <style type="text/css" media="print">
         .top_nav { display: none; }
     </style>
+    {% block head %}{% endblock head %}
 </head>
 
 <body>
+    {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}</ul>
+    {% endif %}
+
     <table width="100%" class="top_nav">
         {# Верхная строка с логотипом и меню #}
         <tr>
@@ -35,6 +43,9 @@
                 <a href="/burials/?template=reports/report_4.html">[Ф4]</a>&nbsp;
                 <a href="/burials/?template=reports/report_4a.html">[Ф4а]</a>&nbsp;
                 <a href="/burials/?template=reports/report_5.html">[Ф5]</a>
+                {% if user|has_perm:"common.add_burial" %}
+                    <a href="/import/">[Импорт]</a>
+                {% endif %}
             </td>
             <td align="right" colspan="3">
                 {% if user.is_authenticated %}

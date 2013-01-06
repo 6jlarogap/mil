@@ -5,7 +5,7 @@ import pytils
 from django.contrib import admin
 
 from common.models import *
-from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget
+from common.forms import PersonAdminForm, BurialAdminForm, LocationField, LocationWidget, PersonCallForm
 
 class PersonDutyInline(admin.TabularInline):
     model = PersonDuty
@@ -14,6 +14,7 @@ class PersonDutyInline(admin.TabularInline):
 
 class PersonCallInline(admin.TabularInline):
     model = PersonCall
+    form = PersonCallForm
     extra = 1
     can_delete = False
 
@@ -28,6 +29,7 @@ class ClosedBurialFromInLine(admin.TabularInline):
     extra = 1
     max_num = 1
     can_delete = False
+    raw_id_fields = ['burial_to', ]
 
 class BurialCategoryInLine(admin.TabularInline):
     model = BurialCategory
@@ -35,7 +37,7 @@ class BurialCategoryInLine(admin.TabularInline):
     readonly_fields = ['category', 'known', ]
     can_delete = False
     template = 'tabular_burialcat.html'
-    fieldsets = [(None, {'fields': ['category', 'known', 'custom_known', 'unknown', ]})]
+    fieldsets = [(None, {'fields': ['category', 'custom_known', 'unknown', 'known', ]})]
 
     def get_formset(self, request, obj=None):
         if not obj:
@@ -71,9 +73,11 @@ class BurialAdmin(admin.ModelAdmin):
         ClosedBurialFromInLine,
     ]
     form = BurialAdminForm
+    save_on_top = True
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', 'creator', 'today', ]
     raw_id_fields = ['location', ]
+    list_filter = ['passportid', ]
 
     def today(self, obj):
         return pytils.dt.ru_strftime(date=datetime.date.today(), format=u'%d %B %Y', inflected=True)
@@ -113,14 +117,18 @@ class PersonAdmin(admin.ModelAdmin):
         PersonEditCauseInline,
     ]
     form = PersonAdminForm
-    search_fields = ['burial__passportid', 'last_name']
+    search_fields = ['burial__passportid', '=last_name']
     readonly_fields = ['date_of_creation', 'last_edit', 'creator', ]
-    raw_id_fields = ['birth_location', ]
+    raw_id_fields = ['birth_location', 'burial' ]
+    list_filter = ['deadman_category', ]
+    list_display = ['last_name', 'first_name', 'patronymic', 'get_passport_number', 'get_unclear_birth_date_admin', 'get_unclear_death_date_admin',]
+    ordering = ['last_name', 'first_name', 'patronymic', ]
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)
         self.opts.get_field_by_name('info')[0].verbose_name = u'Дополнительная информация о месте захоронения'
         self.opts.get_field_by_name('closed_burials')[0].help_text = None
+        self.opts.get_field_by_name('burial')[0].help_text = u'Необходимо кликнуть на "лупу", ввод номера не сработает'
 
     def get_fieldsets(self, *args, **kwargs):
         fieldsets = super(PersonAdmin, self).get_fieldsets(*args, **kwargs)
@@ -133,6 +141,18 @@ class PersonAdmin(admin.ModelAdmin):
         if not obj.creator:
             obj.creator = request.user
         obj.save()
+
+    def get_passport_number(self, obj):
+        return obj.burial and obj.burial.passportid or ''
+    get_passport_number.short_description = u'Номер паспорта ВЗ'
+
+    def get_unclear_birth_date_admin(self, obj):
+        return obj.get_unclear_birth_date
+    get_unclear_birth_date_admin.short_description = u'Дата рождения'
+
+    def get_unclear_death_date_admin(self, obj):
+        return obj.get_unclear_death_date
+    get_unclear_death_date_admin.short_description = u'Дата смерти'
 
 class DeadmanCategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'ordering',]
@@ -165,6 +185,7 @@ admin.site.register(Municipalitet, SortSearchAdmin)
 admin.site.register(CityType, SortSearchAdmin)
 admin.site.register(GeoCity, SortSearchAdmin)
 admin.site.register(Rank, SortSearchAdmin)
+admin.site.register(Post, SortSearchAdmin)
 admin.site.register(Comissariat, LocationAdmin)
 admin.site.register(MilitaryUnit, LocationAdmin)
 admin.site.register(DeathCause, SortSearchAdmin)

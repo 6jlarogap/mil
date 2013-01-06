@@ -10,6 +10,7 @@ from django_extensions.db.fields import UUIDField
 from django.contrib.auth.models import User
 
 from smart_selects.db_fields import ChainedForeignKey
+import re
 import cemetery_redis
 
 def slugify_filename(prefix):
@@ -39,47 +40,53 @@ class GeoRegion(models.Model):
     Регион.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    country = models.ForeignKey(GeoCountry, null=True)
+    country = models.ForeignKey(GeoCountry, null=True, verbose_name=u"Страна")
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
-        return self.name
+        name = geo_name(self.name)
+        return name
 
     class Meta:
         unique_together = (("country", "name"),)
         verbose_name = u'область'
         verbose_name_plural = u'области'
+        ordering = ['name']
 
 class District(models.Model):
     """
     Район.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    region = models.ForeignKey(GeoRegion, null=True)
+    region = models.ForeignKey(GeoRegion, null=True, verbose_name=u"Область")
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
-        return self.name
+        name = geo_name(self.name)
+        return name
 
     class Meta:
         verbose_name = u'район'
         verbose_name_plural = u'районы'
+        ordering = ['name']
 
 class Municipalitet(models.Model):
     """
     Сельсовет.
     """
     obid = models.IntegerField(blank=True, null=True, editable=False)
-    district = models.ForeignKey(District)
+    district = models.ForeignKey(District, verbose_name=u"Район")
     name = models.CharField(u"Название", max_length=36, db_index=True)
 
     def __unicode__(self):
-        return self.name
+        name = geo_name(self.name)
+        return name
 
     class Meta:
         unique_together = (("district", "name"),)
         verbose_name = u'сельсовет'
         verbose_name_plural = u'сельсоветы'
+        ordering = ['name']
 
 def capitalize_name(instance, **kwargs):
     if instance.name[0] != instance.name.capitalize()[0]:
@@ -100,6 +107,29 @@ class CityType(models.Model):
         verbose_name_plural = u'Типы населенных пунктов'
 
 
+def geo_name(name):
+    clean_name = re.sub(u'\.([A-Za-zА-Яа-яёЁ])', '. \\1', name.capitalize())
+
+    def make_first_upper(m):
+        return u'%s%s' % (m.groups()[0], m.groups()[1].capitalize())
+
+    clean_name = re.sub(u'([\s-])([A-Za-zА-Яа-яёЁ])', make_first_upper, clean_name)
+
+    VALID_PREFIXES = [u'г', u'п', u'пос', u'ул', u'пр', u'просп', u'пер', u'пл', u'л', u'ур',  u'оз',  ]
+
+    def make_prefix_lower(m):
+        prefix = m.groups()[0]
+        if prefix.lower() in VALID_PREFIXES:
+            prefix = prefix.lower()
+
+        return u'%s.' % prefix
+
+    clean_name = re.sub(u'^([A-Za-zА-Яа-яёЁ]+)\.', make_prefix_lower, clean_name)
+
+    clean_name = re.sub(u'(\s|^)[Аа][Оо](\s|$)', u'\\1АО\\2', clean_name)
+
+    return clean_name
+
 class GeoCity(models.Model):
     """
     Город.
@@ -113,9 +143,10 @@ class GeoCity(models.Model):
     name = models.CharField("Название", max_length=36, db_index=True)
 
     def __unicode__(self):
+        name = geo_name(self.name)
         if self.type:
-            return u'%s, %s' % (self.name, self.type)
-        return self.name
+            return u'%s, %s' % (name, self.type)
+        return name
 
     class Meta:
         verbose_name = u'населенный пункт'
@@ -138,17 +169,27 @@ class Location(models.Model):
     gps_y = models.FloatField(u"Координата Y", blank=True, null=True)                            # GPS Y-ось.
     gps_z = models.FloatField(u"Координата Z", blank=True, null=True)                            # GPS Z-ось.
 
-    def __unicode__(self):
-        ret = u"незаполненный адрес"
+    def __unicode__(self, full=True, na=True):
+        ret = na and u"незаполненный адрес" or u""
         if self.city:
-            ret = u'%s' % self.city
-            if self.city.region:
-                ret = u'%s %s' % (self.city.region, ret)
-                if self.city.region.country:
-                    ret = u'%s %s' % (self.city.region.country, ret)
-        if self.info:
-            ret = u'%s %s' % (ret, self.info)
-        return ret
+            ret = u'НП: %s' % self.city
+        if self.municipalitet:
+            ret = u'Сельсовет: %s, %s' % (self.municipalitet, ret)
+        if self.district:
+            ret = u'Район: %s, %s' % (self.district, ret)
+        if self.region:
+            ret = u'Область: %s, %s' % (self.region, ret)
+        if self.country:
+            ret = u'Страна: %s, %s' % (self.country, ret)
+        if self.info and full:
+            ret = u'%s, %s' % (ret, self.info)
+        return ret.strip(' ,')
+
+    def short_title_na(self):
+        return self.__unicode__(full=True, na=False)
+
+    def short_title(self):
+        return self.__unicode__(full=True)
 
     class Meta:
         abstract = True
@@ -157,7 +198,7 @@ class SimpleLocation(Location):
     """
     С точностью до страны
     """
-    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", null=True)       # Страна
+    country = models.ForeignKey(GeoCountry, verbose_name=u"Страна", blank=True, null=True)       # Страна
     region = ChainedForeignKey(GeoRegion, verbose_name=u"Область", chained_field="country", chained_model_field="country", blank=True, null=True)
     district = ChainedForeignKey(District, verbose_name=u"Район", chained_field="region", chained_model_field="region", blank=True, null=True)
     municipalitet = ChainedForeignKey(Municipalitet, verbose_name=u"Сельсовет", chained_field="district", chained_model_field="district", blank=True, null=True)
@@ -256,14 +297,14 @@ class Burial(models.Model):
     obid = models.IntegerField(blank=True, null=True, editable=False)
     oblocationid = models.IntegerField(blank=True, null=True, editable=False)
     uuid = UUIDField(primary_key=True)
-    passportid = models.CharField(u"Номер паспорта воинского захоронения",  blank=True, null=True, max_length=128, db_index=True, unique=True)
+    passportid = models.PositiveIntegerField(u"Номер паспорта воинского захоронения",  blank=True, null=True, db_index=True, unique=True)
     date_closed = models.DateField(u"Дата закрытия", blank=True, null=True, editable=False, db_index=True)
     burial_type = models.ForeignKey(BurialType, verbose_name=u"Тип воинского захоронения", blank=True, null=True)
     military_conflict = models.ForeignKey(MilitaryConflict, verbose_name=u"Военный конфликт", blank=True, null=True)
     state = models.ForeignKey(MemorialState, verbose_name=u"Состояние памятника", blank=True, null=True)
     names_count = models.PositiveSmallIntegerField(u"Кол-во имен на могильной плите", default=0)
 
-    location = models.ForeignKey(StrictLocation, null=True, blank=True)
+    location = models.ForeignKey(SimpleLocation, null=True, blank=True)
 
     date_passport = models.DateField(u"Дата создания паспорта", blank=True, null=True, db_index=True)
     date_passport_no_month = models.BooleanField(default=False, editable=False)
@@ -291,14 +332,11 @@ class Burial(models.Model):
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True, db_index=True)
     date_of_update = models.DateTimeField(u"Дата обновления записи", auto_now=True, db_index=True)
     info = models.TextField(verbose_name=u"Дополнительная информация о захоронении", blank=True, null=True)
-    is_registered = models.BooleanField(u"Учтенное", default=True, db_index=True)
+    is_registered = models.BooleanField(u"Учтенное", default=True, db_index=True, editable=False)
     is_trash = models.BooleanField(u"В корзине", default=False, db_index=True)
 
     def __unicode__(self):
-        if self.passportid:
-            return self.passportid
-        else:
-            return u'без паспорта'
+        return u'%s, %s' % (self.passportid or u'без паспорта', self.location)
 
     def get_full_persons(self):
         return self.person_set.all().select_related()
@@ -328,6 +366,7 @@ class Burial(models.Model):
                     DeadmanCategory.objects.get(name=u"Военнослужащий"),
                     DeadmanCategory.objects.get(name=u"Участник сопротивления"),
                     DeadmanCategory.objects.get(name=u"Жертва войны"),
+                    DeadmanCategory.objects.get(name=u"Военнопленный"),
                     DeadmanCategory.objects.get(name=u"Другие"),
                 ]
 
@@ -339,9 +378,10 @@ class Burial(models.Model):
                 'resistance': r.known_for_burial_list_and_cat([self], dead_cats[1]),
                 'prey': r.known_for_burial_list_and_cat([self], dead_cats[2]),
                 'prisoners': r.known_for_burial_list_and_cat([self], dead_cats[3]),
+                'other': r.known_for_burial_list_and_cat([self], dead_cats[4]),
             }
 
-            cache.set('stats_burial_%s' % self.pk, stats, 3600)
+            cache.set('stats_burial_%s' % self.pk, stats, 10)
         return stats
 
     # get persons count from all previous burials
@@ -577,7 +617,7 @@ class BurialCategory(models.Model):
     category = models.ForeignKey(DeadmanCategory, related_name='burial_categories', verbose_name=u"Категория")
     burial = models.ForeignKey(Burial, related_name='burial_categories')
     custom_known = models.PositiveIntegerField(default=0, verbose_name=u"Известных")
-    known = models.PositiveIntegerField(default=0, verbose_name=u"Известных (авто)")
+    known = models.PositiveIntegerField(default=0, verbose_name=u"Введено фамилий")
     unknown = models.PositiveIntegerField(default=0, verbose_name=u"Неизвестных")
     updated = models.DateTimeField(auto_now=True)
 
@@ -598,17 +638,8 @@ class BurialCategory(models.Model):
         else:
             k = self.known
 
-        if self.pk:
-            old = BurialCategory.objects.get(pk=self.pk)
-
-            pipe.incr('cemetery:burial:%s:known' % burial_id, k - old.custom_known)
-            pipe.incr('cemetery:burial:%s:all' % burial_id, k + self.unknown - (old.custom_known or old.known) - old.unknown)
-            pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
-            pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
-        else:
-            pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
-            pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
-
+        pipe.set('cemetery:burial:%s:category:%s' % (burial_id, self.category.pk), k)
+        pipe.set('cemetery:burial:%s:category:%s:unknown' % (burial_id, self.category.pk), self.unknown)
         pipe.execute()
         super(BurialCategory, self).save(*args, **kwargs)
 
@@ -686,7 +717,7 @@ class UnclearDate:
 
     @property
     def day(self):
-        return not self.no_month and self.d.day or None
+        return not self.no_day and self.d.day or None
 
 
 
@@ -722,10 +753,11 @@ class Person(models.Model):
     information_source = models.ForeignKey(InformationSource, verbose_name=u"Источник информации", blank=True, null=True)
     info = models.TextField(u"Дополнительная информация", blank=True, null=True)
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True, editable=False)
-    date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True)
-    is_trash = models.BooleanField(u"Удалена", default=False, db_index=True)
+    date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True, editable=False)
+    is_trash = models.BooleanField(u"Удалена", default=False, db_index=True, editable=False)
 
     edit_causes = property(lambda self: self.personeditcause_set.all().order_by('-date_edit'))
+    last_edit_obj = property(lambda self: self.edit_causes and self.edit_causes[0] or None)
     last_edit = property(lambda self: (self.edit_causes and self.edit_causes[0].date_edit or self.date_of_creation).strftime(u'%d.%m.%Y %H:%M'))
 
     class Meta:
@@ -735,6 +767,12 @@ class Person(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.last_name
+
+    def save(self, *args, **kwargs):
+        self.first_name = self.first_name.upper()
+        self.last_name = self.last_name.upper()
+        self.patronymic = self.patronymic.upper()
+        super(Person, self).save(*args, **kwargs)
 
     def get_info(self):
         return self.info.replace('.', '. ')
@@ -764,18 +802,18 @@ class Person(models.Model):
     def get_unclear_death_date(self):
         return self.get_unclear_date('death_date')
 
-
 class MilitaryUnit(models.Model):
     """
     Воинское подразделение
     """
     name = models.CharField(u"Воинское подразделение", max_length=100, db_index=True)
-    location = models.OneToOneField(SimpleLocation, null=True, blank=True)
+    location = models.OneToOneField(SimpleLocation, null=True, blank=True, editable=False)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
+        ordering = ['name']
         verbose_name = (u'Воинское подразделение')
         verbose_name_plural = (u'Воинские подразделения')
 
@@ -791,6 +829,7 @@ class Comissariat(models.Model):
         return u'%s' % name
 
     class Meta:
+        ordering = ['name']
         verbose_name = (u'Военкомат')
         verbose_name_plural = (u'Военкоматы')
 
@@ -801,13 +840,39 @@ class PersonCall(models.Model):
     person = models.OneToOneField(Person, primary_key=True)  
     unit = models.ForeignKey(Comissariat, verbose_name=u"Военкомат", blank=True, null=True)
     date = models.DateField(u"Дата призыва", blank=True, null=True)
+    date_no_month = models.BooleanField(default=False, editable=False)
+    date_no_day = models.BooleanField(default=False, editable=False)
 
     def __unicode__(self):
-        return u'%s' % self.unit.name
+        if self.unit:
+            return u'%s' % self.unit.name
+        else:
+            return u'Не указано'
 
     class Meta:
         verbose_name = (u'Место призыва')
         verbose_name_plural = (u'Место призыва')
+
+    def get_unclear_date(self, field_name=None):
+        if not field_name:
+            field_name = 'date'
+        if not getattr(self, field_name, None):
+            return None
+        cur_date = getattr(self, field_name)
+        tmp_date = UnclearDate(cur_date.year, cur_date.month, cur_date.day)
+        if getattr(self, field_name+'_no_day'):
+            tmp_date.day = None
+            tmp_date.no_day = True
+        if getattr(self, field_name+'_no_month'):
+            tmp_date.month = None
+            tmp_date.no_month = True
+        return tmp_date
+
+    def set_unclear_date(self, field_name, ud):
+        setattr(self, field_name, ud)
+        if ud:
+            setattr(self, field_name+'_no_day', ud.no_day)
+            setattr(self, field_name+'_no_month', ud.no_month)
 
 class Post(models.Model):
     """
@@ -820,6 +885,7 @@ class Post(models.Model):
     class Meta:
         verbose_name = (u'Должность')
         verbose_name_plural = (u'Должности')
+        ordering = ['name', ]
 
 class Rank(models.Model):
     """
@@ -841,12 +907,15 @@ class PersonDuty(models.Model):
     Место службы
     """
     person = models.OneToOneField(Person, primary_key=True) 
-    unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", blank=True, null=True)
+    unit = models.ForeignKey(MilitaryUnit, verbose_name=u"Воинское подразделение", editable=False, null=True)
+    unit_name = models.CharField(u"Воинское подразделение", max_length=255, db_index=True, blank=True, null=True)
     rank = models.ForeignKey(Rank, verbose_name=u"Звание", blank=True, null=True)
     post = models.ForeignKey(Post, verbose_name=u"Должность", blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s %s %s' % (self.rank, self.post, self.unit)
+        s = u'%s %s %s' % (self.rank or u'', self.post or u'', self.unit_name or u'')
+        return s.strip()
+
     class Meta:
         verbose_name = (u'Место службы')
         verbose_name_plural = (u'Место службы')

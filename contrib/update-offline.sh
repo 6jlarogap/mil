@@ -10,5 +10,6 @@ python ./manage.py collectstatic --noinput
 
 # Start django daemon
 /etc/init.d/django restart
+supervisorctl restart all
 
 echo "Finished"
