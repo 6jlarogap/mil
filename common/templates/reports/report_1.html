@@ -188,7 +188,14 @@
         <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     </TR>
     <TR>
-        <TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">дополнительная информация о месте захоронения - {{ person.burial.location.info|default:"" }}</FONT></TD>
+        <TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">
+            дополнительная информация о месте захоронения -
+            {% if person.burial.location.info %}
+                {{ person.burial.location.info|default:"" }}
+            {% else %}
+                {{ person.info|default:"" }}
+            {% endif %}
+        </FONT></TD>
         <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
         <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
     </TR>
