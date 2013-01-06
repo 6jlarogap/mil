@@ -273,7 +273,7 @@ class LocationField(MultiValueField):
             LocationModel = StrictLocation
         try:
             loc = LocationModel.objects.filter(**params)[0]
-        except LocationModel.DoesNotExist:
+        except IndexError:
             loc = LocationModel.objects.create(**params)
         return loc.pk
 
