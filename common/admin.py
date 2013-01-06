@@ -126,7 +126,6 @@ class PersonAdmin(admin.ModelAdmin):
 
     def __init__(self, *args, **kwargs):
         super(PersonAdmin, self).__init__(*args, **kwargs)
-        self.opts.get_field_by_name('info')[0].verbose_name = u'Дополнительная информация о месте захоронения'
         self.opts.get_field_by_name('closed_burials')[0].help_text = None
         self.opts.get_field_by_name('burial')[0].help_text = u'Необходимо кликнуть на "лупу", ввод номера не сработает'
 
