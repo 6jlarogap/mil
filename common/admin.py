@@ -77,7 +77,6 @@ class BurialAdmin(admin.ModelAdmin):
     search_fields = ['passportid', ]
     readonly_fields = ['date_of_creation', 'date_of_update', 'creator', 'today', ]
     raw_id_fields = ['location', ]
-    list_filter = ['passportid', ]
 
     def today(self, obj):
         return pytils.dt.ru_strftime(date=datetime.date.today(), format=u'%d %B %Y', inflected=True)
