@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from smart_selects.db_fields import ChainedForeignKey
 import re
 import cemetery_redis
+import pytils.translit
 
 def slugify_filename(prefix):
     def _slugify(instance, filename):
