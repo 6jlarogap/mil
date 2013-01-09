@@ -29,11 +29,13 @@
                 <td>Номер захоронения</td>
                 <td>Дата захоронения</td>
                 <td>Адрес захоронения</td>
+                <td>Доп. инфо</td>
             </thead>
             <tr>
                 <td><a href="{% url burial person.burial.uuid %}">{{ person.burial.passportid }}</a></td>
                 <td>{{ person.burial.get_unclear_date_burried|default:"" }}</td>
                 <td>{{ person.burial.location|default:"" }}</td>
+                <td>{{ person.info|default:"" }}</td>
             </tr>
             {% for old in  person.closed_burials.all %}
             <tr>
@@ -43,6 +45,7 @@
                 </td>
                 <td>{{ old.get_unclear_date_burried|default:"" }}</td>
                 <td>{{ old.location|default:"" }}</td>
+                <td></td>
             </tr>
             {% endfor %}
         </table>

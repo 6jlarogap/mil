@@ -190,8 +190,8 @@
     <TR>
         <TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">
             дополнительная информация о месте захоронения -
-            {% if person.burial.location.info %}
-                {{ person.burial.location.info }}
+            {% if person.info %}
+                {{ person.info }}
             {% endif %}
         </FONT></TD>
         <TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
@@ -225,13 +225,6 @@
 	</TR>
 	<TR>
 		<TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">дата последнего изменения - {{ person.last_edit.date|default:person.date_of_creation|date:"d.m.Y" }}</FONT></TD>
-		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
-		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
-	</TR>
-	<TR>
-		<TD HEIGHT="20" colspan="8" ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000">
-            ссылка на другие информационные источники -{{ person.info|default:"" }}
-        </FONT></TD>
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 		<TD ALIGN="LEFT" VALIGN=BOTTOM SDNUM="1033;1033;General"><FONT FACE="Times New Roman" SIZE=3 COLOR="#000000"><BR></FONT></TD>
 	</TR>
