@@ -738,7 +738,7 @@ class Person(models.Model):
     first_name = models.CharField(u"Имя", max_length=30, blank=True, db_index=True)
     patronymic = models.CharField(u"Отчество", max_length=30, blank=True, db_index=True)
 
-    birth_location = models.OneToOneField(SimpleLocation, null=True, blank=True)
+    birth_location = models.ForeignKey(SimpleLocation, null=True, blank=True)
 
     birth_date = models.DateField(u"Дата рождения", blank=True, null=True, db_index=True)
     birth_date_no_month = models.BooleanField(default=False, editable=False)
