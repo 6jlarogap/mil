@@ -275,7 +275,7 @@ class LocationField(MultiValueField):
             loc = LocationModel.objects.filter(**params)[0]
         except IndexError:
             loc = LocationModel.objects.create(**params)
-        return loc.pk
+        return loc
 
 class PersonsForm(forms.Form):
     """Форма поиска воинов.
