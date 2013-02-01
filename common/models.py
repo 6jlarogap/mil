@@ -109,6 +109,7 @@ class CityType(models.Model):
 
 
 def geo_name(name):
+    """
     clean_name = re.sub(u'\.([A-Za-zА-Яа-яёЁ])', '. \\1', name.capitalize())
 
     def make_first_upper(m):
@@ -128,7 +129,8 @@ def geo_name(name):
     clean_name = re.sub(u'^([A-Za-zА-Яа-яёЁ]+)\.', make_prefix_lower, clean_name)
 
     clean_name = re.sub(u'(\s|^)[Аа][Оо](\s|$)', u'\\1АО\\2', clean_name)
-
+    """
+    clean_name = name
     return clean_name
 
 class GeoCity(models.Model):
