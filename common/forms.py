@@ -526,10 +526,12 @@ class XLSImportForm(forms.Form):
     no_number = forms.BooleanField(label=u"Без номера", required=False)
 
     def clean_burial(self):
-        try:
-            return Burial.objects.get(passportid=self.cleaned_data['burial'])
-        except Exception:
-            raise forms.ValidationError(u"Неверный номер")
+        if self.cleaned_data.get('burial'):
+            try:
+                return Burial.objects.get(passportid=self.cleaned_data['burial'])
+            except Exception:
+                raise forms.ValidationError(u"Неверный номер")
+        return None
 
     def clean(self):
         if not self.cleaned_data.get('burial') and not self.cleaned_data.get('no_number'):
