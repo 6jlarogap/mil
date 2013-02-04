@@ -155,12 +155,13 @@ class GeoCity(models.Model):
         verbose_name = u'населенный пункт'
         verbose_name_plural = u'населенные пункты'
 
-
+"""
 models.signals.pre_save.connect(capitalize_name, sender=GeoCountry)
 models.signals.pre_save.connect(capitalize_name, sender=GeoRegion)
 models.signals.pre_save.connect(capitalize_name, sender=District)
 models.signals.pre_save.connect(capitalize_name, sender=Municipalitet)
 models.signals.pre_save.connect(capitalize_name, sender=GeoCity)
+"""
 
 class Location(models.Model):
     """
