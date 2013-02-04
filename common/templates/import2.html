@@ -23,7 +23,7 @@
     <form action="{% url import2 %}" method="POST">
         {% csrf_token %}
         <input type="hidden" name="lines" value="{{ all_data|length }}" />
-        <input type="hidden" name="burial" value="{{ burial_obj.pk }}" />
+        <input type="hidden" name="burial" value="{{ burial_obj.pk|default:'' }}" />
 
         <input type="hidden" value="{{ head.0 }}" name="head_1" />
         <input type="hidden" value="{{ head.1 }}" name="head_2" />
