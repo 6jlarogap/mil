@@ -69,7 +69,6 @@
                     <th>Дата рождения</th>
                     <th>Дата смерти</th>
                     <th>Захоронение</th>
-                    <th>Расположение</th>
                     <th>Дополнительная информация</th>
                     <th></th>
                 </thead>
@@ -86,15 +85,8 @@
                         <td>
                             <a href="{% url burial person.burial.uuid %}">{{ person.burial }}</a>
                         </td>
-                        <td>
-                            {% with person.burial.location as location %}
-                                {% if location.country %}{{ location.country }}{% if location.region or location.city %}, {% endif %}{% endif %}
-                                {% if location.region %}{{ location.region }}{% if location.city %}, {% endif %}{% endif %}
-                                {% if location.city %}{{ location.city }}{% endif %}
-                            {% endwith %}
-                        </td>
                     {% else %}
-                        <td></td><td></td>
+                        <td></td>
                     {% endif %}
                     <td>{{ person.info|default:"" }}</td>
                     <td>
