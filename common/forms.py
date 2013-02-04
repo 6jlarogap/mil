@@ -522,10 +522,19 @@ class PersonCallForm(forms.ModelForm):
 
 class XLSImportForm(forms.Form):
     xls = forms.FileField(label=u'Файл XLS')
-    burial = forms.IntegerField(label=u"Номер захоронения")
+    burial = forms.IntegerField(label=u"Номер захоронения", required=False)
+    no_number = forms.BooleanField(label=u"Без номера", required=False)
 
     def clean_burial(self):
         try:
             return Burial.objects.get(passportid=self.cleaned_data['burial'])
         except Exception:
             raise forms.ValidationError(u"Неверный номер")
+
+    def clean(self):
+        if not self.cleaned_data.get('burial') and not self.cleaned_data.get('no_number'):
+            raise forms.ValidationError(u"Необходимо указать номер либо отметить Без номера")
+        if self.cleaned_data.get('burial') and self.cleaned_data.get('no_number'):
+            raise forms.ValidationError(u"Уберите галку Без номера")
+        return self.cleaned_data
+

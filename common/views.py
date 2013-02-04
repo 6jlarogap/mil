@@ -594,7 +594,8 @@ def import_xls(request):
         for chunk in form.cleaned_data['xls'].chunks():
             destination.write(chunk)
         destination.close()
-        burial_obj = form.cleaned_data['burial']
+
+        burial_obj = form.cleaned_data.get('burial')
 
         errors = []
         try:
@@ -687,7 +688,10 @@ def import_xls(request):
                 bad_errrors = True
                 row_bad_errrors = True
             else:
-                persons = Person.objects.filter(first_name=first_name, last_name=last_name, patronymic=middle_name, burial=burial_obj)
+                params = dict(first_name=first_name, last_name=last_name, patronymic=middle_name)
+                if burial_obj:
+                    params.update(burial=burial_obj)
+                persons = Person.objects.filter(**params)
                 d = data_row.get('death')
                 if d and isinstance(d, UnclearDate):
                     persons = persons.filter(death_date=d.d)
@@ -728,7 +732,10 @@ def import_xls_2(request):
     row = 0
     cnt = 0
 
-    burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    if request.POST.get('burial'):
+        burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    else:
+        burial_obj = None
 
     errors = []
     xli = 1
@@ -755,12 +762,13 @@ def import_xls_2(request):
 
         if request.POST.get('check_%s' % row):
             params = dict(
-                burial = burial_obj,
                 last_name = last_name,
                 first_name = first_name,
                 patronymic = middle_name,
                 info = info,
             )
+            if burial_obj:
+                params['burial'] = burial_obj
             if birth:
                 bits = map(int, str(birth).split('.'))
                 bits.reverse()
@@ -830,7 +838,10 @@ def import_xls_3(request):
 
     errors = simplejson.loads(request.POST.get('errors_pickled'))
 
-    burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    if request.POST.get('burial'):
+        burial_obj = Burial.objects.get(pk=request.POST.get('burial'))
+    else:
+        burial_obj = None
     book = xlwt.Workbook(encoding='cp1251')
     sheet = book.add_sheet(u'Ошибки'.encode('cp1251'))
 
@@ -852,5 +863,8 @@ def import_xls_3(request):
     content = StringIO()
     book.save(content)
     response = HttpResponse(content.getvalue(), mimetype='application/vnd.ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="import_%s_errors.xls"' % burial_obj.passportid
+    if burial_obj:
+        response['Content-Disposition'] = 'attachment; filename="import_%s_errors.xls"' % burial_obj.passportid
+    else:
+        response['Content-Disposition'] = 'attachment; filename="import_errors.xls"'
     return response
