@@ -455,7 +455,7 @@ class PersonAdminForm(forms.ModelForm):
                 self.fields['duplicate_ok'].widget = forms.CheckboxInput()
                 raise forms.ValidationError(u"Обнаружена дублирующая запись: %s %s %s (%s - %s). Необходимо подтвердить дублирование." % (
                     person.last_name, person.first_name, person.patronymic,
-                    person.get_unclear_birth_date() or u'неизвестно', person.get_unclear_death_date() or u'неизвестно'
+                    person.get_unclear_birth_date or u'неизвестно', person.get_unclear_death_date or u'неизвестно'
                 ))
         return self.cleaned_data
 
