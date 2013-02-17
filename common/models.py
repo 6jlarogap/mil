@@ -337,7 +337,7 @@ class Burial(models.Model):
     date_of_update = models.DateTimeField(u"Дата обновления записи", auto_now=True, db_index=True)
     info = models.TextField(verbose_name=u"Дополнительная информация о захоронении", blank=True, null=True)
     is_registered = models.BooleanField(u"Учтенное", default=True, db_index=True, editable=False)
-    is_trash = models.BooleanField(u"В корзине", default=False, db_index=True)
+    is_trash = models.BooleanField(u"В корзине", default=False, db_index=True, editable=False)
 
     def __unicode__(self):
         return u'%s, %s' % (self.passportid or u'без паспорта', self.location)

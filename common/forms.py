@@ -301,7 +301,6 @@ class PersonsForm(forms.Form):
 
     burial_passportid = forms.CharField(required=False, max_length=30, label="Номер паспорта захоронения")
     info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о воине")
-    in_trash = forms.BooleanField(required=False, label="В корзине")
 
     per_page = forms.ChoiceField(label=u"Записей на страницу", choices=PER_PAGE_CHOICES)
 
@@ -338,7 +337,6 @@ class BurialsForm(forms.ModelForm):
     military_conflict = forms.ModelChoiceField(queryset=MilitaryConflict.objects.all(), required=False, label="Военный конфликт")
     info = forms.CharField(required=False, max_length=30, label="Дополнительная информация о захоронении")
     state = forms.ModelChoiceField(queryset=MemorialState.objects.all(), required=False, label="Состояние памятника")
-    in_trash = forms.BooleanField(required=False, label="В корзине")
     only_closed = forms.BooleanField(required=False, label=u"Только среди закрытых и в корзине")
     other_countries = forms.BooleanField(required=False, label=u"Все страны, кроме выбранной")
 
