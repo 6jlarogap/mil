@@ -557,15 +557,15 @@ class PersonAttachment(models.Model):
 
 class BurialInformationLinks(models.Model):
     """
-    Ссылка на другие информационные источники
+    Ссылка на доп. информацию о месте захоронения
     """
     burial = models.ForeignKey(Burial)                                          # Связь с Захоронением
     link = models.URLField(u"Ссылка", max_length=100)
     def __unicode__(self):
         return self.name
     class Meta:
-        verbose_name = (u'Ссылка на информационные источники')
-        verbose_name_plural = (u'Ссылки на информационные источники')
+        verbose_name = (u'Ссылка на доп. информацию о месте захоронения')
+        verbose_name_plural = (u'Ссылки на доп. информацию о месте захоронения')
 
 class SearchObject(models.Model):
     """
@@ -755,7 +755,7 @@ class Person(models.Model):
     deadman_category = models.ForeignKey(DeadmanCategory, verbose_name=u"Категория погибшего", blank=True, null=True)
     documents_place = models.ForeignKey(DocumentsPlace, verbose_name=u"Место нахождения документов", blank=True, null=True)
     information_source = models.ForeignKey(InformationSource, verbose_name=u"Источник информации", blank=True, null=True)
-    info = models.TextField(u"Другие информационные источники", blank=True, null=True)
+    info = models.TextField(u"Доп. информация о месте захоронения", blank=True, null=True)
     creator = models.ForeignKey(User, verbose_name=u"Создатель записи", blank=True, null=True, editable=False)
     date_of_creation = models.DateTimeField(u"Дата создания записи", auto_now_add=True, editable=False)
     is_trash = models.BooleanField(u"Удалена", default=False, db_index=True, editable=False)
