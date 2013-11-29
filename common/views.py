@@ -150,9 +150,11 @@ def persons(request):
                     except EmptyPage:
                         persons_page = paginator.page(paginator.num_pages)
                         
-                    query_vars = ''
+                    paginate_vars = query_vars = ''
                     for x in request.GET:
                         query_vars += '%s=%s&' % (x, request.GET[x])
+                        if x != 'p':
+                            paginate_vars += '%s=%s&' % (x, request.GET[x])
 
                     template = request.REQUEST.get('template', 'persons.html')
 
@@ -160,6 +162,7 @@ def persons(request):
                         'persons': persons_page,
                         'persons_count': persons_count,
                         'query_vars': query_vars,
+                        'paginate_vars': paginate_vars,
                         'form': form,
                         'search_offset': per_page * (int(p) - 1),
                     }
@@ -273,14 +276,17 @@ def burials(request):
                     except EmptyPage:
                         burials_page = paginator.page(paginator.num_pages)
 
-                    query_vars = ''
+                    paginate_vars = query_vars = ''
                     for x in request.GET:
                         query_vars += '%s=%s&' % (x, request.GET[x])
+                        if x != 'p':
+                            paginate_vars += '%s=%s&' % (x, request.GET[x])
 
                     context = {
                         'burials': burials_page,
                         'burials_count': burials_count,
                         'query_vars': query_vars,
+                        'paginate_vars': paginate_vars,
                         'form': form,
                         'template': urllib.unquote(request.REQUEST.get('template', '')) or 'burials.html',
                     }

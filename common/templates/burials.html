@@ -93,17 +93,10 @@
     {% endfor %}
 </table>
 <br/>
-<center>
-    {% if burials.has_previous %}
-    <a href="?{{ query_vars }}&p={{ burials.previous_page_number }}"><< Пред</a>
-    {% endif %}
 
-    Страница {{ burials.number }} из {{ burials.paginator.num_pages }}
-
-    {% if burials.has_next %}
-    <a href="?{{ query_vars }}&p={{ burials.next_page_number }}">След >></a>
-    {% endif %}
-</center>
+{% with burials as objects %}
+    {% include "paginator.html" %}
+{% endwith %}
 {% else %}
 {% if is_first_search %}
 <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ burials_count }}&nbsp;</caption>

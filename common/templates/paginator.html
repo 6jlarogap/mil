@@ -1,0 +1,23 @@
+<script type="text/javascript">
+    $(function() {
+        $('#paginator_select').live('change', function() {
+            top.location.href = $(this).val();
+        });
+    });
+</script>
+<center>
+    {% if objects.has_previous %}
+    <a href="?{{ query_vars }}&p={{ objects.previous_page_number }}"><< Пред</a>
+    {% endif %}
+
+    Страница {{ objects.number }} из {{ objects.paginator.num_pages }}
+
+    {% if objects.has_next %}
+    <a href="?{{ query_vars }}&p={{ objects.next_page_number }}">След >></a>
+    {% endif %}
+    Или выберите: <select id="paginator_select" style="width: 80px;">
+        {% for p in objects.paginator.page_range %}
+            <option value="?{{ paginate_vars }}&p={{ p }}"{% if p == objects.number %} selected="1"{% endif %}>{{ p }}</option>
+        {% endfor %}
+        </select>
+</center>
