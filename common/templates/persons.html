@@ -100,17 +100,9 @@
             {% endfor %}
         </table>
         <br/>
-        <center>
-            {% if persons.has_previous %}
-                <a href="?{{ query_vars }}&p={{ persons.previous_page_number }}"><< Пред</a>
-            {% endif %}
-
-            Страница {{ persons.number }} из {{ persons.paginator.num_pages }}
-
-            {% if persons.has_next %}
-                <a href="?{{ query_vars }}&p={{ persons.next_page_number }}">След >></a>
-            {% endif %}
-        </center>
+        {% with persons as objects %}
+            {% include "paginator.html" %}
+        {% endwith %}
     {% else %}
         {% if is_first_search %}
             <caption>Поиск&nbsp;не&nbsp;выполнен. Всего записей: {{ persons_count }}&nbsp;</caption>
