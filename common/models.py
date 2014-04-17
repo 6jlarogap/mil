@@ -764,6 +764,8 @@ class Person(models.Model):
     last_edit_obj = property(lambda self: self.edit_causes and self.edit_causes[0] or None)
     last_edit = property(lambda self: (self.edit_causes and self.edit_causes[0].date_edit or self.date_of_creation).strftime(u'%d.%m.%Y %H:%M'))
 
+    birth_location_info = models.TextField(verbose_name=u"Доп. информация о месте рождения", blank=True, null=True)
+
     class Meta:
         ordering = ['last_name'] # Сортировка по фамилии
         verbose_name = (u'Погибший')

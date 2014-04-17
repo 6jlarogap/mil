@@ -797,7 +797,7 @@ def import_xls_2(request):
                 )
 
             if info_birth:
-                params['birth_location'] = SimpleLocation.objects.create(info=info_birth)
+                params['birth_location_info'] = info_birth
 
             p = Person.objects.create(**params)
 

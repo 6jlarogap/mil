@@ -418,7 +418,6 @@ class PersonAdminForm(forms.ModelForm):
     death_date = UnclearDateField(label=u"Дата гибели", required=False)
     duplicate_ok = forms.BooleanField(label=u"Да, создайте дублирующую запись", required=False, widget=forms.HiddenInput)
     birth_location = LocationField(label=u"Место рождения", required=False, partial=True, widget=AdminLocationWidget)
-    birth_location_info = forms.CharField(label=u"Доп.информация", required=False, widget=forms.Textarea)
 
     class Meta:
         model = Person
@@ -428,7 +427,6 @@ class PersonAdminForm(forms.ModelForm):
         kwargs.setdefault('initial', {}).update({
             'birth_date': obj.get_unclear_date('birth_date'),
             'death_date': obj.get_unclear_date('death_date'),
-            'birth_location_info': obj.birth_location and obj.birth_location.info or '',
         })
         super(PersonAdminForm, self).__init__(*args, **kwargs)
 
@@ -470,17 +468,6 @@ class PersonAdminForm(forms.ModelForm):
                 self.fields[f].widget.value_from_datadict(data=self.data, files=None, name=f)
                 setattr(obj, f+'_no_month', getattr(obj, f) and nm or False)
                 setattr(obj, f+'_no_day', getattr(obj, f) and nd or False)
-
-        if self.cleaned_data.get('birth_location_info') and self.cleaned_data.get('birth_location_info').strip():
-            if obj.birth_location and obj.birth_location.pk:
-                obj.birth_location.info = self.cleaned_data['birth_location_info']
-                obj.birth_location.save()
-            else:
-                obj.birth_location = SimpleLocation.objects.create(info = self.cleaned_data['birth_location_info'])
-        else:
-            if obj.birth_location and obj.birth_location.pk and obj.birth_location.info and obj.birth_location.info.strip():
-                obj.birth_location.info = ''
-                obj.birth_location.save()
 
         if kwargs.get('commit'):
             obj.save()
