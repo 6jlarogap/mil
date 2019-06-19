@@ -361,7 +361,7 @@ def burials(request):
                                     burial_type__type__name=u"ИМ"
                                 ).count(),
                                 'mass': burials.filter(
-                                    burial_type__type__name=u"ММУ"
+                                    burial_type__type__name=u"ЖВ"
                                 ).count(),
                                 'foreign': burials.filter(
                                     burial_type__type__name=u"ИН"
@@ -409,7 +409,7 @@ def burials(request):
                                     burial_type__type__name=u"ИМ"
                                 ).count(),
                                 'mass': burials.filter(
-                                    burial_type__type__name=u"ММУ"
+                                    burial_type__type__name=u"ЖВ"
                                 ).count(),
                                 'foreign': burials.filter(
                                     burial_type__type__name=u"ИН"
@@ -477,7 +477,7 @@ def burials(request):
                                     'war': sum([b.count for b in burial_types if b.type and b.type.name == u'ВК'], 0),
                                     'group': sum([b.count for b in burial_types if b.type and b.type.name == u"БМ"], 0),
                                     'personal': sum([b.count for b in burial_types if b.type and b.type.name == u"ИМ"], 0),
-                                    'mass': sum([b.count for b in burial_types if b.type and b.type.name == u"ММУ"], 0),
+                                    'mass': sum([b.count for b in burial_types if b.type and b.type.name == u"ЖВ"], 0),
                                     'foreign': sum([b.count for b in burial_types if b.type and b.type.name == u"ИН"], 0),
                                 }
 
